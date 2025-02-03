@@ -1,0 +1,18 @@
+{
+  "name": "com.infinityworld.kplugin.maxmediation",
+  "version": "1.0.1",
+  "displayName": "KPlugin.MaxMediation",
+  "description": "Tools to simplify work third-party Unity plugin",
+  "documentationUrl": "https://bitbucket.org/nvhstart/kplugin_maxmediation/src/main/README.md",
+  "changelogUrl": "https://bitbucket.org/nvhstart/kplugin_maxmediation/src/main/CHANGELOG.md",
+  "licensesUrl": "https://bitbucket.org/nvhstart/kplugin_maxmediation/src/main/LICENSES.md",
+  "PackageImport":[
+    "AppLovin-MAX-Unity-Plugin-6.2.1-Android-12.2.0-iOS-12.2.1"
+  ],
+  "author": 
+  {
+    "name": "Nguyen Van Hung",
+    "email": "nvhung.world@gmail.com",
+    "url": "https://www.facebook.com/Hung.FollowMe"
+  }
+}

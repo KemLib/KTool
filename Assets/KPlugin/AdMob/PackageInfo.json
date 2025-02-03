@@ -1,0 +1,18 @@
+{
+  "name": "com.infinityworld.kplugin.google.adnob",
+  "version": "1.0.1",
+  "displayName": "KPlugin.Google.Adnob",
+  "description": "Tools to simplify work third-party Unity plugin",
+  "documentationUrl": "https://bitbucket.org/nvhstart/kplugin_googleadmob/src/main/README.md",
+  "changelogUrl": "https://bitbucket.org/nvhstart/kplugin_googleadmob/src/main/CHANGELOG.md",
+  "licensesUrl": "https://bitbucket.org/nvhstart/kplugin_googleadmob/src/main/LICENSES.md",
+  "PackageImport":[
+    "GoogleMobileAds-v8.7.0"
+  ],
+  "author": 
+  {
+    "name": "Nguyen Van Hung",
+    "email": "nvhung.world@gmail.com",
+    "url": "https://www.facebook.com/Hung.FollowMe"
+  }
+}
