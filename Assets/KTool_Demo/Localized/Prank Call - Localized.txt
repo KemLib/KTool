@@ -1,0 +1,15 @@
+English	Vietnamese	Portuguese	French	German	Korean	ChineseTraditional	Japanese
+Video Call	Cuộc gọi video	Video chamada	Appel vidéo	Videoanruf	영상 통화	视频电话	ビデオ通話
+Message	Tin nhắn	Mensagem	Message	Nachricht	메시지	信息	メッセージ
+Change Language	Thay đổi ngôn ngữ	Mudar idioma	Changer de langue	Sprache ändern	언어를 변경하십시오	改变语言	言語を変えてください
+Language	Ngôn ngữ	Linguagem	Langue	Sprache	언어	语言	言語
+Settings	Cài đặt	Configurações	Paramètres	Einstellungen	설정	设置	設定
+General	Tổng quan	Em geral	Général	Allgemein	일반적인	一般的	一般的な
+Sound	Âm thanh	Som	Son	Klang	소리	声音	音
+Vibration	Rung động	Vibração	Vibration	Vibration	진동	振动	振動
+Flash	Đèn	Lâmpada	Éclair	Blitz	플래시	闪光	閃光
+Others	Khác	Outros	Autres	Andere	기타	其他的	その他
+Rate Us 5 Star	Đánh giá chúng tôi 5 sao	Avalie 5 estrelas	Évaluez-nous 5 étoiles	Bewerten Sie uns 5 Sterne	미국 5 성급 평가	评分我们5星	5つ星を評価します
+Incomming Call	Cuộc gọi đến	CHAMADA INCOMMANTE	Appel incorporé	Auftragsanruf	소송 전화	不断打电话	着信コール
+Call End!	Cuộc gọi kết thúc	Ligue para o final!	Appelez la fin!	Rufen Sie Ende an!	전화 끝!	通话端！	コールエンド！
+Close	Đóng	Fechar	Fermer	Schließen	닫다	关闭	近い
