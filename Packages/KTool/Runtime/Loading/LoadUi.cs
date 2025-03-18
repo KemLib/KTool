@@ -8,7 +8,8 @@ namespace KTool.Loading
     public class LoadUi : MonoBehaviour, ILoadUi
     {
         #region  Properties
-        [SerializeField] private Image imgProgress;
+        [SerializeField] 
+        private Image imgProgress;
 
         public float Progress
         {

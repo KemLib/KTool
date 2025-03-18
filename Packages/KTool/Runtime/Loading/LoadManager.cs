@@ -12,14 +12,40 @@ namespace KTool.Loading
 		private const string LOAD_SCENE_TASK_NAME_FORMAT = "Load scene: {0}";
 		private const float LOAD_SCENE_MAX_PROGRESS = 0.4f;
 
-		[SerializeField] private LoadUi defaultLoadUi;
+		public static LoadManager Instance
+        {
+            get;
+            private set;
+        }
 
-		public ILoadUi LoadUi => ILoadUi.Instance == null ? defaultLoadUi : ILoadUi.Instance;
-		#endregion
+        [SerializeField] 
+		private LoadUi defaultLoadUi;
+		[SerializeField]
+		public bool IncludeInactive = false;
 
-		#region Unity Event		
-		// Start is called before the first frame update
-		void Start()
+        public ILoadUi LoadUi => ILoadUi.Instance == null ? defaultLoadUi : ILoadUi.Instance;
+        #endregion
+
+        #region Unity Event
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+                return;
+            }
+            Destroy(gameObject);
+        }
+        private void OnDestroy()
+        {
+            if (Instance != null && Instance.GetInstanceID() == GetInstanceID())
+            {
+                Instance = null;
+            }
+        }
+        // Start is called before the first frame update
+        void Start()
 		{
 			LoadItem(LoadUi, GetSceneActive(), 0);
 		}
@@ -200,6 +226,9 @@ namespace KTool.Loading
 			GameObject[] rootGO = scene.GetRootGameObjects();
 			foreach (GameObject go in rootGO)
 			{
+				if (!IncludeInactive && !go.activeSelf)
+					continue;
+				//
 				T[] items = go.GetComponentsInChildren<T>();
 				if (items.Length == 0)
 					continue;

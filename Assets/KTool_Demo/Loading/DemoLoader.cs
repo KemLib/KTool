@@ -8,7 +8,12 @@ namespace KTool_Demo.Loading
     public class DemoLoader : MonoBehaviour, ILoader
     {
         #region Properties
-
+        [SerializeField]
+        private string LoadName;
+        [SerializeField]
+        [Min(1)]
+        private float timeLoad = 1,
+            timeInit = 1;
         #endregion
 
         #region Unity Event
@@ -29,18 +34,18 @@ namespace KTool_Demo.Loading
 
         public void GameLoad(Entri entri)
         {
-            entri.Name = "Game Load";
-            StartCoroutine(IE_Delay(entri));
+            entri.Name = "Game load: " + LoadName;
+            StartCoroutine(IE_Delay(entri, timeLoad));
         }
 
         public void GameInit(Entri entri)
         {
-            entri.Name = "Game Init";
-            StartCoroutine(IE_Delay(entri));
+            entri.Name = "Game Init: " + LoadName;
+            StartCoroutine(IE_Delay(entri, timeInit));
         }
         public void GameStart()
         {
-            Debug.Log("Game Start");
+            Debug.Log("Game Start: " + LoadName);
         }
         private IEnumerator IE_Delay(Entri entri, float delay = 1)
         {
