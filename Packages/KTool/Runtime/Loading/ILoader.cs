@@ -3,30 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using KTool.Attribute;
 
-namespace Packages.com.kem.ktool.Runtime.Loading
+namespace KTool.Loading
 {
-	public class ILoader : MonoBehaviour
+	public interface ILoader
 	{
-		#region Properties
 		
-		#endregion
-		
-		#region Unity Event		
-		// Start is called before the first frame update
-		void Start()
-		{
+        #region Progperties
 
-		}
+        #endregion
 
-		// Update is called once per frame
-		void Update()
-		{
-
-		}
-		#endregion
-		
-		#region Method
-
-		#endregion
+        #region Method
+        public void GameLoad(Entri entri);
+		public void GameInit(Entri entri);
+		public void GameStart();
+        #endregion
 	}
 }
