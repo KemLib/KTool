@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KTool.ThirdParty
+namespace KTool.Localized.ThirdParty
 {
     public class TsvTable
     {

@@ -1,4 +1,4 @@
-using KTool.ThirdParty;
+using KTool.Localized.ThirdParty;
 using UnityEngine;
 using UnityEngine.UI;
 

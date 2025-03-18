@@ -1,4 +1,4 @@
-using KTool.ThirdParty;
+using KLibStandard.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,11 +38,11 @@ namespace KTool.Data
         }
         public static string ConvertToString(Dictionary<string, object> dic)
         {
-            return Json.Serialize(dic);
+            return MiniJson.Serialize(dic);
         }
         public static string ConvertToString(List<object> list)
         {
-            return Json.Serialize(list);
+            return MiniJson.Serialize(list);
         }
         public static DateTime ConvertToDate(string time)
         {
@@ -50,11 +50,11 @@ namespace KTool.Data
         }
         public static Dictionary<string, object> ConvertToDictionary(string jsonData)
         {
-            return Json.Deserialize(jsonData) as Dictionary<string, object>;
+            return MiniJson.Deserialize(jsonData) as Dictionary<string, object>;
         }
         public static List<object> ConvertToList(string jsonData)
         {
-            return Json.Deserialize(jsonData) as List<object>;
+            return MiniJson.Deserialize(jsonData) as List<object>;
         }
         #endregion Convert
     }

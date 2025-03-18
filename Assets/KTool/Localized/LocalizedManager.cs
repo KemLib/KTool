@@ -1,5 +1,5 @@
 ﻿using KTool.Data;
-using KTool.ThirdParty;
+using KTool.Localized.ThirdParty;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
