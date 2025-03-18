@@ -5,14 +5,11 @@ using KTool.Attribute;
 
 namespace #NAMESPACE#
 {
-    public class #SCRIPTNAME#
+    [CreateAssetMenu(fileName = "#SCRIPTNAME#", menuName = "Scriptable Objects/#SCRIPTNAME#")]
+    public class #SCRIPTNAME# : ScriptableObject
     {
 		#region Properties
 		
-		#endregion
-		
-		#region Construction
-
 		#endregion
 		
 		#region Method

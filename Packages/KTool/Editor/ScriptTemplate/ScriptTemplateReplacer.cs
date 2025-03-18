@@ -15,10 +15,15 @@ namespace KTool.ScriptTemplate.Editor
             CHAR_SLIP = '_';
         private const string FOLDER_PACKAGE = "Packages/KTool",
             FOLDER_PACKAGE_CACHE = "Library/PackageCache",
-            FOLDER_PACKAGE_CACHE_KTOOL = "com.kem.ktool",
-            PATH_SCRIPTTEMPLATE_NEW_BEHAVIOURSCRIPT = "{0}/Runtime/ScriptTemplate/ScriptTemplate_NewBehaviourScript.txt",
-            PATH_SCRIPTTEMPLATE_CLASS = "{0}/Runtime/ScriptTemplate/ScriptTemplate_Class.txt",
-            PATH_SCRIPTTEMPLATE_CLASS_EDITOR = "{0}/Runtime/ScriptTemplate/ScriptTemplate_ClassEditer.txt";
+            FOLDER_PACKAGE_CACHE_KTOOL = "com.kem.ktool";
+        private const string PATH_SCRIPTTEMPLATE_NEW_BEHAVIOURSCRIPT = "{0}/Runtime/ScriptTemplate/ScriptTemplate_NewBehaviourScript.txt",
+            PATH_SCRIPTTEMPLATE_NEW_BEHAVIOURSCRIPT_V6 = "{0}/Runtime/ScriptTemplate/ScriptTemplate_NewBehaviourScript_v6.txt",
+            PATH_SCRIPTTEMPLATE_BEHAVIOURSCRIPT = "{0}/Runtime/ScriptTemplate/ScriptTemplate_BehaviourScript.txt",
+            PATH_SCRIPTTEMPLATE_BEHAVIOURSCRIPT_EDITOR = "{0}/Runtime/ScriptTemplate/ScriptTemplate_BehaviourScriptEditer.txt";
+        private const string PATH_SCRIPTTEMPLATE_NEW_SCRIPTABLEOBJECT = "{0}/Runtime/ScriptTemplate/ScriptTemplate_NewScriptableObject.txt",
+            PATH_SCRIPTTEMPLATE_SCRIPTABLEOBJECT = "{0}/Runtime/ScriptTemplate/ScriptTemplate_ScriptableObject.txt";
+        private const string PATH_SCRIPTTEMPLATE_NEW_CLASS = "{0}/Runtime/ScriptTemplate/ScriptTemplate_NewClass.txt",
+            PATH_SCRIPTTEMPLATE_CLASS = "{0}/Runtime/ScriptTemplate/ScriptTemplate_Class.txt";
         private const string NAMESPACE_ROOT = "KTool",
             NAMESPACE_PACKAGE = "Packages",
             NAMESPACE_ASSETS = "Assets",
@@ -34,17 +39,22 @@ namespace KTool.ScriptTemplate.Editor
                 return;
             string pathCs = pathMeta.Replace(FILE_META, string.Empty),
                 fileName = GetFileName(pathCs);
-            if (!Check_NewBehaviourScript(pathCs, fileName))
-                return;
             //
             string folderName = GetFolderName(pathCs),
                 nameSpace = GetNameSpace(folderName);
-            string data;
-            if (Check_ClassEditor(fileName, nameSpace))
+            string data = string.Empty;
+            if (Check_NewBehaviourScript(pathCs, fileName))
             {
-                data = GetData_ClassEditor(fileName, nameSpace);
+                if (Check_ClassEditor(fileName, nameSpace))
+                    data = GetData_BehaviourScriptEditor(fileName, nameSpace);
+                else
+                    data = GetData_BehaviourScript(fileName, nameSpace);
             }
-            else
+            else if (Check_NewScriptableObject(pathCs, fileName))
+            {
+                data = GetData_ScriptableObject(fileName, nameSpace);
+            }
+            else if (Check_NewClass(pathCs, fileName))
             {
                 data = GetData_Class(fileName, nameSpace);
             }
@@ -52,6 +62,7 @@ namespace KTool.ScriptTemplate.Editor
             if (string.IsNullOrEmpty(data))
                 return;
             File.WriteAllText(pathCs, data);
+            //
             AssetDatabase.Refresh();
         }
         private static bool Check_MetaCS(string pathMeta)
@@ -61,7 +72,17 @@ namespace KTool.ScriptTemplate.Editor
         private static bool Check_NewBehaviourScript(string pathCs, string fileName)
         {
             string data = File.ReadAllText(pathCs);
-            return data == GetData_NewBehaviourScript(fileName);
+            return data == GetData_NewBehaviourScript(fileName) || data == GetData_NewBehaviourScriptV6(fileName);
+        }
+        private static bool Check_NewScriptableObject(string pathCs, string fileName)
+        {
+            string data = File.ReadAllText(pathCs);
+            return data == GetData_NewScriptableObject(fileName);
+        }
+        private static bool Check_NewClass(string pathCs, string fileName)
+        {
+            string data = File.ReadAllText(pathCs);
+            return data == GetData_NewClasst(fileName);
         }
         private static bool Check_ClassEditor(string fileName, string nameSpace)
         {
@@ -111,20 +132,52 @@ namespace KTool.ScriptTemplate.Editor
             data = data.Replace(KEY_CLASS_NAME, fileName);
             return data;
         }
+        private static string GetData_NewBehaviourScriptV6(string fileName)
+        {
+            string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_NEW_BEHAVIOURSCRIPT_V6);
+            data = data.Replace(KEY_CLASS_NAME, fileName);
+            return data;
+        }
+        private static string GetData_NewScriptableObject(string fileName)
+        {
+            string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_NEW_SCRIPTABLEOBJECT);
+            data = data.Replace(KEY_CLASS_NAME, fileName);
+            return data;
+        }
+        private static string GetData_NewClasst(string fileName)
+        {
+            string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_NEW_CLASS);
+            data = data.Replace(KEY_CLASS_NAME, fileName);
+            return data;
+        }
+        private static string GetData_BehaviourScript(string fileName, string nameSpace)
+        {
+            string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_BEHAVIOURSCRIPT);
+            data = data.Replace(KEY_NAMESPACE, nameSpace);
+            data = data.Replace(KEY_CLASS_NAME, fileName);
+            return data;
+        }
+        private static string GetData_BehaviourScriptEditor(string fileName, string nameSpace)
+        {
+            string classname = fileName.Replace(CLASS_EDITOR, string.Empty);
+            string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_BEHAVIOURSCRIPT_EDITOR);
+            data = data.Replace(KEY_NAMESPACE, nameSpace);
+            data = data.Replace(KEY_CLASS_NAME, classname);
+            data = data.Replace(KEY_CLASS_EDITOR_NAME, fileName);
+            return data;
+        }
+        private static string GetData_ScriptableObject(string fileName, string nameSpace)
+        {
+            string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_SCRIPTABLEOBJECT);
+            data = data.Replace(KEY_NAMESPACE, nameSpace);
+            data = data.Replace(KEY_CLASS_NAME, fileName);
+            return data;
+        }
         private static string GetData_Class(string fileName, string nameSpace)
         {
             string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_CLASS);
             data = data.Replace(KEY_NAMESPACE, nameSpace);
             data = data.Replace(KEY_CLASS_NAME, fileName);
-            return data;
-        }
-        private static string GetData_ClassEditor(string fileName, string nameSpace)
-        {
-            string classname = fileName.Replace(CLASS_EDITOR, string.Empty);
-            string data = PackageFile_Read(PATH_SCRIPTTEMPLATE_CLASS_EDITOR);
-            data = data.Replace(KEY_NAMESPACE, nameSpace);
-            data = data.Replace(KEY_CLASS_NAME, classname);
-            data = data.Replace(KEY_CLASS_EDITOR_NAME, fileName);
             return data;
         }
         private static string PackageFile_Read(string pathFormat)
