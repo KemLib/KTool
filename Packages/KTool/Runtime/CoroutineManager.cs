@@ -1,12 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-namespace KTool.MultiThread
+namespace KTool
 {
     public class CoroutineManager : MonoBehaviour
     {
         #region Properties
-        private const string GAME_OBJECT_NAME = "Coroutine_Manager";
+        private const string GAME_OBJECT_NAME = "CoroutineManager";
 
         private static CoroutineManager instance;
         public static CoroutineManager Instance
@@ -26,7 +26,13 @@ namespace KTool.MultiThread
         #endregion
 
         #region Unity Event
-
+        private void OnDestroy()
+        {
+            if (instance != null && instance.GetInstanceID() == GetInstanceID())
+            {
+                instance = null;
+            }
+        }
         #endregion
 
         #region Method
@@ -34,7 +40,6 @@ namespace KTool.MultiThread
         {
 
         }
-
         #endregion Method
 
         #region Coroutine

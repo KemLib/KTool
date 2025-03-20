@@ -1,42 +1,31 @@
+using KTool;
 using KTool.Init;
 using System.Collections;
 using UnityEngine;
 
 namespace KTool_Demo.Init
 {
-    public class DemoInitControl : MonoBehaviour, IInit
+    public class DemoInitControl : MonoBehaviour, IIniter
     {
         #region Properties
         [SerializeField]
-        private InitType initType;
+        private bool requiredConditions;
         [SerializeField]
         private float timeInit;
 
-        private bool initComplete;
-
-        public string Name => gameObject.name;
-        public InitType InitType => initType;
-        public bool InitComplete => initComplete;
+        public bool RequiredConditions => requiredConditions;
         #endregion
 
-        #region Unity Event		
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        #region Unity Event
         #endregion
 
         #region Method
-        public void InitBegin()
+        public TrackEntry InitBegin()
         {
-            StartCoroutine(IE_Init());
+            Debug.Log("Demo Init Begin");
+            TrackEntrySource trackEntrySource = new TrackEntrySource(gameObject.name);
+            StartCoroutine(IE_Init(trackEntrySource));
+            return trackEntrySource;
         }
 
         public void InitEnd()
@@ -44,11 +33,16 @@ namespace KTool_Demo.Init
             Debug.Log("Demo Init Ended");
         }
 
-        private IEnumerator IE_Init()
+        private IEnumerator IE_Init(TrackEntrySource trackEntrySource)
         {
-            if (timeInit > 0)
-                yield return new WaitForSecondsRealtime(timeInit);
-            initComplete = true;
+            float time = 0;
+            while (time < timeInit)
+            {
+                time += Time.deltaTime;
+                trackEntrySource.Progress = time / timeInit;
+                yield return new WaitForEndOfFrame();
+            }
+            trackEntrySource.CompleteSuccess();
             Debug.Log("Init Complete: " + gameObject.name);
         }
         #endregion

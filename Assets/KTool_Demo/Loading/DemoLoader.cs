@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using KTool.Loading;
 using KTool;
+using KTool.Loading;
+using System.Collections;
+using UnityEngine;
 namespace KTool_Demo.Loading
 {
     public class DemoLoader : MonoBehaviour, ILoader
@@ -12,8 +11,7 @@ namespace KTool_Demo.Loading
         private string LoadName;
         [SerializeField]
         [Min(1)]
-        private float timeLoad = 1,
-            timeInit = 1;
+        private float timeLoad = 1;
         #endregion
 
         #region Unity Event
@@ -32,31 +30,26 @@ namespace KTool_Demo.Loading
 
         #region Loader
 
-        public void GameLoad(Entri entri)
+        public TrackEntry LoadBegin()
         {
-            entri.Name = "Game load: " + LoadName;
-            StartCoroutine(IE_Delay(entri, timeLoad));
+            TrackEntrySource trackLoaderSource = new TrackEntrySource("Loading... " + LoadName);
+            StartCoroutine(IE_Delay(trackLoaderSource, timeLoad));
+            return trackLoaderSource;
         }
-
-        public void GameInit(Entri entri)
+        public void LoadEnd()
         {
-            entri.Name = "Game Init: " + LoadName;
-            StartCoroutine(IE_Delay(entri, timeInit));
+            Debug.Log("Load ended: " + LoadName);
         }
-        public void GameStart()
-        {
-            Debug.Log("Game Start: " + LoadName);
-        }
-        private IEnumerator IE_Delay(Entri entri, float delay = 1)
+        private IEnumerator IE_Delay(TrackEntrySource trackLoaderSource, float delay = 1)
         {
             float time = 0;
             while (time < delay)
             {
-                entri.Progress = time / delay;
+                trackLoaderSource.Progress = time / delay;
                 time += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
-            entri.Done();
+            trackLoaderSource.CompleteSuccess();
         }
         #endregion
     }

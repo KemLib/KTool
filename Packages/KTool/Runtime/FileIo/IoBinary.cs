@@ -10,12 +10,12 @@ namespace KTool.FileIo
         #endregion
 
         #region Method
-        public static Result<byte[]> Read(string path, object state = null)
+        public static ResultRead Read(string path, object state = null)
         {
             if (!File.Exists(path))
-                return Result<byte[]>.FailException(null, PathUnit.ERROR_FILE_NOT_FOUND, state);
+                return ResultRead.Fail(PathUnit.ERROR_FILE_NOT_FOUND, state);
             //
-            Result<byte[]> result;
+            ResultRead result;
             Stream stream = null;
             try
             {
@@ -31,18 +31,18 @@ namespace KTool.FileIo
                 }
                 stream.Close();
                 //
-                result = Result<byte[]>.Success(data, state);
+                result = ResultRead.Success(data, state);
             }
             catch (Exception ex)
             {
                 if (stream != null)
                     stream.Close();
-                result = Result<byte[]>.FailException(null, ex.Message, state);
+                result = ResultRead.Fail(ex.Message, state);
             }
             //
             return result;
         }
-        public static Result Write(string path, byte[] data, object state = null)
+        public static ResultWrite Write(string path, byte[] data, object state = null)
         {
             string error;
             Stream stream = null;
@@ -80,9 +80,9 @@ namespace KTool.FileIo
             }
             //
             if (string.IsNullOrEmpty(error))
-                return Result.Success(state);
+                return ResultWrite.Success(state);
             else
-                return Result.FailException(error, state);
+                return ResultWrite.Fail(error, state);
         }
         #endregion
     }

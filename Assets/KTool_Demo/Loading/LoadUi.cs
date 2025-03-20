@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using KTool.Loading;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using KTool.Attribute;
-using KTool.Loading;
 
 namespace KTool_Demo.Loading
 {

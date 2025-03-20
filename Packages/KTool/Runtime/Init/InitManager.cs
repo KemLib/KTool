@@ -16,21 +16,26 @@ namespace KTool.Init
         [SerializeField]
         private float maxTime = 5;
         [SerializeField]
-        private GroupItem[] groups;
+        private InitStep[] steps;
         [SerializeField]
         public UnityEvent OnInitBegin,
             OnInitEnd;
         [SerializeField]
         public UnityEvent<float> OnProgress;
-        private bool isLoading;
+        [SerializeField]
+        public UnityEvent<string> OnTaskName;
+        [SerializeField]
+        public UnityEvent<string> OnFail;
+        private bool isIniting;
         private float progress;
+        private string taskName;
 
-        public bool IsLoading
+        public bool IsIniting
         {
-            get => isLoading;
+            get => isIniting;
             private set
             {
-                isLoading = value;
+                isIniting = value;
                 if (value)
                     OnInitBegin?.Invoke();
                 else
@@ -46,23 +51,29 @@ namespace KTool.Init
                 OnProgress?.Invoke(progress);
             }
         }
+        public string TaskName
+        {
+            get => taskName;
+            set
+            {
+                taskName = value;
+                OnTaskName?.Invoke(taskName);
+            }
+        }
         #endregion
 
         #region Unity Event
         private void Awake()
         {
-            if (Instance != null)
-            {
-                if (Instance.GetInstanceID() != GetInstanceID())
-                    Destroy(gameObject);
-            }
-            else
+            if (Instance == null)
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
                 Init();
                 return;
             }
+            //
+            Destroy(gameObject);
         }
         private void OnDestroy()
         {
@@ -74,8 +85,8 @@ namespace KTool.Init
         #region Method
         public void Init()
         {
-            foreach (GroupItem group in groups)
-                group.Init();
+            foreach (InitStep step in steps)
+                step.Init();
             InitBegin();
         }
         #endregion
@@ -83,10 +94,10 @@ namespace KTool.Init
         #region Loading
         private void InitBegin()
         {
-            IsLoading = true;
+            IsIniting = true;
             Progress = 0;
             //
-            if (groups == null || groups.Length == 0)
+            if (steps == null || steps.Length == 0)
             {
                 InitEnd();
                 return;
@@ -99,77 +110,72 @@ namespace KTool.Init
         }
         private void InitEnd()
         {
-            foreach (GroupItem group in groups)
-                group.Item_InitEnded();
+            foreach (InitStep step in steps)
+                step.Item_InitEnded(OnFail);
             //
             Progress = 1;
-            IsLoading = false;
+            IsIniting = false;
         }
         private IEnumerator IE_Init_TimeLimit()
         {
-            float stepProgress = 1f / groups.Length;
+            float stepProgress = 1f / steps.Length;
             //
             float time = 0;
-            for (int i = 0; i < groups.Length; i++)
+            for (int i = 0; i < steps.Length; i++)
             {
-                GroupItem group = groups[i];
-                group.Item_Init();
+                InitStep step = steps[i];
+                step.Item_Init(OnFail);
+                TaskName = step.StepName;
                 do
                 {
                     yield return new WaitForEndOfFrame();
-                    if (time < maxTime)
-                        time = Mathf.Min(time + Time.unscaledDeltaTime, maxTime);
-                    float currentProgress = i * stepProgress,
-                        progressGroup = group.Item_GetProgress(),
-                        progressItem = currentProgress + progressGroup * stepProgress,
-                        progressTime = time / maxTime;
-                    Progress = progressItem * 0.9f + progressTime * 0.1f;
+                    Progress = stepProgress * i + stepProgress * step.Item_GetProgress();
                     //
-                    if (time >= maxTime && group.Item_IsCompleteAllCompulsory())
+                    time = Mathf.Min(time + Time.unscaledDeltaTime, maxTime);
+                    if (time >= maxTime && step.Item_IsCompleteAllRequired())
                     {
                         StartCoroutine(IE_Init_Now(i + 1));
                         yield break;
                     }
-                } while (!group.Item_IsCompleteAll());
+                } while (!step.Item_IsCompleteAll());
             }
             //
             InitEnd();
         }
         private IEnumerator IE_Init_TimeUnLimit()
         {
-            float stepProgress = 1f / groups.Length;
+            float stepProgress = 1f / steps.Length;
             //
-            for (int i = 0; i < groups.Length; i++)
+            for (int i = 0; i < steps.Length; i++)
             {
-                GroupItem group = groups[i];
-                group.Item_Init();
-                float currentProgress = i * stepProgress,
-                    progressGroup;
+                InitStep step = steps[i];
+                step.Item_Init(OnFail);
+                TaskName = step.StepName;
                 do
                 {
                     yield return new WaitForEndOfFrame();
-                    progressGroup = group.Item_GetProgress();
-                    Progress = currentProgress + progressGroup * stepProgress;
-                } while (!group.Item_IsCompleteAll());
+                    Progress = stepProgress * i + stepProgress * step.Item_GetProgress();
+                } while (!step.Item_IsCompleteAll());
             }
             //
             InitEnd();
         }
-
         private IEnumerator IE_Init_Now(int indexStart)
         {
-            float stepProgress = 1f / groups.Length;
+            float stepProgress = 1f / steps.Length;
             //
-            for (int i = indexStart; i < groups.Length; i++)
+            for (int i = indexStart; i < steps.Length; i++)
             {
-                GroupItem group = groups[i];
-                group.Item_Init();
-                float currentProgress = i * stepProgress;
+                InitStep step = steps[i];
+                step.Item_Init(OnFail);
+                TaskName = step.StepName;
                 //
-                Progress = currentProgress * 0.9f + 0.1f;
-                while (!group.Item_IsCompleteAllCompulsory())
+                while (!step.Item_IsCompleteAllRequired())
+                {
+                    Progress = stepProgress * i + stepProgress * step.Item_GetProgress();
                     yield return new WaitForEndOfFrame();
-                Progress = (currentProgress + stepProgress) * 0.9f + 0.1f;
+                }
+                Progress = i * stepProgress + stepProgress;
             }
             //
             InitEnd();

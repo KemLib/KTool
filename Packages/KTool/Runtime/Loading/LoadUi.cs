@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +6,7 @@ namespace KTool.Loading
     public class LoadUi : MonoBehaviour, ILoadUi
     {
         #region  Properties
-        [SerializeField] 
+        [SerializeField]
         private Image imgProgress;
 
         public float Progress
