@@ -1,0 +1,34 @@
+using UnityEditor;
+using UnityEngine;
+
+namespace [Namespace]
+{
+
+    [CustomEditor(typeof([ClassName]))]
+    [ClassAccessModifiers] class [ClassName] : UnityEditor.Editor
+    {
+        #region Properties
+
+        #endregion
+
+        #region Methods Unity        
+        private void OnEnable()
+        {
+
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            //
+
+            //
+            serializedObject.ApplyModifiedProperties();
+        }
+        #endregion
+
+        #region Methods
+
+        #endregion
+    }
+}

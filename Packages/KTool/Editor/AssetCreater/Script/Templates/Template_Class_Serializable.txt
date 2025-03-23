@@ -1,0 +1,16 @@
+using UnityEngine;
+
+namespace [Namespace]
+{
+    [System.Serializable]
+    [ClassAccessModifiers] class [ClassName]
+    {
+        #region Properties
+
+        #endregion
+
+        #region Methods
+
+        #endregion
+    }
+}

@@ -1,0 +1,22 @@
+using UnityEngine;
+
+namespace [Namespace]
+{
+    [ClassAccessModifiers] class [ClassName]
+    {
+        #region Properties
+
+        #endregion
+
+        #region Construction
+        public [ClassName]()
+        {
+            
+        }
+        #endregion
+
+        #region Methods
+
+        #endregion
+    }
+}

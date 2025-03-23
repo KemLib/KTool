@@ -1,0 +1,22 @@
+using UnityEngine;
+
+namespace [Namespace]
+{
+    [ClassAccessModifiers] class [ClassName] : ScriptableObject
+    {
+        #region Properties
+
+        #endregion
+
+        #region Methods Unity
+        private void OnEnable()
+        {
+
+        }
+        #endregion
+
+        #region Methods
+
+        #endregion
+    }
+}

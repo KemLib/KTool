@@ -14,7 +14,14 @@ namespace KTool.Data.Editor
         [MenuItem(itemName: "KTool/Data/Open Data folder")]
         public static void Data_OpenDataFolder()
         {
-            System.Diagnostics.Process.Start(PathUnit.PathFolderData);
+            try
+            {
+                System.Diagnostics.Process.Start(PathUnit.PathFolderData);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
         }
 
         [MenuItem(itemName: "KTool/Data/Clear PlayerPrefs")]

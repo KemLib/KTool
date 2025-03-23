@@ -1,0 +1,47 @@
+using UnityEngine;
+
+namespace [Namespace]
+{
+    [ClassAccessModifiers] class [ClassName] : MonoBehaviour
+    {
+        #region Properties
+        public static [ClassName] Instance
+        {
+            get;
+            private set;
+        }
+        #endregion
+
+        #region Methods Unity
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+                return;
+            }
+            //
+            Destroy(gameObject);
+        }
+        private void OnDestroy()
+        {
+            if (Instance != null && Instance.GetInstanceID() == GetInstanceID())
+                Instance = null;
+        }
+        private void Start()
+        {
+        
+        }
+        private void Update()
+        {
+        
+        }
+        #endregion
+
+        #region Methods
+
+        #endregion
+    }
+}

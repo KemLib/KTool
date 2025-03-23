@@ -1,0 +1,15 @@
+using UnityEngine;
+
+namespace [Namespace]
+{
+    [ClassAccessModifiers] interface [ClassName]
+    {
+        #region Properties
+
+        #endregion
+
+        #region Methods
+
+        #endregion
+    }
+}
