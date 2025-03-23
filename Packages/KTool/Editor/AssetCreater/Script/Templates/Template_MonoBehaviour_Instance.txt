@@ -13,7 +13,6 @@ namespace [Namespace]
         #endregion
 
         #region Methods Unity
-
         private void Awake()
         {
             if (Instance == null)

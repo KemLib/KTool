@@ -57,6 +57,8 @@ namespace KTool.FileIo
             string fullFolder = PathUnit.GetFullFolder_Asset(folder);
             string searchPattern = PathUnit.GetSearchPattern(extension);
             DirectoryInfo directory = new DirectoryInfo(fullFolder);
+            if (!directory.Exists)
+                return new List<string>();
             FileInfo[] files = directory.GetFiles(searchPattern);
             if (isSort)
                 SortTmp.SortFileInfo(files);

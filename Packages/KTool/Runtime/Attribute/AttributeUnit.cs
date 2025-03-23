@@ -27,7 +27,8 @@ namespace KTool.Attribute
         {
             return NavMesh.GetSettingsByIndex(index).agentTypeID;
         }
-        public static string[] Agent_GetAll()
+
+        public static string[] Array_Agent()
         {
             string[] agents;
             agents = new string[NavMesh.GetSettingsCount()];
@@ -38,7 +39,6 @@ namespace KTool.Attribute
             }
             return agents;
         }
-
         public static string[] Array_Layer()
         {
             List<string> layers = new List<string>();

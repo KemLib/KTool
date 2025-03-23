@@ -10,7 +10,8 @@ namespace KTool.Attribute.Editor
     public class SelectAssetInFolderDrawer : PropertyDrawer
     {
         #region Properties
-        public const string ERROR_TYPE = "type of property not is UnityEngine.Object or UnityEngine.Object[]";
+        public const string ERROR_TYPE = "type of property not is UnityEngine.Object or UnityEngine.Object[]",
+            ERROR_FOLDER_NOT_FOUND = "Folder not found";
         public const string FORMAT_PATH_ASSET = "{0}/{1}.{2}";
         #endregion
 
@@ -41,6 +42,11 @@ namespace KTool.Attribute.Editor
         private void OnGUI(Rect position, GUIContent label, SerializedProperty property, Type typeElement)
         {
             SelectAssetInFolderAttribute objectAttribute = attribute as SelectAssetInFolderAttribute;
+            if (!AssetFinder.Exists(objectAttribute.Folder))
+            {
+                EditorGUI.LabelField(position, label, new GUIContent(ERROR_FOLDER_NOT_FOUND));
+                return;
+            }
             List<string> tagetFiles = AssetFinder.GetAllFile(objectAttribute.Folder, objectAttribute.Extension, false);
             int indexTagetFile = 0;
             while (indexTagetFile < tagetFiles.Count)

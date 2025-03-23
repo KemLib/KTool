@@ -9,7 +9,8 @@ namespace KTool.Attribute.Editor
     public class GetFileNameInFolderDrawer : PropertyDrawer
     {
         #region Properties
-        public const string ERROR_TYPE = "type of property not is string[]";
+        public const string ERROR_TYPE = "type of property not is string[]",
+            ERROR_FOLDER_NOT_FOUND = "Folder not found: {0}";
         #endregion
 
         #region Constructor
@@ -33,19 +34,34 @@ namespace KTool.Attribute.Editor
         {
             int indexElement = EditorGui_Draw.PropertyElement_IndexOf(property);
             if (indexElement == 0)
-                Reload_PropertyRoot(property);
+            {
+                GetFileNameInFolderAttribute objectAttribute = attribute as GetFileNameInFolderAttribute;
+                string folder = objectAttribute.Folder,
+                    extension = objectAttribute.Extension;
+                SerializedProperty propertyRoot = EditorGui_Draw.PropertyElement_GetPropertyRoot(property);
+                if (!AssetFinder.Exists(folder))
+                {
+                    propertyRoot.arraySize = 0;
+                    Debug.LogError(string.Format(ERROR_FOLDER_NOT_FOUND, folder));
+                    return;
+                }
+                if (!Reload_PropertyRoot(folder, extension, propertyRoot))
+                    return;
+            }
+            //
             EditorGUI.PropertyField(position, property, label);
         }
         #endregion
 
         #region Method
-        private void Reload_PropertyRoot(SerializedProperty property)
+        private bool Reload_PropertyRoot(string folder, string extension, SerializedProperty propertyRoot)
         {
-            GetFileNameInFolderAttribute objectAttribute = attribute as GetFileNameInFolderAttribute;
-            List<string> files = AssetFinder.GetAllFile(objectAttribute.Folder, objectAttribute.Extension, false);
+            List<string> files = AssetFinder.GetAllFile(folder, extension, false);
             //
-            SerializedProperty propertyRoot = EditorGui_Draw.PropertyElement_GetPropertyRoot(property);
             EditorGui_Draw.ArrayAsync_String(files, propertyRoot);
+            if (propertyRoot.arraySize == 0)
+                return false;
+            return true;
         }
         #endregion
     }

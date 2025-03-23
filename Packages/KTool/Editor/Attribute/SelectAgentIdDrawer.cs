@@ -13,7 +13,7 @@ namespace KTool.Attribute.Editor
         #region Constructor
         public SelectAgentIdDrawer() : base()
         {
-            agents = AttributeUnit.Agent_GetAll();
+            agents = AttributeUnit.Array_Agent();
         }
 
         #endregion Constructor

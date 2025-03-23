@@ -7,7 +7,7 @@ namespace KTool.Attribute.Editor
     public static class EditorGui_Draw
     {
         #region Properties
-        public const string ERROR_OPTION_EMPTY = "empty Option to Select";
+        public const string ERROR_OPTION_EMPTY = "No items to select";
         private const string PROPERTIES_ARRAY = "Array";
         #endregion
 
@@ -122,12 +122,12 @@ namespace KTool.Attribute.Editor
         #endregion
 
         #region Method
-        public static void ArrayAsync_Component(List<Component> tagetComponents, SerializedProperty property)
+        public static void ArrayAsync_Component(List<Component> tagetComponents, SerializedProperty originProperty)
         {
-            if (property.arraySize != tagetComponents.Count)
-                property.arraySize = tagetComponents.Count;
+            if (originProperty.arraySize != tagetComponents.Count)
+                originProperty.arraySize = tagetComponents.Count;
             //
-            foreach (SerializedProperty propertyItem in property)
+            foreach (SerializedProperty propertyItem in originProperty)
             {
                 if (propertyItem.objectReferenceValue == null)
                     continue;
@@ -141,7 +141,7 @@ namespace KTool.Attribute.Editor
             //
             if (tagetComponents.Count == 0)
                 return;
-            foreach (SerializedProperty propertyItem in property)
+            foreach (SerializedProperty propertyItem in originProperty)
             {
                 if (propertyItem.objectReferenceValue == null)
                 {
@@ -150,12 +150,12 @@ namespace KTool.Attribute.Editor
                 }
             }
         }
-        public static void ArrayAsync_String(List<string> tagetStrings, SerializedProperty property)
+        public static void ArrayAsync_String(List<string> tagetStrings, SerializedProperty originProperty)
         {
-            if (property.arraySize != tagetStrings.Count)
-                property.arraySize = tagetStrings.Count;
+            if (originProperty.arraySize != tagetStrings.Count)
+                originProperty.arraySize = tagetStrings.Count;
             //
-            foreach (SerializedProperty propertyItem in property)
+            foreach (SerializedProperty propertyItem in originProperty)
             {
                 if (string.IsNullOrEmpty(propertyItem.stringValue))
                     continue;
@@ -169,7 +169,7 @@ namespace KTool.Attribute.Editor
             //
             if (tagetStrings.Count == 0)
                 return;
-            foreach (SerializedProperty propertyItem in property)
+            foreach (SerializedProperty propertyItem in originProperty)
             {
                 if (string.IsNullOrEmpty(propertyItem.stringValue))
                 {
@@ -178,24 +178,28 @@ namespace KTool.Attribute.Editor
                 }
             }
         }
-        public static void ArrayAsync_String(List<string> arrayTaget, List<string> arrayOrigin)
+        public static void ArrayAsync_String(List<string> tagetStrings, List<string> originStrings)
         {
+            while(originStrings.Count > tagetStrings.Count)
+                originStrings.RemoveAt(0);
+            //
             int index = 0;
-            while (index < arrayOrigin.Count)
+            while (index < originStrings.Count)
             {
-                if (arrayTaget.Contains(arrayOrigin[index]))
+                if (tagetStrings.Contains(originStrings[index]))
                 {
                     index++;
                     continue;
                 }
-                arrayOrigin.RemoveAt(index);
+                originStrings.RemoveAt(index);
             }
+            //
             index = 0;
-            while (index < arrayTaget.Count)
+            while (index < tagetStrings.Count)
             {
-                if (!arrayOrigin.Contains(arrayTaget[index]))
+                if (!originStrings.Contains(tagetStrings[index]))
                 {
-                    arrayOrigin.Add(arrayTaget[index]);
+                    originStrings.Add(tagetStrings[index]);
                 }
                 index++;
             }

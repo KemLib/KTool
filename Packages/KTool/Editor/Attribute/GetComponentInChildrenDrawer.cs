@@ -62,13 +62,16 @@ namespace KTool.Attribute.Editor
         {
             int indexElement = EditorGui_Draw.PropertyElement_IndexOf(property);
             if (indexElement == 0)
-                Reload_PropertyRoot(property, typeElement, getInTree);
+            {
+                if (!Reload_PropertyRoot(property, typeElement, getInTree))
+                    return;
+            }
             EditorGUI.PropertyField(position, property, label);
         }
         #endregion Unity Event
 
         #region Method
-        private void Reload_PropertyRoot(SerializedProperty property, Type typeElement, bool getInTree)
+        private bool Reload_PropertyRoot(SerializedProperty property, Type typeElement, bool getInTree)
         {
             List<Component> components = new List<Component>();
             MonoBehaviour mono = property.serializedObject.targetObject as MonoBehaviour;
@@ -76,6 +79,9 @@ namespace KTool.Attribute.Editor
             //
             SerializedProperty propertyRoot = EditorGui_Draw.PropertyElement_GetPropertyRoot(property);
             EditorGui_Draw.ArrayAsync_Component(components, propertyRoot);
+            if (propertyRoot.arraySize == 0)
+                return false;
+            return true;
         }
         #endregion
 

@@ -9,7 +9,8 @@ namespace KTool.Attribute.Editor
     public class SelectFileNameInFolderDrawer : PropertyDrawer
     {
         #region Properties
-        public const string ERROR_TYPE = "type of property not is string or string[]";
+        public const string ERROR_TYPE = "type of property not is string or string[]",
+            ERROR_FOLDER_NOT_FOUND = "Folder not found";
         #endregion
 
         #region Constructor
@@ -25,6 +26,11 @@ namespace KTool.Attribute.Editor
             if (fieldInfo.FieldType == typeof(string) || fieldInfo.FieldType == typeof(string[]))
             {
                 SelectFileNameInFolderAttribute objectAttribute = attribute as SelectFileNameInFolderAttribute;
+                if (!AssetFinder.Exists(objectAttribute.Folder))
+                {
+                    EditorGUI.LabelField(position, label, new GUIContent(ERROR_FOLDER_NOT_FOUND));
+                    return;
+                }
                 List<string> files = AssetFinder.GetAllFile(objectAttribute.Folder, objectAttribute.Extension, false);
                 EditorGui_Draw.DrawPopup_String(position, label, files.ToArray(), property);
                 return;
