@@ -17,11 +17,9 @@ namespace KTool.Loading
         }
 
         [SerializeField]
-        private LoadUi defaultLoadUi;
-        [SerializeField]
         public bool IncludeInactive = false;
 
-        public ILoadUi LoadUi => ILoadUi.Instance == null ? defaultLoadUi : ILoadUi.Instance;
+        public ILoadUi LoadUi => ILoadUi.Instance == null ? LoadUiDefault.Instance : ILoadUi.Instance;
         #endregion
 
         #region Unity Event
@@ -33,6 +31,7 @@ namespace KTool.Loading
                 DontDestroyOnLoad(gameObject);
                 return;
             }
+            //
             Destroy(gameObject);
         }
         private void OnDestroy()
@@ -46,12 +45,6 @@ namespace KTool.Loading
         void Start()
         {
             LoadItem(LoadUi);
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
         }
         #endregion
 

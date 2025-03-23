@@ -180,7 +180,7 @@ namespace KTool.Attribute.Editor
         }
         public static void ArrayAsync_String(List<string> tagetStrings, List<string> originStrings)
         {
-            while(originStrings.Count > tagetStrings.Count)
+            while (originStrings.Count > tagetStrings.Count)
                 originStrings.RemoveAt(0);
             //
             int index = 0;

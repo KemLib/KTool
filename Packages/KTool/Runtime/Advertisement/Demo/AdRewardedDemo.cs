@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 
 namespace KTool.Advertisement.Demo
 {
@@ -36,11 +36,15 @@ namespace KTool.Advertisement.Demo
             //
             currentTrackingSource?.ShowComplete(true);
             PushEvent_ShowComplete(true);
+            PushEvent_ReceivedReward(AdRewardReceived.RewardSuccess);
+            currentTrackingSource.ReceivedReward(AdRewardReceived.RewardSuccess);
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdManagerDemo.AdSource, string.Empty, AdManagerDemo.adCountryCode, string.Empty, AdType.Banner, 1, AdManagerDemo.AdCurrency);
+            PushEvent_RevenuePaid(adRevenuePaid);
+            currentTrackingSource.RevenuePaid(adRevenuePaid);
             //
             rewarded.gameObject.SetActive(false);
             currentTrackingSource?.Hidden();
             PushEvent_Hidden();
-            PushEvent_ReceivedReward(AdRewardReceived.RewardSuccess);
             //
             State = AdState.Inited;
         }

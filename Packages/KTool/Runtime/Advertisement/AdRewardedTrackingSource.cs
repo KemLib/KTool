@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KTool.Advertisement
+﻿namespace KTool.Advertisement
 {
     public class AdRewardedTrackingSource : AdRewardedTracking
     {
@@ -29,7 +23,7 @@ namespace KTool.Advertisement
         {
             PushEvent_Clicked();
         }
-        protected void ReceivedReward(AdRewardReceived adRewardReceived)
+        public void ReceivedReward(AdRewardReceived adRewardReceived)
         {
             PushEvent_ReceivedReward(adRewardReceived);
         }

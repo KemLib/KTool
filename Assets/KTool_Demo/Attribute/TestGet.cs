@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using KTool.Attribute;
+﻿using KTool.Attribute;
+using UnityEngine;
 
 namespace KTool_Demo.Attribute
 {
@@ -23,11 +23,11 @@ namespace KTool_Demo.Attribute
         #region Methods Unity
         private void Start()
         {
-        
+
         }
         private void Update()
         {
-        
+
         }
         #endregion
 

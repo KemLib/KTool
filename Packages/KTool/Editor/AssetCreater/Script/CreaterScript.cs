@@ -1,10 +1,10 @@
-﻿using System;
+﻿using KTool.AssetCreater.Editor;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
-using KTool.AssetCreater.Editor;
 
 namespace KTool.AssetCreater.Script.Editor
 {

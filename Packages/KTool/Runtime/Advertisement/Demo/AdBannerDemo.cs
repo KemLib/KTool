@@ -115,6 +115,9 @@ namespace KTool.Advertisement.Demo
             //
             currentTrackingSource?.ShowComplete(true);
             PushEvent_ShowComplete(true);
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdManagerDemo.AdSource, string.Empty, AdManagerDemo.adCountryCode, string.Empty, AdType.Banner, 1, AdManagerDemo.AdCurrency);
+            PushEvent_RevenuePaid(adRevenuePaid);
+            currentTrackingSource.RevenuePaid(adRevenuePaid);
             //
             currentBanner.gameObject.SetActive(false);
             currentTrackingSource?.Hidden();

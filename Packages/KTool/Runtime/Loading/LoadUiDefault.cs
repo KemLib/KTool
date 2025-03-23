@@ -3,9 +3,27 @@ using UnityEngine.UI;
 
 namespace KTool.Loading
 {
-    public class LoadUi : MonoBehaviour, ILoadUi
+    public class LoadUiDefault : MonoBehaviour, ILoadUi
     {
         #region  Properties
+        private const string RESOURCES_PATH = "KTool/Loading/LoadUiDefault";
+        private const string GAME_OBJECT_NAME = "KTool_LoadUiDefault";
+        private static LoadUiDefault instance;
+        public static LoadUiDefault Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    LoadUiDefault prefab = Resources.Load<LoadUiDefault>(RESOURCES_PATH);
+                    instance = Instantiate(prefab);
+                    instance.gameObject.name = GAME_OBJECT_NAME;
+                    DontDestroyOnLoad(instance.gameObject);
+                }
+                return instance;
+            }
+        }
+
         [SerializeField]
         private Image imgProgress;
 
@@ -27,17 +45,7 @@ namespace KTool.Loading
         #endregion
 
         #region  Unity Event
-        // Start is called before the first frame update
-        void Start()
-        {
 
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         #endregion
 
         #region Menu Anim

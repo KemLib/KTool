@@ -13,6 +13,7 @@ namespace KTool_Demo.Loading
             get;
             private set;
         }
+
         [SerializeField]
         private Canvas canvas;
         [SerializeField]
@@ -50,6 +51,7 @@ namespace KTool_Demo.Loading
                 DontDestroyOnLoad(gameObject);
                 return;
             }
+            //
             Destroy(gameObject);
         }
         private void OnDestroy()

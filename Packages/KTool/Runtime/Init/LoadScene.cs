@@ -13,11 +13,8 @@ namespace KTool.Init
         private const string ERROR_SCENE_NOT_FOUND = "scene {0} not found";
         private const float MAX_LOAD_PROGRESS = 0.9f;
 
-        [SerializeField]
-        [SelectScene]
+        [SerializeField, SelectScene]
         private string scene;
-        [SerializeField]
-        private LoadSceneMode mode;
         [SerializeField]
         private bool requiredConditions;
 
@@ -36,7 +33,7 @@ namespace KTool.Init
             string taskName = string.Format(TASK_NAME_FORMAT, scene);
             try
             {
-                aoLoadScene = SceneManager.LoadSceneAsync(scene, mode);
+                aoLoadScene = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Single);
                 if (aoLoadScene == null)
                 {
                     string errorMessage = string.Format(ERROR_SCENE_NOT_FOUND, scene);
