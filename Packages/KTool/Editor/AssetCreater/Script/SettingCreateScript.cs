@@ -12,17 +12,8 @@ namespace KTool.AssetCreater.Script.Editor
             PATH_INSTANCE_ASSET = "Assets/KTool/AssetCreater/Editor/Script/SettingCreateScript.asset";
         private const string ERROR_CREATE_ASSET_FAIL = "Failed to copy asset SettingUsingNamespace to Resources folder";
 
-        private static SettingCreateScript instanceDefault;
         private static SettingCreateScript instance;
-        private static SettingCreateScript InstancePackage
-        {
-            get
-            {
-                if (instanceDefault == null)
-                    instanceDefault = AssetDatabase.LoadAssetAtPath<SettingCreateScript>(PATH_INSTANCE_PACKAGE);
-                return instanceDefault;
-            }
-        }
+
         public static SettingCreateScript Instance
         {
             get
@@ -49,7 +40,6 @@ namespace KTool.AssetCreater.Script.Editor
         #endregion
 
         #region Methods
-
         [InitializeOnLoadMethod]
         private static void Init()
         {

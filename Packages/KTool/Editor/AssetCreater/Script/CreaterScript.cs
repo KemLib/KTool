@@ -37,7 +37,8 @@ namespace KTool.AssetCreater.Script.Editor
         private string txtClassName;
         private int indexTemplate;
         private string txtTemplate;
-        private Vector2 scrollTemplate;
+        private Vector2 scrollTemplate,
+            scrollTextTemplate;
 
         public string CreaterName => CREATER_NAME;
         public bool SaveAndClose => true;
@@ -173,8 +174,10 @@ namespace KTool.AssetCreater.Script.Editor
             //
             txtClassName = EditorGUILayout.TextField("Class Name", txtClassName);
             //
+            string templateName = string.Empty;
             if (Setting != null && Setting.Count > 0)
             {
+                EditorGUILayout.Space(10);
                 string[] arrayTemplateName = new string[Setting.Count];
                 for (int i = 0; i < Setting.Count; i++)
                     arrayTemplateName[i] = Setting[i].Name;
@@ -182,14 +185,20 @@ namespace KTool.AssetCreater.Script.Editor
                     indexTemplate = 0;
                 else if (indexTemplate >= Setting.Count)
                     indexTemplate = Setting.Count - 1;
+                //
+                scrollTemplate = EditorGUILayout.BeginScrollView(scrollTemplate);
                 EditorGUI.BeginChangeCheck();
-                indexTemplate = EditorGUILayout.Popup("Template", indexTemplate, arrayTemplateName);
+                indexTemplate = GUILayout.Toolbar(indexTemplate, arrayTemplateName);
                 if (EditorGUI.EndChangeCheck())
                     txtTemplate = Setting[indexTemplate].TextTemplate;
+                EditorGUILayout.EndScrollView();
+                EditorGUILayout.Space(10);
+                //
+                templateName = Setting[indexTemplate].Name;
             }
             //
-            GUILayout.BeginVertical("Script", "window");
-            scrollTemplate = EditorGUILayout.BeginScrollView(scrollTemplate);
+            GUILayout.BeginVertical("Script " + templateName, "window");
+            scrollTextTemplate = EditorGUILayout.BeginScrollView(scrollTextTemplate);
             txtTemplate = EditorGUILayout.TextArea(txtTemplate, GUILayout.Height(createWindow.position.height));
             EditorGUILayout.EndScrollView();
             GUILayout.EndVertical();
