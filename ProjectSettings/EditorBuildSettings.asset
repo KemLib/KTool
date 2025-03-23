@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/KTool_Demo/Init/Demo_Init.unity
+    guid: f16839319372b014db20d6de4165be5e
+  - enabled: 1
+    path: Assets/KTool_Demo/Loading/Demo_Loading.unity
+    guid: c56bf7100fb174fb48ef912c73c428c4
+  - enabled: 1
+    path: Assets/KTool_Demo/Advertisement/Demo_Advertisement.unity
+    guid: 953b6c3050de5dd48b7726a58e014f4f
+  m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

@@ -1,0 +1,19 @@
+{
+  "name": "com.kem.ktool",
+  "version": "1.0.1",
+  "displayName": "KTool",
+  "description": "Tools to simplify work",
+  "documentationUrl": "https://bitbucket.org/nvhstart/ktool/src/release/README.md",
+  "changelogUrl": "https://bitbucket.org/nvhstart/ktool/src/release/CHANGELOG.md",
+  "licensesUrl": "https://bitbucket.org/nvhstart/ktool/src/release/LICENSES.md",
+  "keywords": [
+    "InfinityWorld",
+    "KTool",
+    "Tool"
+  ],
+  "author": {
+    "name": "Nguyen Van Hung",
+    "email": "nvhung.world@google.com",
+    "url": "https://www.facebook.com/Hung.FollowMe"
+  }
+}

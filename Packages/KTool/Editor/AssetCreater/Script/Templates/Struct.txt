@@ -1,0 +1,19 @@
+using UnityEngine;
+
+namespace [Namespace]
+{
+    [ClassAccessModifiers] struct [ClassName]
+    {
+        #region Properties
+
+        #endregion
+
+        #region Construction
+
+        #endregion
+
+        #region Methods
+
+        #endregion
+    }
+}
