@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Packages.KTool.Editor.AssetCreater.Script
+namespace KTool.AssetCreater.Script.Editor
 {
     [System.Serializable]
     public class SettingTemplate

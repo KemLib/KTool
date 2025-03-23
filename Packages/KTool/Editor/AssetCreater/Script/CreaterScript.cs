@@ -4,8 +4,9 @@ using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using KTool.AssetCreater.Editor;
 
-namespace Packages.KTool.Editor.AssetCreater.Script
+namespace KTool.AssetCreater.Script.Editor
 {
     public class CreaterScript : ICreater
     {
@@ -15,8 +16,10 @@ namespace Packages.KTool.Editor.AssetCreater.Script
             CHAR_UN_BACKSLASH = '\\',
             CHAR_SPACE = ' ',
             CHAR_SLIP = '_';
-        public const string TEXT_ENTER = "\n";
-        public static string TextNewLine = Environment.NewLine;
+        private const string FOLDER_NAME_PACKAGES = "Packages",
+            FOLDER_NAME_ASSETS = "Assets",
+            FOLDER_NAME_RUNTIME = "Runtime",
+            FOLDER_NAME_EDITOR = "Editor";
         private const string CREATER_NAME = "Creater Script";
         private const string DEFAULT_CLASS_NAME = "NewScript";
         private const string SCRIPT_FILE_PATH_FORMAT = "{0}/{1}/{2}.cs";
@@ -71,6 +74,41 @@ namespace Packages.KTool.Editor.AssetCreater.Script
             folder = folder.Replace(CHAR_UN_BACKSLASH, CHAR_DOT);
             folder = folder.Replace(CHAR_SPACE, CHAR_SLIP);
             List<string> listFolder = new List<string>(folder.Split(CHAR_DOT));
+            if (listFolder.Count > 0)
+            {
+                if (listFolder[0] == FOLDER_NAME_ASSETS)
+                {
+                    if (listFolder.Count >= 3)
+                    {
+                        if (listFolder[2] == FOLDER_NAME_EDITOR)
+                        {
+                            listFolder.RemoveAt(2);
+                            listFolder.Add(FOLDER_NAME_EDITOR);
+                        }
+                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
+                        {
+                            listFolder.RemoveAt(2);
+                        }
+                    }
+                    listFolder.RemoveAt(0);
+                }
+                else if (listFolder[0] == FOLDER_NAME_PACKAGES)
+                {
+                    if (listFolder.Count >= 3)
+                    {
+                        if (listFolder[2] == FOLDER_NAME_EDITOR)
+                        {
+                            listFolder.RemoveAt(2);
+                            listFolder.Add(FOLDER_NAME_EDITOR);
+                        }
+                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
+                        {
+                            listFolder.RemoveAt(2);
+                        }
+                    }
+                    listFolder.RemoveAt(0);
+                }
+            }
             string nameSpace = string.Join(CHAR_DOT, listFolder.ToArray());
             return nameSpace;
         }
@@ -103,7 +141,6 @@ namespace Packages.KTool.Editor.AssetCreater.Script
             }
         }
         #endregion
-
 
         #region Method Creater
         public void OnGuiShow(CreateWindow createWindow)

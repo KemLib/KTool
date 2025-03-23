@@ -2,7 +2,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace Packages.KTool.Editor.AssetCreater
+namespace KTool.AssetCreater.Editor
 {
     public class CreateWindow : EditorWindow
     {

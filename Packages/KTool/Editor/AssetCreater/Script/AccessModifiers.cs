@@ -1,4 +1,4 @@
-namespace Packages.KTool.Editor.AssetCreater.Script
+namespace KTool.AssetCreater.Script.Editor
 {
     public enum AccessModifiers
     {

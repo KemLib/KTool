@@ -1,4 +1,4 @@
-namespace Packages.KTool.Editor.AssetCreater
+namespace KTool.AssetCreater.Editor
 {
     public interface ICreater
     {

@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Packages.KTool.Editor.AssetCreater.Script
+namespace KTool.AssetCreater.Script.Editor
 {
     public class SettingCreateScript : ScriptableObject
     {
