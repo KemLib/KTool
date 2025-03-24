@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace KTool.Attribute.Editor
 {
-    [CustomPropertyDrawer(typeof(GetAssetInFolderAttribute))]
-    public class GetAssetInFolderDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(GetAssetAttribute))]
+    public class GetAssetDrawer : PropertyDrawer
     {
         #region Properties
         public const string ERROR_TYPE = "type of property not is UnityEngine.Object[]",
@@ -15,7 +15,7 @@ namespace KTool.Attribute.Editor
         #endregion
 
         #region Constructor
-        public GetAssetInFolderDrawer() : base()
+        public GetAssetDrawer() : base()
         {
 
         }
@@ -24,6 +24,11 @@ namespace KTool.Attribute.Editor
         #region Unity Event		
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            if (fieldInfo.FieldType == typeof(string[]))
+            {
+                OnGui_Fields(position, label, property);
+                return;
+            }
             if (fieldInfo.FieldType.IsArray)
             {
                 Type typeElement = fieldInfo.FieldType.GetElementType();
@@ -33,6 +38,7 @@ namespace KTool.Attribute.Editor
                     return;
                 }
             }
+            //
             EditorGUI.LabelField(position, label, new GUIContent(ERROR_TYPE));
         }
         private void OnGui_Fields(Rect position, GUIContent label, SerializedProperty property, Type typeElement)
@@ -40,7 +46,7 @@ namespace KTool.Attribute.Editor
             int indexElement = EditorGui_Draw.PropertyElement_IndexOf(property);
             if (indexElement == 0)
             {
-                GetAssetInFolderAttribute objectAttribute = attribute as GetAssetInFolderAttribute;
+                GetAssetAttribute objectAttribute = attribute as GetAssetAttribute;
                 string folder = objectAttribute.Folder,
                     extension = objectAttribute.Extension;
                 SerializedProperty propertyRoot = EditorGui_Draw.PropertyElement_GetPropertyRoot(property);
@@ -56,6 +62,28 @@ namespace KTool.Attribute.Editor
             //
             EditorGUI.PropertyField(position, property, label);
         }
+
+        private void OnGui_Fields(Rect position, GUIContent label, SerializedProperty property)
+        {
+            int indexElement = EditorGui_Draw.PropertyElement_IndexOf(property);
+            if (indexElement == 0)
+            {
+                GetAssetAttribute objectAttribute = attribute as GetAssetAttribute;
+                string folder = objectAttribute.Folder,
+                    extension = objectAttribute.Extension;
+                SerializedProperty propertyRoot = EditorGui_Draw.PropertyElement_GetPropertyRoot(property);
+                if (!AssetFinder.Exists(folder))
+                {
+                    propertyRoot.arraySize = 0;
+                    Debug.LogError(string.Format(ERROR_FOLDER_NOT_FOUND, folder));
+                    return;
+                }
+                if (!Reload_PropertyRoot(folder, extension, propertyRoot))
+                    return;
+            }
+            //
+            EditorGUI.PropertyField(position, property, label);
+        }
         #endregion
 
         #region Method
@@ -65,7 +93,7 @@ namespace KTool.Attribute.Editor
             int indexTagetFile = 0;
             while (indexTagetFile < tagetFiles.Count)
             {
-                UnityEngine.Object obj = SelectAssetInFolderDrawer.Asset_GetObject(folder, tagetFiles[indexTagetFile], extension, typeElement);
+                UnityEngine.Object obj = SelectAssetDrawer.Asset_GetObject(folder, tagetFiles[indexTagetFile], extension, typeElement);
                 if (obj == null)
                     tagetFiles.RemoveAt(indexTagetFile);
                 else
@@ -80,7 +108,7 @@ namespace KTool.Attribute.Editor
             List<string> originFile = new List<string>();
             foreach (SerializedProperty propertyItem in propertyRoot)
             {
-                string fileName = SelectAssetInFolderDrawer.Asset_GetFileName(propertyItem, tagetFiles, folder, extension);
+                string fileName = SelectAssetDrawer.Asset_GetFileName(propertyItem, tagetFiles, folder, extension);
                 if (!originFile.Contains(fileName))
                     originFile.Add(fileName);
             }
@@ -90,10 +118,19 @@ namespace KTool.Attribute.Editor
             int index = 0;
             foreach (SerializedProperty propertyItem in propertyRoot)
             {
-                propertyItem.objectReferenceValue = SelectAssetInFolderDrawer.Asset_GetObject(folder, originFile[index], extension, typeElement);
+                propertyItem.objectReferenceValue = SelectAssetDrawer.Asset_GetObject(folder, originFile[index], extension, typeElement);
                 index++;
             }
             //
+            return true;
+        }
+        private bool Reload_PropertyRoot(string folder, string extension, SerializedProperty propertyRoot)
+        {
+            List<string> files = AssetFinder.GetAllFile(folder, extension, false);
+            //
+            EditorGui_Draw.ArrayAsync_String(files, propertyRoot);
+            if (propertyRoot.arraySize == 0)
+                return false;
             return true;
         }
         #endregion

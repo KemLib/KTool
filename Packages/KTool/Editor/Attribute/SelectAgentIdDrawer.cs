@@ -45,6 +45,7 @@ namespace KTool.Attribute.Editor
                     property.intValue = AttributeUnit.Agent_GetId(index);
                 return;
             }
+            //
             EditorGUI.LabelField(position, label, new GUIContent("type of property not is Int"));
         }
         #endregion Unity Event

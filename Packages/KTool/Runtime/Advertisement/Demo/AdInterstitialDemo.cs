@@ -7,6 +7,7 @@ namespace KTool.Advertisement.Demo
     public class AdInterstitialDemo : AdInterstitial
     {
         #region Properties
+        private const string ERROR_IS_SHOW = "Ad is show";
         public static AdInterstitialDemo InstanceAdInterstitial => AdManagerDemo.Instance.AdInterstitial;
 
         [SerializeField]
@@ -51,25 +52,19 @@ namespace KTool.Advertisement.Demo
         #region Ad
         public override void Init()
         {
-            if (State != AdState.None)
-                return;
-            //
             State = AdState.Inited;
             PushEvent_Inited();
         }
         public override void Load()
         {
-            if (State != AdState.Inited)
-                return;
-            //
             State = AdState.Loaded;
             PushEvent_Loaded(true);
             State = AdState.Ready;
         }
         public override AdInterstitialTracking Show()
         {
-            if (!IsReady)
-                return null;
+            if (IsShow)
+                return new AdInterstitialTrackingSource(ERROR_IS_SHOW);
             //
             currentTrackingSource = new AdInterstitialTrackingSource();
             //
@@ -83,9 +78,6 @@ namespace KTool.Advertisement.Demo
         }
         public override void Destroy()
         {
-            if (State == AdState.None)
-                return;
-            //
             State = AdState.Destroy;
             PushEvent_Destroy();
         }

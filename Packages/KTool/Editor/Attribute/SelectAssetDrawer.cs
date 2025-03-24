@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace KTool.Attribute.Editor
 {
-    [CustomPropertyDrawer(typeof(SelectAssetInFolderAttribute))]
-    public class SelectAssetInFolderDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(SelectAssetAttribute))]
+    public class SelectAssetDrawer : PropertyDrawer
     {
         #region Properties
         public const string ERROR_TYPE = "type of property not is UnityEngine.Object or UnityEngine.Object[]",
@@ -16,7 +16,7 @@ namespace KTool.Attribute.Editor
         #endregion
 
         #region Constructor
-        public SelectAssetInFolderDrawer() : base()
+        public SelectAssetDrawer() : base()
         {
 
         }
@@ -25,28 +25,37 @@ namespace KTool.Attribute.Editor
         #region Unity Event		
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            SelectAssetAttribute objectAttribute = attribute as SelectAssetAttribute;
+            if (!AssetFinder.Exists(objectAttribute.Folder))
+            {
+                EditorGUI.LabelField(position, label, new GUIContent(ERROR_FOLDER_NOT_FOUND));
+                return;
+            }
+            if (fieldInfo.FieldType == typeof(string) || fieldInfo.FieldType == typeof(string[]))
+            {
+                List<string> files = AssetFinder.GetAllFile(objectAttribute.Folder, objectAttribute.Extension, false);
+                EditorGui_Draw.DrawPopup_String(position, label, files.ToArray(), property);
+                return;
+            }
             if (fieldInfo.FieldType.IsSubclassOf(typeof(UnityEngine.Object)))
             {
-                OnGUI(position, label, property, fieldInfo.FieldType);
+                OnGUI(objectAttribute, position, label, property, fieldInfo.FieldType);
                 return;
             }
             if (fieldInfo.FieldType.IsArray)
             {
                 Type typeElement = fieldInfo.FieldType.GetElementType();
                 if (typeElement.IsSubclassOf(typeof(UnityEngine.Object)))
-                    OnGUI(position, label, property, typeElement);
-                return;
+                {
+                    OnGUI(objectAttribute, position, label, property, typeElement);
+                    return;
+                }
             }
+            //
             EditorGUI.LabelField(position, label, new GUIContent(ERROR_TYPE));
         }
-        private void OnGUI(Rect position, GUIContent label, SerializedProperty property, Type typeElement)
+        private void OnGUI(SelectAssetAttribute objectAttribute, Rect position, GUIContent label, SerializedProperty property, Type typeElement)
         {
-            SelectAssetInFolderAttribute objectAttribute = attribute as SelectAssetInFolderAttribute;
-            if (!AssetFinder.Exists(objectAttribute.Folder))
-            {
-                EditorGUI.LabelField(position, label, new GUIContent(ERROR_FOLDER_NOT_FOUND));
-                return;
-            }
             List<string> tagetFiles = AssetFinder.GetAllFile(objectAttribute.Folder, objectAttribute.Extension, false);
             int indexTagetFile = 0;
             while (indexTagetFile < tagetFiles.Count)
@@ -85,7 +94,6 @@ namespace KTool.Attribute.Editor
             string assetPath = Asset_GetPath(folderName, fileName, extension);
             return AssetDatabase.LoadAssetAtPath(assetPath, assetType);
         }
-
         public static string Asset_GetPath(string folderName, string fileName, string extension)
         {
             return string.Format(FORMAT_PATH_ASSET, folderName, fileName, extension);

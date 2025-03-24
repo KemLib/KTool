@@ -13,47 +13,47 @@ MonoBehaviour:
   m_Name: SettingCreateScript
   m_EditorClassIdentifier: 
   templates:
-  - displayName: MonoBehaviour
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: 43e1fb6978cd7eb4ca2ae3d0fadaf01d, type: 3}
-  - displayName: MonoBehaviour_Instance
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: 196428e0d5f57e141a11ff536cfa808f, type: 3}
-  - displayName: ScriptableObject
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: 90a259615ccc1c94e8ce62b93ae3ca09, type: 3}
-  - displayName: Class
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: 956e52a610afdb9498c397d5217a4872, type: 3}
-  - displayName: Class_Serializable
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: 54a60de232a7a5d4d962aebc10f21aac, type: 3}
-  - displayName: Interface
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: dc5cca93ad12d7b4ca5d76352bf71e9a, type: 3}
-  - displayName: Struct
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: 71e6642031a02b34d9ba39e79bb46a11, type: 3}
-  - displayName: Enum
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'
     assetTemplate: {fileID: 4900000, guid: 2f0f663acdbfa714a8e180d71bf88290, type: 3}
-  - displayName: CustomEditor_MonoBehaviour
+  - displayName: 
     keyNamespace: '[Namespace]'
     keyAccessModifiers: '[ClassAccessModifiers]'
     keyClassname: '[ClassName]'

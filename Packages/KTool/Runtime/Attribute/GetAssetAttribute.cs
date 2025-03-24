@@ -5,7 +5,7 @@ using UnityEngine;
 namespace KTool.Attribute
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    public class SelectAssetInFolderAttribute : PropertyAttribute
+    public class GetAssetAttribute : PropertyAttribute
     {
         #region Properties
         private string folder;
@@ -18,13 +18,13 @@ namespace KTool.Attribute
         #endregion
 
         #region Constructor
-        public SelectAssetInFolderAttribute(string folder, ExtensionType extension) : base()
+        public GetAssetAttribute(string folder, ExtensionType extension) : base()
         {
             this.folder = folder;
             this.extension = PathUnit.GetExtension(extension);
             search_pattern = PathUnit.GetSearchPattern(extension);
         }
-        public SelectAssetInFolderAttribute(string folder, string extension) : base()
+        public GetAssetAttribute(string folder, string extension) : base()
         {
             this.folder = folder;
             this.extension = PathUnit.GetExtension(extension);

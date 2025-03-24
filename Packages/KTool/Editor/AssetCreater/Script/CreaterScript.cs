@@ -37,8 +37,7 @@ namespace KTool.AssetCreater.Script.Editor
         private string txtClassName;
         private int indexTemplate;
         private string txtTemplate;
-        private Vector2 scrollTemplate,
-            scrollTextTemplate;
+        private Vector2 scrollTextTemplate;
 
         public string CreaterName => CREATER_NAME;
         public bool SaveAndClose => true;
@@ -186,12 +185,10 @@ namespace KTool.AssetCreater.Script.Editor
                 else if (indexTemplate >= Setting.Count)
                     indexTemplate = Setting.Count - 1;
                 //
-                scrollTemplate = EditorGUILayout.BeginScrollView(scrollTemplate);
                 EditorGUI.BeginChangeCheck();
-                indexTemplate = GUILayout.Toolbar(indexTemplate, arrayTemplateName);
+                indexTemplate = EditorGUILayout.Popup("Template", indexTemplate, arrayTemplateName);
                 if (EditorGUI.EndChangeCheck())
                     txtTemplate = Setting[indexTemplate].TextTemplate;
-                EditorGUILayout.EndScrollView();
                 EditorGUILayout.Space(10);
                 //
                 templateName = Setting[indexTemplate].Name;
