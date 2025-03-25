@@ -11,7 +11,8 @@ namespace KTool.FileIo
         private const string FORMAT_FOLDER = "{0}/{1}";
         public const char CHAR_SPECIAL_DOT = '.',
             CHAR_SPECIAL_PATH_WALL = '/';
-        public const string FOTMAT_FULL_PATH_FILE = "{0}/{1}.{2}",
+        public const string FOTMAT_FULL_PATH_FILE = "{0}/{1}",
+            FOTMAT_FULL_PATH_FILE_EXTENSION = "{0}/{1}.{2}",
             FORMAT_SEARCH_PATTERN = "*.{0}",
             SEARCH_PATTERN_NONE = "*.*";
         public const string ERROR_FILE_NOT_FOUND = "File not found";

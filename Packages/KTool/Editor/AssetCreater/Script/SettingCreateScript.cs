@@ -51,8 +51,10 @@ namespace KTool.AssetCreater.Script.Editor
             if (AssetFinder.Exists(ASSET_INSTANCE_FOLDER, ASSET_INSTANCE_FILE_NAME, ExtensionType.ASSET))
                 return;
             AssetFinder.CreateFolder(ASSET_INSTANCE_FOLDER);
-            if (!AssetDatabase.CopyAsset(PACKAGE_INSTANCE_PATH, ASSET_INSTANCE_PATH))
+            if (!AssetFinder.Clone(PACKAGE_INSTANCE_PATH, ASSET_INSTANCE_PATH, true))
+            {
                 Debug.LogError(ERROR_CREATE_ASSET_FAIL);
+            }
         }
         #endregion
     }
