@@ -10,14 +10,6 @@ namespace KTool_Demo.Attribute
         private int agentId;
         [SerializeField, SelectAgentId]
         private int[] agentIds;
-        [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates", KTool.FileIo.ExtensionType.TXT)]
-        private TextAsset assetInFolder;
-        [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates", KTool.FileIo.ExtensionType.TXT)]
-        private TextAsset[] assetInFolders;
-        [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates", KTool.FileIo.ExtensionType.TXT)]
-        private string assetNameInFolder;
-        [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates", KTool.FileIo.ExtensionType.TXT)]
-        private string[] assetNameInFolders;
         [SerializeField, SelectLayer]
         private int layerId;
         [SerializeField, SelectLayer]
