@@ -1,4 +1,4 @@
-using KTool.Loading;
+using KTool.Ui.Popup;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +15,7 @@ namespace KTool_Demo.Loading
         }
 
         [SerializeField]
-        private Canvas canvas;
+        private Image panelMenu;
         [SerializeField]
         private TextMeshProUGUI txtTaskName;
         [SerializeField]
@@ -37,8 +37,8 @@ namespace KTool_Demo.Loading
             get => txtTaskName.text;
             set => txtTaskName.text = value;
         }
-        public bool IsShow => canvas.gameObject.activeSelf;
-        public bool IsChanging => false;
+        public bool IsShow => panelMenu.gameObject.activeSelf;
+        public bool IsStateChanging => false;
         #endregion
 
         #region Unity Event	
@@ -57,9 +57,7 @@ namespace KTool_Demo.Loading
         private void OnDestroy()
         {
             if (Instance != null && Instance.GetInstanceID() == GetInstanceID())
-            {
                 Instance = null;
-            }
         }
         #endregion
 
@@ -72,25 +70,25 @@ namespace KTool_Demo.Loading
         {
             if (IsShow)
                 return;
-            canvas.gameObject.SetActive(true);
+            panelMenu.gameObject.SetActive(true);
         }
         public void Show(float time)
         {
             if (IsShow)
                 return;
-            canvas.gameObject.SetActive(true);
+            panelMenu.gameObject.SetActive(true);
         }
         public void Hide()
         {
             if (!IsShow)
                 return;
-            canvas.gameObject.SetActive(false);
+            panelMenu.gameObject.SetActive(false);
         }
         public void Hide(float time)
         {
             if (!IsShow)
                 return;
-            canvas.gameObject.SetActive(false);
+            panelMenu.gameObject.SetActive(false);
         }
         #endregion
     }

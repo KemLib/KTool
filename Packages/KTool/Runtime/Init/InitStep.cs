@@ -44,7 +44,7 @@ namespace KTool.Init
         #endregion
 
         #region Item
-        public void Item_Init(UnityEvent<string> OnFail)
+        public void Item_Init()
         {
             int index = 0;
             while (index < items.Count)
@@ -59,12 +59,12 @@ namespace KTool.Init
                 {
                     items.RemoveAt(index);
                     string message = string.Format(ERROR_ITEM_INIT_BEGIN, index, ex.Message);
-                    OnFail?.Invoke(message);
+                    Debug.LogError(message);
                 }
             }
 
         }
-        public void Item_InitEnded(UnityEvent<string> OnFail)
+        public void Item_InitEnded()
         {
             for (int i = 0; i < items.Count; i++)
             {
@@ -75,7 +75,7 @@ namespace KTool.Init
                 catch (Exception ex)
                 {
                     string message = string.Format(ERROR_ITEM_INIT_END, i, ex.Message);
-                    OnFail?.Invoke(message);
+                    Debug.LogError(message);
                 }
             }
             //

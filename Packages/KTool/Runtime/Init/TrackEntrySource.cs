@@ -1,7 +1,7 @@
 using KLibStandard.Concurrent;
 using UnityEngine;
 
-namespace KTool
+namespace KTool.Init
 {
     public class TrackEntrySource : TrackEntry
     {

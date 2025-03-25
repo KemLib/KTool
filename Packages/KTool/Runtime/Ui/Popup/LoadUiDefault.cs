@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KTool.Loading
+namespace KTool.Ui.Popup
 {
     public class LoadUiDefault : MonoBehaviour, ILoadUi
     {
         #region  Properties
-        private const string RESOURCES_PATH = "KTool/Loading/LoadUiDefault";
-        private const string GAME_OBJECT_NAME = "KTool_LoadUiDefault";
+        private const string RESOURCES_PATH = "KTool/Ui/Popup/LoadUiDefault";
+        private const string GAME_OBJECT_NAME = "KTool_Ui_LoadUiDefault";
         private static LoadUiDefault instance;
         public static LoadUiDefault Instance
         {
@@ -25,6 +25,8 @@ namespace KTool.Loading
         }
 
         [SerializeField]
+        private Image panelMenu;
+        [SerializeField]
         private Image imgProgress;
 
         public float Progress
@@ -40,38 +42,42 @@ namespace KTool.Loading
 
             }
         }
-        public bool IsShow => gameObject.activeSelf;
-        public bool IsChanging => false;
+        public bool IsShow => panelMenu.gameObject.activeSelf;
+        public bool IsStateChanging => false;
         #endregion
 
         #region  Unity Event
-
+        private void OnDestroy()
+        {
+            if (instance != null && instance.GetInstanceID() == GetInstanceID())
+                instance = null;
+        }
         #endregion
 
         #region Menu Anim
         public void Show()
         {
-            if (gameObject.activeSelf)
+            if (IsShow)
                 return;
-            gameObject.SetActive(true);
+            panelMenu.gameObject.SetActive(true);
         }
         public void Show(float time)
         {
-            if (gameObject.activeSelf)
+            if (IsShow)
                 return;
-            gameObject.SetActive(true);
+            panelMenu.gameObject.SetActive(true);
         }
         public void Hide()
         {
-            if (!gameObject.activeSelf)
+            if (!IsShow)
                 return;
-            gameObject.SetActive(false);
+            panelMenu.gameObject.SetActive(false);
         }
         public void Hide(float time)
         {
-            if (!gameObject.activeSelf)
+            if (!IsShow)
                 return;
-            gameObject.SetActive(false);
+            panelMenu.gameObject.SetActive(false);
         }
         #endregion
     }

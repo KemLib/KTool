@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4302056387316195732
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29,7 +29,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7984890596537666585}
   m_Father: {fileID: 1930815587361068795}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -93,7 +94,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1930815587361068795
 RectTransform:
   m_ObjectHideFlags: 0
@@ -107,7 +108,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4302056387316195732}
-  - {fileID: 7984890596537666585}
   m_Father: {fileID: 3369439876182657097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf409b20bdd09a14db81a2b796928e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 449666887554131035}
+  panelMenu: {fileID: 5429518435463675070}
   txtTaskName: {fileID: 8405055535031069696}
   imtProgress: {fileID: 1969975451683118781}
   txtProgress: {fileID: 755220056932311288}
@@ -386,7 +386,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3021901210559772480}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -394,7 +394,7 @@ RectTransform:
   - {fileID: 681287612247793683}
   - {fileID: 2506784347913776071}
   - {fileID: 5635377094447856642}
-  m_Father: {fileID: 1930815587361068795}
+  m_Father: {fileID: 4302056387316195732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}

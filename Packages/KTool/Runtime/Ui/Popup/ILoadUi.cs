@@ -1,4 +1,4 @@
-namespace KTool.Loading
+namespace KTool.Ui.Popup
 {
     public interface ILoadUi
     {
@@ -25,7 +25,7 @@ namespace KTool.Loading
         {
             get;
         }
-        public bool IsChanging
+        public bool IsStateChanging
         {
             get;
         }

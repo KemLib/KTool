@@ -1,4 +1,4 @@
-namespace KTool
+namespace KTool.Init
 {
     public interface TrackEntry
     {
