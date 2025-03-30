@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +12,10 @@ namespace KTool.AssetCreater.Editor
         private const string WINDOW_TITLE = "Create Asset";
         private static string ERROR_SELECT_EMPTY = "Create Window: select is empty",
             ERROR_SELECT_PATH_EMPTY = "Create Window: select path is empty",
-            ERROR_SELECT_PATH_NOT_FILE_OR_FOLDER = "Create Window: select path is not file or folder";
+            ERROR_SELECT_PATH_NOT_FILE_OR_FOLDER = "Create Window: select path is not file or folder",
+            ERROR_FILE_EXISTS = "Create file fail: File already exists",
+            ERROR_WRITE_FAIL = "Create file fail to write data: {0}";
+        private const string FILE_PATH_FORMAT = "{0}/{1}/{2}.{3}";
 
         private static string project_path;
         public static string ProjectPath
@@ -137,6 +142,69 @@ namespace KTool.AssetCreater.Editor
             //
             creater.OnCancel(this);
             creater = null;
+        }
+        #endregion
+
+        #region Write File
+        public bool WriteFile(string fileName, string fileExtension, string data)
+        {
+            string path = string.Format(FILE_PATH_FORMAT, ProjectPath, SelectFolder, fileName, fileExtension);
+            StreamWriter sw = null;
+            try
+            {
+                if (File.Exists(path))
+                {
+                    Debug.LogError(ERROR_FILE_EXISTS);
+                    return false;
+                }
+                FileStream fs = File.Open(path, FileMode.Create);
+                sw = new StreamWriter(fs, Encoding.UTF8);
+                sw.Write(data);
+                sw.Flush();
+                sw.Close();
+                sw = null;
+                AssetDatabase.Refresh();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(ERROR_WRITE_FAIL, ex.Message));
+                return false;
+            }
+            finally
+            {
+                sw?.Close();
+            }
+        }
+        public bool WriteFile(string folder, string fileName, string fileExtension, string data)
+        {
+            string path = string.Format(FILE_PATH_FORMAT, ProjectPath, folder, fileName, fileExtension);
+            StreamWriter sw = null;
+            try
+            {
+                if (File.Exists(path))
+                {
+                    Debug.LogError(ERROR_FILE_EXISTS);
+                    return false;
+                }
+                FileStream fs = File.Open(path, FileMode.Create);
+                sw = new StreamWriter(fs, Encoding.UTF8);
+                sw.Write(data);
+                sw.Flush();
+                sw.Close();
+                sw = null;
+                AssetDatabase.Refresh();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(ERROR_WRITE_FAIL, ex.Message));
+                return false;
+            }
+            finally
+            {
+                sw?.Close();
+            }
         }
         #endregion
     }

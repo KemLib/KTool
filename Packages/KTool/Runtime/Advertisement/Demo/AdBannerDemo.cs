@@ -6,6 +6,7 @@ namespace KTool.Advertisement.Demo
     public class AdBannerDemo : AdBanner
     {
         #region Properties
+        private const string ERROR_IS_SHOW = "Ad is show";
         public static AdBannerDemo InstanceAdBanner => AdManagerDemo.Instance.AdBanner;
 
         [SerializeField]
@@ -73,25 +74,19 @@ namespace KTool.Advertisement.Demo
         #region Ad
         public override void Init()
         {
-            if (State != AdState.None)
-                return;
-            //
             State = AdState.Inited;
             PushEvent_Inited();
         }
         public override void Load()
         {
-            if (State != AdState.Inited)
-                return;
-            //
             State = AdState.Loaded;
             PushEvent_Loaded(true);
             State = AdState.Ready;
         }
         public override AdBannerTracking Show()
         {
-            if (!IsReady)
-                return null;
+            if (IsShow)
+                return new AdBannerTrackingSource(ERROR_IS_SHOW);
             //
             currentTrackingSource = new AdBannerTrackingSource();
             //
@@ -127,9 +122,6 @@ namespace KTool.Advertisement.Demo
         }
         public override void Destroy()
         {
-            if (State == AdState.None)
-                return;
-            //
             State = AdState.Destroy;
             PushEvent_Destroy();
         }

@@ -33,7 +33,7 @@ namespace KTool.FileIo
         public static string GetPath(string folder, string file, string extension)
         {
             extension = PathUnit.GetExtension(extension);
-            return string.Format(PathUnit.FOTMAT_FULL_PATH_FILE, PathUnit.GetFullFolder_Data(folder), file, extension);
+            return string.Format(PathUnit.FOTMAT_FULL_PATH_FILE_EXTENSION, PathUnit.GetFullFolder_Data(folder), file, extension);
         }
         public static bool Exists(string folder, string file, string extension)
         {

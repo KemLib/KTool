@@ -7,6 +7,7 @@ namespace KTool.Advertisement.Demo
     public class AdRewardedDemo : AdRewarded
     {
         #region Properties
+        private const string ERROR_IS_SHOW = "Ad is show";
         public static AdRewardedDemo InstanceAdRewarded => AdManagerDemo.Instance.AdRewarded;
 
         [SerializeField]
@@ -53,25 +54,19 @@ namespace KTool.Advertisement.Demo
         #region Ad
         public override void Init()
         {
-            if (State != AdState.None)
-                return;
-            //
             State = AdState.Inited;
             PushEvent_Inited();
         }
         public override void Load()
         {
-            if (State != AdState.Inited)
-                return;
-            //
             State = AdState.Loaded;
             PushEvent_Loaded(true);
             State = AdState.Ready;
         }
         public override AdRewardedTracking Show()
         {
-            if (!IsReady)
-                return null;
+            if (IsShow)
+                return new AdRewardedTrackingSource(ERROR_IS_SHOW);
             //
             currentTrackingSource = new AdRewardedTrackingSource();
             //

@@ -6,6 +6,17 @@
 
         #endregion
 
+        #region Contruction
+        public AdRewardedTrackingSource(string errorMessage) : base(errorMessage)
+        {
+
+        }
+        public AdRewardedTrackingSource() : base()
+        {
+
+        }
+        #endregion
+
         #region Event
         public void Displayed(bool isSuccess)
         {

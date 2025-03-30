@@ -15,6 +15,10 @@ namespace KTool.FileIo
             string extensionString = PathUnit.GetExtension(extension);
             return GetPath(folder, file, extensionString);
         }
+        public static string GetPath(string file)
+        {
+            return string.Format(PathUnit.FOTMAT_FULL_PATH_FILE, PathUnit.PathFolderProject, file);
+        }
         public static bool Exists(string folder, string file, ExtensionType extension)
         {
             string extensionString = PathUnit.GetExtension(extension);
@@ -33,7 +37,7 @@ namespace KTool.FileIo
         public static string GetPath(string folder, string file, string extension)
         {
             extension = PathUnit.GetExtension(extension);
-            return string.Format(PathUnit.FOTMAT_FULL_PATH_FILE, PathUnit.GetFullFolder_Asset(folder), file, extension);
+            return string.Format(PathUnit.FOTMAT_FULL_PATH_FILE_EXTENSION, PathUnit.GetFullFolder_Asset(folder), file, extension);
         }
         public static bool Exists(string folder, string file, string extension)
         {
@@ -73,6 +77,17 @@ namespace KTool.FileIo
                 result.Add(name);
             }
             return result;
+        }
+        public static bool Clone(string file, string taget, bool overwrite = true)
+        {
+            if (string.IsNullOrEmpty(file) || string.IsNullOrEmpty(taget))
+                return false;
+            string pathFile = GetPath(file),
+                pathTaget = GetPath(taget);
+            if (!File.Exists(pathFile))
+                return false;
+            File.Copy(pathFile, pathTaget, true);
+            return true;
         }
         #endregion
 
