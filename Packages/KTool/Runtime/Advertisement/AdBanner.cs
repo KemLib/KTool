@@ -25,11 +25,11 @@ namespace KTool.Advertisement
         private AdPosition adPosition;
         [SerializeField]
         private AdSize adSize;
-
+        [SerializeField]
         private Vector2 position,
             size;
-        private bool isExpanded;
 
+        private bool isExpanded;
         public event AdExpandedDelegate OnAdExpanded;
 
         public override AdType AdType => AdType.Banner;

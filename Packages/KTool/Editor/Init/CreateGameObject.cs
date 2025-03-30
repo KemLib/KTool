@@ -11,13 +11,13 @@ namespace KTool.Init.Editor
         #endregion
 
         #region Methods
-        [MenuItem("GameObject/KTool/Create Init Manager")]
+        [MenuItem("GameObject/KTool/Init/Create Manager", priority = 0)]
         private static void Create_InitManager()
         {
             GameObject newGO = new GameObject(GAME_OBJECT_NAME_INIT_MANAGER);
             newGO.AddComponent<InitManager>();
         }
-        [MenuItem("GameObject/KTool/Create Init Container")]
+        [MenuItem("GameObject/KTool/Init/Create Container", priority = 1)]
         private static void Create_InitContainer()
         {
             GameObject newGO = new GameObject(GAME_OBJECT_NAME_INIT_CONTAINER);
