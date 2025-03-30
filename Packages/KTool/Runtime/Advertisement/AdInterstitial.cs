@@ -5,16 +5,11 @@ namespace KTool.Advertisement
     public abstract class AdInterstitial : Ad
     {
         #region Properties
-        protected static AdInterstitial instance;
+        private static AdInterstitial instance;
         public static AdInterstitial Instance
         {
-            get
-            {
-                if (instance == null)
-                    return AdInterstitialDemo.InstanceAdInterstitial;
-                else
-                    return instance;
-            }
+            get => instance;
+            protected set => instance = value;
         }
 
         public override AdType AdType => AdType.Interstitial;
@@ -22,6 +17,10 @@ namespace KTool.Advertisement
 
         #region Methods
         public abstract AdInterstitialTracking Show();
+        public static AdInterstitial GetInstance()
+        {
+            return Instance ?? AdInterstitialDemo.InstanceAdInterstitial;
+        }
         #endregion
     }
 }

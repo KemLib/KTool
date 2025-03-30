@@ -5,16 +5,11 @@ namespace KTool.Advertisement
     public abstract class AdRewarded : Ad
     {
         #region Properties
-        protected static AdRewarded instance;
+        private static AdRewarded instance;
         public static AdRewarded Instance
         {
-            get
-            {
-                if (instance == null)
-                    return AdRewardedDemo.InstanceAdRewarded;
-                else
-                    return instance;
-            }
+            get => instance;
+            protected set => instance = value;
         }
 
         public delegate void AdReceivedRewardDelegate(AdRewardReceived rewardReceived);
@@ -26,6 +21,10 @@ namespace KTool.Advertisement
 
         #region Methods
         public abstract AdRewardedTracking Show();
+        public static AdRewarded GetInstance()
+        {
+            return Instance ?? AdRewardedDemo.InstanceAdRewarded;
+        }
         #endregion
 
         #region Event

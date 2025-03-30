@@ -6,16 +6,11 @@ namespace KTool.Advertisement
     public abstract class AdBanner : Ad
     {
         #region Properties
-        protected static AdBanner instance;
+        private static AdBanner instance;
         public static AdBanner Instance
         {
-            get
-            {
-                if (instance == null)
-                    return AdBannerDemo.InstanceAdBanner;
-                else
-                    return instance;
-            }
+            get => instance;
+            protected set => instance = value;
         }
 
         public delegate void AdExpandedDelegate(bool isExpanded);
@@ -62,6 +57,10 @@ namespace KTool.Advertisement
         #region Methods
         public abstract AdBannerTracking Show();
         public abstract void Hide();
+        public static AdBanner GetInstance()
+        {
+            return Instance ?? AdBannerDemo.InstanceAdBanner;
+        }
         #endregion
 
         #region Event
