@@ -5,7 +5,7 @@ namespace KTool.Advertisement
     public abstract class AdRewarded : Ad
     {
         #region Properties
-        private static AdRewarded instance;
+        protected static AdRewarded instance;
         public static AdRewarded Instance
         {
             get
@@ -15,7 +15,6 @@ namespace KTool.Advertisement
                 else
                     return instance;
             }
-            protected set => instance = value;
         }
 
         public delegate void AdReceivedRewardDelegate(AdRewardReceived rewardReceived);

@@ -6,7 +6,7 @@ namespace KTool.Advertisement
     public abstract class AdBanner : Ad
     {
         #region Properties
-        private static AdBanner instance;
+        protected static AdBanner instance;
         public static AdBanner Instance
         {
             get
@@ -16,7 +16,6 @@ namespace KTool.Advertisement
                 else
                     return instance;
             }
-            protected set => instance = value;
         }
 
         public delegate void AdExpandedDelegate(bool isExpanded);

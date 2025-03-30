@@ -51,7 +51,8 @@ namespace KTool.Init
                 try
                 {
                     TrackEntry trackEntry = items[index].InitBegin();
-                    dicTrackEntry.Add(items[index], trackEntry);
+                    if (trackEntry is not null)
+                        dicTrackEntry.Add(items[index], trackEntry);
                     index++;
                 }
                 catch (Exception ex)
