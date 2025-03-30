@@ -16,9 +16,10 @@ namespace KTool.Advertisement
 
         [SerializeField]
         private string adName;
+        [SerializeField]
+        private bool isAutoReload;
 
         private AdState state;
-        private bool isAutoReload;
 
         public event AdInitDelegate OnAdInited;
         public event AdLoadedDelegate OnAdLoaded;
