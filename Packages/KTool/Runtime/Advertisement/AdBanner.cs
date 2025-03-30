@@ -33,27 +33,27 @@ namespace KTool.Advertisement
         public event AdExpandedDelegate OnAdExpanded;
 
         public override AdType AdType => AdType.Banner;
-        public AdPosition PositionType
+        public virtual AdPosition PositionType
         {
             get => adPosition;
             protected set => adPosition = value;
         }
-        public AdSize SizeType
+        public virtual AdSize SizeType
         {
             get => adSize;
             protected set => adSize = value;
         }
-        public Vector2 Position
+        public virtual Vector2 Position
         {
             get => position;
             protected set => position = value;
         }
-        public Vector2 Size
+        public virtual Vector2 Size
         {
             get => size;
             protected set => size = value;
         }
-        public bool IsExpanded
+        public virtual bool IsExpanded
         {
             get => isExpanded;
             protected set => isExpanded = value;

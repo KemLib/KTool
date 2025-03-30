@@ -29,26 +29,26 @@ namespace KTool.Advertisement
         public event AdClickedDelegate OnAdClicked;
         public event AdRevenuePaidDelegate OnAdRevenuePaid;
 
-        public string Name => string.IsNullOrEmpty(adName) ? gameObject.name : adName;
         public abstract AdType AdType
         {
             get;
         }
-        public AdState State
+        public virtual string Name => string.IsNullOrEmpty(adName) ? gameObject.name : adName;
+        public virtual AdState State
         {
             get => state;
             protected set => state = value;
         }
-        public bool IsAutoReload
+        public virtual bool IsAutoReload
         {
             get => isAutoReload;
             protected set => isAutoReload = value;
         }
-        public bool IsInited => State == (AdState.Inited | AdState.Loaded | AdState.Ready | AdState.Show);
-        public bool IsLoaded => State == (AdState.Loaded | AdState.Ready | AdState.Show);
-        public bool IsReady => State == AdState.Ready;
-        public bool IsShow => State == AdState.Show;
-        public bool IsDestroy => State == AdState.Destroy;
+        public virtual bool IsInited => State == (AdState.Inited | AdState.Loaded | AdState.Ready | AdState.Show);
+        public virtual bool IsLoaded => State == (AdState.Loaded | AdState.Ready | AdState.Show);
+        public virtual bool IsReady => State == AdState.Ready;
+        public virtual bool IsShow => State == AdState.Show;
+        public virtual bool IsDestroy => State == AdState.Destroy;
         #endregion
 
         #region Methods
