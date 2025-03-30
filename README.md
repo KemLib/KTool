@@ -2,7 +2,7 @@
 
 KTool is a tool library that supports Unity developers in simplifying their work.
 
-## # How do I get set up?
+## How do I get set up?
 
  1. Open PacakageManager window
  2. Click button [+]
