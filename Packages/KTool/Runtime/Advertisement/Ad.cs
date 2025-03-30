@@ -55,8 +55,8 @@ namespace KTool.Advertisement
             get => isAutoReload;
             protected set => isAutoReload = value;
         }
-        public virtual bool IsInited => State == (AdState.Inited | AdState.Loaded | AdState.Ready | AdState.Show);
-        public virtual bool IsLoaded => State == (AdState.Loaded | AdState.Ready | AdState.Show);
+        public virtual bool IsInited => State == AdState.Inited || State == AdState.Loaded || State == AdState.Ready || State == AdState.Show;
+        public virtual bool IsLoaded => State == AdState.Loaded || State == AdState.Ready || State == AdState.Show;
         public virtual bool IsReady => State == AdState.Ready;
         public virtual bool IsShow => State == AdState.Show;
         public virtual bool IsDestroy => State == AdState.Destroy;
