@@ -3,13 +3,9 @@ namespace KTool.Init
     public interface TrackEntry
     {
         #region Progperties
-        public static TrackEntry TrackLoaderSuccess = TrackEntrySource.CreateTraskEntrySuccess(string.Empty),
-            TrackLoaderFail = TrackEntrySource.CreateTraskEntryFail(string.Empty);
+        public static TrackEntry TrackLoaderSuccess = TrackEntrySource.CreateTraskEntrySuccess(),
+            TrackLoaderFail = TrackEntrySource.CreateTraskEntryFail();
 
-        public string Name
-        {
-            get;
-        }
         public float Progress
         {
             get;

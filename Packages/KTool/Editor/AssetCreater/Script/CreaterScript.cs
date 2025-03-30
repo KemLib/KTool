@@ -1,8 +1,6 @@
 ﻿using KTool.AssetCreater.Editor;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -22,13 +20,11 @@ namespace KTool.AssetCreater.Script.Editor
             FOLDER_NAME_EDITOR = "Editor";
         private const string CREATER_NAME = "Creater Script";
         private const string DEFAULT_CLASS_NAME = "NewScript";
-        private const string SCRIPT_FILE_PATH_FORMAT = "{0}/{1}/{2}.cs";
+        private const string SCRIPT_FILE_EXTENSION = "cs";
         private const string ERROR_NAMESPACE_IS_EMPTY = "Create script fail: Namespace is empty",
             ERROR_CLASS_NAME_IS_EMPTY = "Create script fail: ClassName is empty",
             ERROR_LOAD_SETTING_FAIL = "Create script fail: canot load Setting",
-            ERROR_LOAD_SETTING_TEMPALE_FAIL = "Create script fail: canot load SettingTemplate",
-            ERROR_FILE_EXISTS = "Create script fail: File already exists",
-            ERROR_WRITE_FAIL = "Create script fail to write data: {0}";
+            ERROR_LOAD_SETTING_TEMPALE_FAIL = "Create script fail: canot load SettingTemplate";
 
         public static string[] arrayAccessModifier = Enum.GetNames(typeof(AccessModifiers));
 
@@ -61,84 +57,11 @@ namespace KTool.AssetCreater.Script.Editor
         #endregion
 
         #region Method
-
         [MenuItem("Assets/KTool/Create Script")]
         private static void MenuItem_ShowWindow()
         {
             ICreater creater = new CreaterScript();
             CreateWindow.ShowWindow(creater);
-        }
-        public static string GetNamespace(string folder)
-        {
-            folder = folder.Replace(CHAR_BACKSLASH, CHAR_DOT);
-            folder = folder.Replace(CHAR_UN_BACKSLASH, CHAR_DOT);
-            folder = folder.Replace(CHAR_SPACE, CHAR_SLIP);
-            List<string> listFolder = new List<string>(folder.Split(CHAR_DOT));
-            if (listFolder.Count > 0)
-            {
-                if (listFolder[0] == FOLDER_NAME_ASSETS)
-                {
-                    if (listFolder.Count >= 3)
-                    {
-                        if (listFolder[2] == FOLDER_NAME_EDITOR)
-                        {
-                            listFolder.RemoveAt(2);
-                            listFolder.Add(FOLDER_NAME_EDITOR);
-                        }
-                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
-                        {
-                            listFolder.RemoveAt(2);
-                        }
-                    }
-                    listFolder.RemoveAt(0);
-                }
-                else if (listFolder[0] == FOLDER_NAME_PACKAGES)
-                {
-                    if (listFolder.Count >= 3)
-                    {
-                        if (listFolder[2] == FOLDER_NAME_EDITOR)
-                        {
-                            listFolder.RemoveAt(2);
-                            listFolder.Add(FOLDER_NAME_EDITOR);
-                        }
-                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
-                        {
-                            listFolder.RemoveAt(2);
-                        }
-                    }
-                    listFolder.RemoveAt(0);
-                }
-            }
-            string nameSpace = string.Join(CHAR_DOT, listFolder.ToArray());
-            return nameSpace;
-        }
-        public static void WriteScript(string folder, string fileName, string data)
-        {
-            string path = string.Format(SCRIPT_FILE_PATH_FORMAT, CreateWindow.ProjectPath, folder, fileName);
-            StreamWriter sw = null;
-            try
-            {
-                if (File.Exists(path))
-                {
-                    Debug.LogError(ERROR_FILE_EXISTS);
-                    return;
-                }
-                FileStream fs = File.Open(path, FileMode.Create);
-                sw = new StreamWriter(fs, Encoding.UTF8);
-                sw.Write(data);
-                sw.Flush();
-                sw.Close();
-                sw = null;
-                AssetDatabase.Refresh();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_WRITE_FAIL, ex.Message));
-            }
-            finally
-            {
-                sw?.Close();
-            }
         }
         #endregion
 
@@ -163,6 +86,7 @@ namespace KTool.AssetCreater.Script.Editor
         {
             EditorGUILayout.BeginHorizontal();
             txtNameSpace = EditorGUILayout.TextField("NameSpace", txtNameSpace);
+            txtNameSpace = FixName(txtNameSpace);
             if (GUILayout.Button("Auto Namespace"))
             {
                 txtNameSpace = GetNamespace(createWindow.SelectFolder);
@@ -172,6 +96,7 @@ namespace KTool.AssetCreater.Script.Editor
             indexAccessModifiers = EditorGUILayout.Popup("Access Modifier", indexAccessModifiers, arrayAccessModifier);
             //
             txtClassName = EditorGUILayout.TextField("Class Name", txtClassName);
+            txtClassName = FixName(txtClassName);
             //
             string templateName = string.Empty;
             if (Setting != null && Setting.Count > 0)
@@ -231,11 +156,86 @@ namespace KTool.AssetCreater.Script.Editor
             scriptData = scriptData.Replace(Setting[indexTemplate].KeyNamespace, txtNameSpace);
             scriptData = scriptData.Replace(Setting[indexTemplate].KeyAccessModifiers, txtAccessModifier);
             scriptData = scriptData.Replace(Setting[indexTemplate].KeyClassname, txtClassName);
-            WriteScript(createWindow.SelectFolder, txtClassName, scriptData);
+            createWindow.WriteFile(txtClassName, SCRIPT_FILE_EXTENSION, scriptData);
         }
         public void OnCancel(CreateWindow createWindow)
         {
 
+        }
+        #endregion
+
+        #region Utility
+        public static string GetNamespace(string folder)
+        {
+            folder = FixName(folder);
+            //
+            List<string> listFolder = new List<string>(folder.Split(CHAR_DOT));
+            if (listFolder.Count > 0)
+            {
+                if (listFolder[0] == FOLDER_NAME_ASSETS)
+                {
+                    if (listFolder.Count >= 3)
+                    {
+                        if (listFolder[2] == FOLDER_NAME_EDITOR)
+                        {
+                            listFolder.RemoveAt(2);
+                            listFolder.Add(FOLDER_NAME_EDITOR);
+                        }
+                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
+                        {
+                            listFolder.RemoveAt(2);
+                        }
+                    }
+                    listFolder.RemoveAt(0);
+                }
+                else if (listFolder[0] == FOLDER_NAME_PACKAGES)
+                {
+                    if (listFolder.Count >= 3)
+                    {
+                        if (listFolder[2] == FOLDER_NAME_EDITOR)
+                        {
+                            listFolder.RemoveAt(2);
+                            listFolder.Add(FOLDER_NAME_EDITOR);
+                        }
+                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
+                        {
+                            listFolder.RemoveAt(2);
+                        }
+                    }
+                    listFolder.RemoveAt(0);
+                }
+            }
+            string nameSpace = string.Join(CHAR_DOT, listFolder.ToArray());
+            return nameSpace;
+        }
+        public static string FixName(string name)
+        {
+            name = StringRemoveStartSpace(name);
+            name = StringRemoveEndSpace(name);
+            name = name.Replace(CHAR_BACKSLASH, CHAR_DOT);
+            name = name.Replace(CHAR_UN_BACKSLASH, CHAR_DOT);
+            name = name.Replace(CHAR_SPACE, CHAR_SLIP);
+            return name;
+        }
+        private static string StringRemoveStartSpace(string text)
+        {
+            while (text.StartsWith(CHAR_SPACE))
+            {
+                if (text.Length <= 1)
+                    return string.Empty;
+                text = text.Substring(1);
+            }
+            return text;
+        }
+        private static string StringRemoveEndSpace(string text)
+        {
+            while (text.EndsWith(CHAR_SPACE))
+            {
+                if (text.Length <= 1)
+                    return string.Empty;
+                text = text.Substring(0, text.Length - 1);
+            }
+            return text;
         }
         #endregion
     }

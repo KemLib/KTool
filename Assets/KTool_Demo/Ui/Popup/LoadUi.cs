@@ -1,13 +1,13 @@
-using KTool.Ui.Popup;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace KTool_Demo.Loading
 {
-    public class LoadUi : MonoBehaviour, ILoadUi
+    public class LoadUi : MonoBehaviour
     {
         #region Properties
+        private const string TEXT_PROGRESS_FORMAT = "{0} %";
         public static LoadUi Instance
         {
             get;
@@ -29,7 +29,7 @@ namespace KTool_Demo.Loading
             set
             {
                 imtProgress.fillAmount = value;
-                txtProgress.text = string.Format(ILoadUi.TEXT_PROGRESS_FORMAT, Mathf.FloorToInt(imtProgress.fillAmount * 100));
+                txtProgress.text = string.Format(TEXT_PROGRESS_FORMAT, Mathf.FloorToInt(imtProgress.fillAmount * 100));
             }
         }
         public string TaskName
@@ -47,7 +47,6 @@ namespace KTool_Demo.Loading
             if (Instance == null)
             {
                 Instance = this;
-                ILoadUi.Instance = this;
                 DontDestroyOnLoad(gameObject);
                 return;
             }

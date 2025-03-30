@@ -6,19 +6,13 @@ namespace KTool.Init
     public class TrackEntrySource : TrackEntry
     {
         #region Progperties
-        public const string ERROR_MESSAGE_CANCELED = "Task Canceled";
+        public const string ERROR_UNKNOWN = "unknown error";
 
-        private string name;
         private InterValueFloat progress;
         private InterValueBool isComplete,
             isSuccessfully;
         private InterValueClass<string> errorMessage;
 
-        public string Name
-        {
-            get => name;
-            set => name = value ?? string.Empty;
-        }
         public float Progress
         {
             get => progress;
@@ -42,9 +36,8 @@ namespace KTool.Init
         #endregion
 
         #region Construction
-        public TrackEntrySource(string name)
+        public TrackEntrySource()
         {
-            this.name = name;
             progress = new InterValueFloat(0);
             isComplete = new InterValueBool(false);
             isSuccessfully = new InterValueBool(false);
@@ -65,30 +58,30 @@ namespace KTool.Init
             Progress = 1;
             IsComplete = true;
             IsSuccessfully = false;
-            ErrorMessage = string.Empty;
+            ErrorMessage = ERROR_UNKNOWN;
         }
         public void CompleteFail(string errorMessage)
         {
             Progress = 1;
             IsComplete = true;
             IsSuccessfully = false;
-            ErrorMessage = errorMessage;
+            ErrorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
         }
-        public static TrackEntry CreateTraskEntrySuccess(string name)
+        public static TrackEntry CreateTraskEntrySuccess()
         {
-            TrackEntrySource trackLoaderSource = new TrackEntrySource(name);
+            TrackEntrySource trackLoaderSource = new TrackEntrySource();
             trackLoaderSource.CompleteSuccess();
             return trackLoaderSource;
         }
-        public static TrackEntry CreateTraskEntryFail(string name)
+        public static TrackEntry CreateTraskEntryFail()
         {
-            TrackEntrySource trackLoaderSource = new TrackEntrySource(name);
+            TrackEntrySource trackLoaderSource = new TrackEntrySource();
             trackLoaderSource.CompleteFail();
             return trackLoaderSource;
         }
-        public static TrackEntry CreateTraskEntryFail(string name, string errorMessage)
+        public static TrackEntry CreateTraskEntryFail(string errorMessage)
         {
-            TrackEntrySource trackLoaderSource = new TrackEntrySource(name);
+            TrackEntrySource trackLoaderSource = new TrackEntrySource();
             trackLoaderSource.CompleteFail(errorMessage);
             return trackLoaderSource;
         }

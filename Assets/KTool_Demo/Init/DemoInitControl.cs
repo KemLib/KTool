@@ -1,4 +1,3 @@
-using KTool;
 using KTool.Init;
 using System.Collections;
 using UnityEngine;
@@ -23,7 +22,7 @@ namespace KTool_Demo.Init
         public TrackEntry InitBegin()
         {
             Debug.Log("Demo Init Begin");
-            TrackEntrySource trackEntrySource = new TrackEntrySource(gameObject.name);
+            TrackEntrySource trackEntrySource = new TrackEntrySource();
             StartCoroutine(IE_Init(trackEntrySource));
             return trackEntrySource;
         }
