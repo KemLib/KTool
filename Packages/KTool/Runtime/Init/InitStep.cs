@@ -102,7 +102,7 @@ namespace KTool.Init
         public bool Item_IsCompleteAllRequired()
         {
             foreach (IIniter initer in dicTrackEntry.Keys)
-                if (initer.RequiredConditions || !dicTrackEntry[initer].IsComplete)
+                if (initer.RequiredConditions && !dicTrackEntry[initer].IsComplete)
                     return false;
             return true;
         }
