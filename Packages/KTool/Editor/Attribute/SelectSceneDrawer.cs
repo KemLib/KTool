@@ -7,20 +7,20 @@ namespace KTool.Attribute.Editor
     public class SelectSceneDrawer : PropertyDrawer
     {
         #region Properties
-        private string[] options;
 
         #endregion Properties
 
         #region Constructor
         public SelectSceneDrawer() : base()
         {
-            options = AttributeUnit.Array_Scene();
+
         }
         #endregion Constructor
 
         #region UnityEvent
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            string[] options = AttributeUnit.Array_Scene();
             if (options.Length == 0)
             {
                 EditorGUI.LabelField(position, label, new GUIContent("List scene in build setting is empty"));

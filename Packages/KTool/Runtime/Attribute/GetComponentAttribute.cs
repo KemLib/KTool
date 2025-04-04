@@ -15,7 +15,7 @@ namespace KTool.Attribute
         #endregion Properties
 
         #region Constructor
-        public GetComponentAttribute(GetComponentType getComponentType = GetComponentType.ThisGameObject, bool includeInactive = false) : base()
+        public GetComponentAttribute(GetComponentType getComponentType = GetComponentType.InGameObject, bool includeInactive = false) : base()
         {
             this.getComponentType = getComponentType;
             this.includeInactive = includeInactive;

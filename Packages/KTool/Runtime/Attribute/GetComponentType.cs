@@ -5,7 +5,7 @@ namespace KTool.Attribute
         /// <summary>
         /// Get Component in curent GameObject
         /// </summary>
-        ThisGameObject,
+        InGameObject,
         /// <summary>
         /// Get Component in first Children
         /// </summary>
