@@ -8,13 +8,7 @@ namespace KTool.Advertisement
         private static AdInterstitial instance;
         public static AdInterstitial Instance
         {
-            get
-            {
-                if (instance == null)
-                    return AdInterstitialDemo.InstanceAdInterstitial;
-                else
-                    return instance;
-            }
+            get => instance;
             protected set => instance = value;
         }
 
@@ -23,6 +17,10 @@ namespace KTool.Advertisement
 
         #region Methods
         public abstract AdInterstitialTracking Show();
+        public static AdInterstitial GetInstance()
+        {
+            return Instance ?? AdInterstitialDemo.InstanceAdInterstitial;
+        }
         #endregion
     }
 }

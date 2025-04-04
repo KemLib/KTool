@@ -8,13 +8,7 @@ namespace KTool.Advertisement
         private static AdRewarded instance;
         public static AdRewarded Instance
         {
-            get
-            {
-                if (instance == null)
-                    return AdRewardedDemo.InstanceAdRewarded;
-                else
-                    return instance;
-            }
+            get => instance;
             protected set => instance = value;
         }
 
@@ -27,6 +21,10 @@ namespace KTool.Advertisement
 
         #region Methods
         public abstract AdRewardedTracking Show();
+        public static AdRewarded GetInstance()
+        {
+            return Instance ?? AdRewardedDemo.InstanceAdRewarded;
+        }
         #endregion
 
         #region Event

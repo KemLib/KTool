@@ -7,13 +7,12 @@ namespace KTool.Attribute.Editor
     public class SelectAgentIdDrawer : PropertyDrawer
     {
         #region Properties
-        private string[] agents;
         #endregion Properties
 
         #region Constructor
         public SelectAgentIdDrawer() : base()
         {
-            agents = AttributeUnit.Array_Agent();
+
         }
 
         #endregion Constructor
@@ -21,6 +20,7 @@ namespace KTool.Attribute.Editor
         #region Unity Event		
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            string[] agents = AttributeUnit.Array_Agent();
             if (agents.Length == 0)
             {
                 EditorGUI.LabelField(position, label, new GUIContent("List agent is empty"));

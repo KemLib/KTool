@@ -1,9 +1,14 @@
-﻿namespace KTool.Advertisement
+﻿using System;
+using UnityEngine;
+
+namespace KTool.Advertisement
 {
     public abstract class AdBannerTracking
     {
         #region Properties
+        internal const string ERROR_AD_EVENT_EXPANDED_EXCEPTION = "Ad {0} call event Expanded exception: {1}";
         private const string ERROR_UNKNOWN = "unknown error";
+
         public readonly bool IsShow;
         public readonly string ErrorMessage;
 
@@ -31,27 +36,70 @@
         #region Event
         protected void PushEvent_Displayed(bool isSuccess)
         {
-            OnAdDisplayed?.Invoke(isSuccess);
-        }
-        protected void PushEvent_Expanded(bool isSuccess)
-        {
-            OnAdExpanded?.Invoke(isSuccess);
+            try
+            {
+                OnAdDisplayed?.Invoke(isSuccess);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_DISPLAYED_EXCEPTION, AdType.Banner.ToString(), ex.Message));
+            }
         }
         protected void PushEvent_ShowComplete(bool isSuccess)
         {
-            OnAdShowComplete?.Invoke(isSuccess);
+            try
+            {
+                OnAdShowComplete?.Invoke(isSuccess);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_SHOW_COMPLETE_EXCEPTION, AdType.Banner.ToString(), ex.Message));
+            }
         }
         protected void PushEvent_Hidden()
         {
-            OnAdHidden?.Invoke();
+            try
+            {
+                OnAdHidden?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_HIDDEN_EXCEPTION, AdType.Banner.ToString(), ex.Message));
+            }
         }
         protected void PushEvent_Clicked()
         {
-            OnAdClicked?.Invoke();
+            try
+            {
+                OnAdClicked?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_CLICKED_EXCEPTION, AdType.Banner.ToString(), ex.Message));
+            }
         }
         protected void PushEvent_RevenuePaid(AdRevenuePaid adRevenuePaid)
         {
-            OnAdRevenuePaid?.Invoke(adRevenuePaid);
+            try
+            {
+                OnAdRevenuePaid?.Invoke(adRevenuePaid);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_REVENUEPAID_EXCEPTION, AdType.Banner.ToString(), ex.Message));
+            }
+        }
+
+        protected void PushEvent_Expanded(bool isSuccess)
+        {
+            try
+            {
+                OnAdExpanded?.Invoke(isSuccess);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(ERROR_AD_EVENT_EXPANDED_EXCEPTION, AdType.Banner.ToString(), ex.Message));
+            }
         }
         #endregion
     }

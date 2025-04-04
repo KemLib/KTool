@@ -7,19 +7,20 @@ namespace KTool.Attribute.Editor
     public class SelectTagDrawer : PropertyDrawer
     {
         #region Properties
-        private string[] options;
+
         #endregion Properties
 
         #region Constructor
         public SelectTagDrawer() : base()
         {
-            options = AttributeUnit.Array_Tag();
+
         }
         #endregion Constructor
 
         #region Unity Event		
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            string[] options = AttributeUnit.Array_Tag();
             if (options.Length == 0)
             {
                 EditorGUI.LabelField(position, label, new GUIContent("List tag in setting is empty"));

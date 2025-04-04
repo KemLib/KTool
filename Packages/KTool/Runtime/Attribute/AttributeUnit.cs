@@ -51,19 +51,36 @@ namespace KTool.Attribute
             }
             return layers.ToArray();
         }
+        public static int[] Array_LayerId()
+        {
+            List<int> layers = new List<int>();
+            for (int i = 0; i < 32; i++)
+            {
+                string name = LayerMask.LayerToName(i);
+                if (string.IsNullOrEmpty(name))
+                    continue;
+                layers.Add(i);
+            }
+            return layers.ToArray();
+        }
         public static string[] Array_Scene()
         {
-            string[] scenes;
+            List<string> scenes;
 #if UNITY_EDITOR
-            scenes = new string[EditorBuildSettings.scenes.Length];
-            for (int i = 0; i < scenes.Length; i++)
+            int sceneCount = EditorBuildSettings.scenes.Length;
+            scenes = new List<string>(sceneCount);
+            for (int i = 0; i < sceneCount; i++)
             {
-                scenes[i] = System.IO.Path.GetFileNameWithoutExtension(EditorBuildSettings.scenes[i].path);
+                EditorBuildSettingsScene scene = EditorBuildSettings.scenes[i];
+                if(!scene.enabled)
+                    continue;
+                string sceneName = System.IO.Path.GetFileNameWithoutExtension(scene.path);
+                scenes.Add(sceneName);
             }
 #else
-            scenes = new string[0];
+            scenes = new List<string>();
 #endif
-            return scenes;
+            return scenes.ToArray();
         }
         public static string[] Array_SortingLayer()
         {

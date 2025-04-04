@@ -7,19 +7,20 @@ namespace KTool.Attribute.Editor
     public class SelectLayerDrawer : PropertyDrawer
     {
         #region Properties
-        private string[] options;
         #endregion Properties
 
         #region Constructor
         public SelectLayerDrawer() : base()
         {
-            options = AttributeUnit.Array_Layer();
+
         }
         #endregion Constructor
 
         #region Unity Event	
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            string[] options = AttributeUnit.Array_Layer();
+            int[] optionsId = AttributeUnit.Array_LayerId();
             if (options.Length == 0)
             {
                 EditorGUI.LabelField(position, label, new GUIContent("List Layer in setting is empty"));
@@ -33,7 +34,13 @@ namespace KTool.Attribute.Editor
             }
             if (fieldInfo.FieldType == typeof(int) || fieldInfo.FieldType == typeof(int[]))
             {
-                EditorGui_Draw.DrawPopup_Int(position, label, options, property);
+                int indexLayer = IndexOf(property.intValue, optionsId);
+                EditorGui_Draw.DrawPopup_Int(position, label, options, ref indexLayer);
+                int newId = optionsId[indexLayer];
+                if(newId != property.intValue)
+                {
+                    property.intValue = newId;
+                }
                 return;
             }
             //
@@ -42,7 +49,15 @@ namespace KTool.Attribute.Editor
         #endregion Unity Event
 
         #region Method
-
+        private int IndexOf(int id, int[] optionsId)
+        {
+            for (int i = 0; i < optionsId.Length; i++)
+            {
+                if (optionsId[i] == id)
+                    return i;
+            }
+            return -1;
+        }
         #endregion Method
     }
 }

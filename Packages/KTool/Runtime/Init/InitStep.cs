@@ -51,7 +51,8 @@ namespace KTool.Init
                 try
                 {
                     TrackEntry trackEntry = items[index].InitBegin();
-                    dicTrackEntry.Add(items[index], trackEntry);
+                    if (trackEntry is not null)
+                        dicTrackEntry.Add(items[index], trackEntry);
                     index++;
                 }
                 catch (Exception ex)
@@ -101,7 +102,7 @@ namespace KTool.Init
         public bool Item_IsCompleteAllRequired()
         {
             foreach (IIniter initer in dicTrackEntry.Keys)
-                if (initer.RequiredConditions || !dicTrackEntry[initer].IsComplete)
+                if (initer.RequiredConditions && !dicTrackEntry[initer].IsComplete)
                     return false;
             return true;
         }

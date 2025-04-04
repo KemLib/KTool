@@ -89,7 +89,7 @@ namespace KTool.Attribute.Editor
         #region Children
         public static Component GetComponent(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool includeInactive)
         {
-            if (getComponentType == GetComponentType.ThisGameObject)
+            if (getComponentType == GetComponentType.InGameObject)
                 return mono.GetComponent(typeElement);
             //
             return GetComponent_InChildren(mono, typeElement, getComponentType, includeInactive);
@@ -130,7 +130,7 @@ namespace KTool.Attribute.Editor
         }
         public static void GetComponent(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool includeInactive, List<Component> components)
         {
-            if (getComponentType == GetComponentType.ThisGameObject)
+            if (getComponentType == GetComponentType.InGameObject)
             {
                 mono.GetComponents(typeElement, components);
                 return;
@@ -169,7 +169,7 @@ namespace KTool.Attribute.Editor
         }
         public static bool Children_Check(MonoBehaviour mono, Transform child, GetComponentType getComponentType, bool includeInactive)
         {
-            if (getComponentType == GetComponentType.ThisGameObject)
+            if (getComponentType == GetComponentType.InGameObject)
                 return mono.gameObject.GetInstanceID() == child.gameObject.GetInstanceID();
             //
             if (!includeInactive && !child.gameObject.activeSelf)

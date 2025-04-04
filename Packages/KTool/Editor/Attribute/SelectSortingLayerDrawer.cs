@@ -7,19 +7,20 @@ namespace KTool.Attribute.Editor
     public class SelectSortingLayerDrawer : PropertyDrawer
     {
         #region Properties
-        private string[] options;
+
         #endregion Properties
 
         #region Constructor
         public SelectSortingLayerDrawer() : base()
         {
-            options = AttributeUnit.Array_SortingLayer();
+
         }
         #endregion Constructor
 
         #region Unity Event	
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            string[] options = AttributeUnit.Array_SortingLayer();
             if (options.Length == 0)
             {
                 EditorGUI.LabelField(position, label, new GUIContent("List SortingLayer in setting is empty"));

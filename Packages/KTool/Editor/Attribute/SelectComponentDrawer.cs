@@ -79,7 +79,7 @@ namespace KTool.Attribute.Editor
         #region Methods
         private string GetComponentName(Component component, GetComponentType getComponentType)
         {
-            if (getComponentType == GetComponentType.ThisGameObject)
+            if (getComponentType == GetComponentType.InGameObject)
                 return string.Format(COMPONENT_NAME_FORMAT, component.GetType().Name, component.GetInstanceID());
             //
             return string.Format(COMPONENT_NAME_IN_CHILD_FORMAT, component.gameObject.name, component.GetType().Name, component.GetInstanceID());
