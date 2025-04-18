@@ -7,19 +7,18 @@ KTool is a tool library that supports Unity developers in simplifying their work
  1. Open PacakageManager window
  2. Click button [+]
  3. Select [Add package form git URL...]
- 4. paste url: https://github.com/KemLib/KTool.git?path=/Packages/KTool
+ 4. paste url: <https://github.com/KemLib/KTool.git?path=/Packages/KTool>
  5. Click button [Add]
 
-If you want to use the latest version, replace the URL.
-	https://github.com/KemLib/KTool.git?path=/Packages/KTool#develop
+If you want to use the latest version, replace the URL. <https://github.com/KemLib/KTool.git?path=/Packages/KTool#develop>
 
 ## Features
 
- - **Advertisement**: easily implement advertising display features in the application, see more [KTool.Admob].
- - **Attribute**: the attribute allow you to easily select the value of the variable in the Inspector.
- - **Script Creater**: editor to create scripts from available templates, automatically adding Namespaces by folder.
- - **FileIo**: file read/write library in asset or data.
- - **Init**: object initialization system.
+- **Advertisement**: easily implement advertising display features in the application, see more [KTool.Admob].
+- **Attribute**: the attribute allow you to easily select the value of the variable in the Inspector.
+- **Script Creater**: editor to create scripts from available templates, automatically adding Namespaces by folder.
+- **FileIo**: file read/write library in asset or data.
+- **Init**: object initialization system.
 
 ### Attribute
 
@@ -28,7 +27,7 @@ If you want to use the latest version, replace the URL.
 |GetAsset|string[], Object[]|get all assets in the folder|
 |GetComponent|Component, Component[]|get all component in the curent GameObject or in children of curent GameObject|
 |SelectAsset|string, string[], Object, Object[]|dropdown list to select assets in the folder|
-|GetAssetAttribute|Component, Component[]|dropdown list to select component in the curent GameObject or in children of curent GameObject|
+|SelectComponent|Component, Component[]|dropdown list to select component in the curent GameObject or in children of curent GameObject|
 |SelectAgentId|int, int[]|dropdown list to select AgentId|
 |SelectLayer|int, int[], string, string[]|dropdown list to select Layer|
 |SelectSortingLayer|int, int[], string, string[]|dropdown list to select SortingLayer|

@@ -134,11 +134,6 @@ namespace KTool.AssetCreater.Script.Editor
                 Debug.LogError(ERROR_LOAD_SETTING_FAIL);
                 return;
             }
-            if (indexTemplate < 0 || indexTemplate >= Setting.Count)
-            {
-                Debug.LogError(ERROR_LOAD_SETTING_TEMPALE_FAIL);
-                return;
-            }
             if (string.IsNullOrEmpty(txtNameSpace))
             {
                 Debug.LogError(ERROR_NAMESPACE_IS_EMPTY);
@@ -152,10 +147,9 @@ namespace KTool.AssetCreater.Script.Editor
             }
             //
             string txtAccessModifier = AccessModifier.ToString().ToLower().Replace(CHAR_SLIP, CHAR_SPACE),
-                scriptData = txtTemplate;
-            scriptData = scriptData.Replace(Setting[indexTemplate].KeyNamespace, txtNameSpace);
-            scriptData = scriptData.Replace(Setting[indexTemplate].KeyAccessModifiers, txtAccessModifier);
-            scriptData = scriptData.Replace(Setting[indexTemplate].KeyClassname, txtClassName);
+                scriptData = txtTemplate.Replace(Setting.KeyNamespace, txtNameSpace)
+                    .Replace(Setting.KeyAccessModifiers, txtAccessModifier)
+                    .Replace(Setting.KeyClassname, txtClassName);
             createWindow.WriteFile(txtClassName, SCRIPT_FILE_EXTENSION, scriptData);
         }
         public void OnCancel(CreateWindow createWindow)

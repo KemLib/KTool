@@ -37,7 +37,7 @@ namespace KTool.Attribute.Editor
                 int indexLayer = IndexOf(property.intValue, optionsId);
                 EditorGui_Draw.DrawPopup_Int(position, label, options, ref indexLayer);
                 int newId = optionsId[indexLayer];
-                if(newId != property.intValue)
+                if (newId != property.intValue)
                 {
                     property.intValue = newId;
                 }

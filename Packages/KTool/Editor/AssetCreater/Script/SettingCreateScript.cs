@@ -1,4 +1,5 @@
-﻿using KTool.FileIo;
+﻿using KTool.Attribute;
+using KTool.FileIo;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +13,9 @@ namespace KTool.AssetCreater.Script.Editor
             ASSET_INSTANCE_FILE_NAME = "SettingCreateScript",
             ASSET_INSTANCE_PATH = "Assets/KTool/AssetCreater/Editor/Script/SettingCreateScript.asset";
         private const string ERROR_CREATE_ASSET_FAIL = "Failed to copy asset SettingUsingNamespace to Resources folder";
+        public const string KEY_NAMESPACE = "[Namespace]",
+            KEY_ACCESS_MODIFIERS = "[ClassAccessModifiers]",
+            KEY_CLASS_NAME = "[ClassName]";
 
         private static SettingCreateScript instance;
 
@@ -29,9 +33,16 @@ namespace KTool.AssetCreater.Script.Editor
             }
         }
 
+        [SerializeField, DisabledChange(false)]
+        private string keyNamespace = KEY_NAMESPACE,
+            keyAccessModifiers = KEY_ACCESS_MODIFIERS,
+            keyClassname = KEY_CLASS_NAME;
         [SerializeField]
         private SettingTemplate[] templates;
 
+        public string KeyNamespace => string.IsNullOrEmpty(keyNamespace) ? KEY_NAMESPACE : keyNamespace;
+        public string KeyAccessModifiers => string.IsNullOrEmpty(keyAccessModifiers) ? KEY_ACCESS_MODIFIERS : keyAccessModifiers;
+        public string KeyClassname => string.IsNullOrEmpty(keyClassname) ? KEY_CLASS_NAME : keyClassname;
         public int Count => templates.Length;
         public SettingTemplate this[int index] => templates[index];
         #endregion
