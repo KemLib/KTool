@@ -2,7 +2,6 @@
 
 namespace KTool.AssetCreater.Script.Editor
 {
-    [CreateAssetMenu(fileName = "SettingReplaceAccessModifier", menuName = "ScriptableObject/SettingReplaceAccessModifier")]
     public class SettingReplaceAccessModifier : SettingReplace
     {
         #region Properties

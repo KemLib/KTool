@@ -11,6 +11,8 @@ namespace KTool.AssetCreater.Script.Editor
         #region Properties
         private const string CREATER_NAME = "Creater Script";
         private const string SCRIPT_FILE_EXTENSION = "cs";
+        private const string FILE_PATH_FORMAT = "{0}\\{1}.{2}";
+        private const string FILE_PATH_TITLE = "Path";
         private const string GUI_ERROR_TITLE = "Error!",
             ERROR_LOAD_SETTING_FAIL = "Canot load Setting",
             ERROR_LOAD_SETTING_TEMPALE_FAIL = "Canot load SettingTemplate";
@@ -111,6 +113,11 @@ namespace KTool.AssetCreater.Script.Editor
         }
         public void OnGuiDraw(CreateWindow createWindow)
         {
+            EditorGUI.BeginDisabledGroup(true);
+            string path = string.Format(FILE_PATH_FORMAT, folderName, fileName, SCRIPT_FILE_EXTENSION);
+            EditorGUILayout.TextField(FILE_PATH_TITLE, path);
+            EditorGUI.EndDisabledGroup();
+            //
             OnGuiDrawSelectTemplate();
             //
             GUILayout.Space(10);

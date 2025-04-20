@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24364738ab05d33449bebb488264b4e3, type: 3}
   m_Name: SettingReplaceNameScriptEditor
   m_EditorClassIdentifier: 
-  keyScriptNameEditor: '[NameScriptEditor]'
+  keyNameScriptEditor: '[NameScriptEditor]'
   colorTextPrivew: {r: 0.30588236, g: 0.7882353, b: 0.6901961, a: 1}
+  editFileName: 1

@@ -2,7 +2,6 @@
 
 namespace KTool.AssetCreater.Script.Editor
 {
-    [CreateAssetMenu(fileName = "SettingReplaceNameScriptEditor", menuName = "ScriptableObject/SettingReplaceNameScriptEditor")]
     public class SettingReplaceNameScriptEditor : SettingReplace
     {
         #region Properties
@@ -12,9 +11,12 @@ namespace KTool.AssetCreater.Script.Editor
         private string keyNameScriptEditor = KEY_NAME_SCRIPT;
         [SerializeField]
         private Color colorTextPrivew;
+        [SerializeField]
+        private bool editFileName;
 
         public string KeyNameScriptEditor => string.IsNullOrEmpty(keyNameScriptEditor) ? KEY_NAME_SCRIPT : keyNameScriptEditor;
         public Color ColorTextPrivew => colorTextPrivew;
+        public bool EditFileName => editFileName;
         #endregion
 
         #region Methods Unity

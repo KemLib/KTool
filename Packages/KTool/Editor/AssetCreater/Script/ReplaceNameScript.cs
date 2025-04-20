@@ -25,7 +25,8 @@ namespace KTool.AssetCreater.Script.Editor
             else
                 textNameScript = CreaterScript.FileName;
             textNameScript = FixName(textNameScript);
-            CreaterScript.FileName = TextNameScript;
+            if(setting.EditFileName)
+                CreaterScript.FileName = TextNameScript;
         }
         #endregion
 
@@ -37,7 +38,8 @@ namespace KTool.AssetCreater.Script.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 textNameScript = FixName(textNameScript);
-                CreaterScript.FileName = TextNameScript;
+                if (setting.EditFileName)
+                    CreaterScript.FileName = TextNameScript;
             }
             //
             return preview.Replace(setting.KeyNameScript, GetTextPreviewColor(textNameScript, setting.ColorTextPrivew));

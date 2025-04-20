@@ -2,7 +2,6 @@
 
 namespace KTool.AssetCreater.Script.Editor
 {
-    [CreateAssetMenu(fileName = "SettingReplaceNamespace", menuName = "ScriptableObject/SettingReplaceNamespace")]
     public class SettingReplaceNamespace : SettingReplace
     {
         #region Properties
