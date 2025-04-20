@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace [Namespace]
 {
-    [ClassAccessModifiers] enum [ClassName]
+    [AccessModifier] enum [NameScript]
     {
         
     }

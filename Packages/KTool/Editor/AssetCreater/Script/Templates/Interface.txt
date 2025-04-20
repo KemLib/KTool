@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace [Namespace]
 {
-    [ClassAccessModifiers] interface [ClassName]
+    [AccessModifier] interface [NameScript]
     {
         #region Properties
 

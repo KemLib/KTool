@@ -13,8 +13,9 @@ namespace KTool.AssetCreater.Editor
         private static string ERROR_SELECT_EMPTY = "Create Window: select is empty",
             ERROR_SELECT_PATH_EMPTY = "Create Window: select path is empty",
             ERROR_SELECT_PATH_NOT_FILE_OR_FOLDER = "Create Window: select path is not file or folder",
+            ERROR_FILE_NAME_IS_EMPTY = "Create file fail: file name is empty",
             ERROR_FILE_EXISTS = "Create file fail: File already exists",
-            ERROR_WRITE_FAIL = "Create file fail to write data: {0}";
+            ERROR_WRITE_FAIL = "Create file fail: to write data: {0}";
         private const string FILE_PATH_FORMAT = "{0}/{1}/{2}.{3}";
 
         private static string project_path;
@@ -148,6 +149,12 @@ namespace KTool.AssetCreater.Editor
         #region Write File
         public bool WriteFile(string fileName, string fileExtension, string data)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                Debug.LogError(ERROR_FILE_NAME_IS_EMPTY);
+                return false;
+            }
+            //
             string path = string.Format(FILE_PATH_FORMAT, ProjectPath, SelectFolder, fileName, fileExtension);
             StreamWriter sw = null;
             try
@@ -178,6 +185,12 @@ namespace KTool.AssetCreater.Editor
         }
         public bool WriteFile(string folder, string fileName, string fileExtension, string data)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                Debug.LogError(ERROR_FILE_NAME_IS_EMPTY);
+                return false;
+            }
+            //
             string path = string.Format(FILE_PATH_FORMAT, ProjectPath, folder, fileName, fileExtension);
             StreamWriter sw = null;
             try

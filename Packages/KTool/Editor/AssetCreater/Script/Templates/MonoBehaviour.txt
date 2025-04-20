@@ -2,21 +2,14 @@ using UnityEngine;
 
 namespace [Namespace]
 {
-    [ClassAccessModifiers] class [ClassName] : MonoBehaviour
+    [AccessModifier] class [NameScript] : MonoBehaviour
     {
         #region Properties
 
         #endregion
 
         #region Methods Unity
-        private void Start()
-        {
-        
-        }
-        private void Update()
-        {
-        
-        }
+
         #endregion
 
         #region Methods

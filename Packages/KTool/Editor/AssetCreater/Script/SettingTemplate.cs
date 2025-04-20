@@ -11,6 +11,8 @@ namespace KTool.AssetCreater.Script.Editor
         private string displayName;
         [SerializeField]
         private TextAsset assetTemplate;
+        [SerializeField]
+        private SettingReplace[] replaces;
 
         public string Name
         {
@@ -27,6 +29,8 @@ namespace KTool.AssetCreater.Script.Editor
             }
         }
         public string TextTemplate => assetTemplate == null ? string.Empty : assetTemplate.text;
+        public int Count => replaces == null ? 0 : replaces.Length;
+        public SettingReplace this[int index] => replaces[index];
         #endregion
 
         #region Methods

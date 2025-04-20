@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace [Namespace]
 {
-    [ClassAccessModifiers] struct [ClassName]
+    [AccessModifier] struct [NameScript]
     {
         #region Properties
 
