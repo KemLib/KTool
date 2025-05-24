@@ -68,8 +68,11 @@ namespace KTool.Attribute.Editor
             }
             //
             string fileName = Asset_GetFileName(property, tagetFiles, objectAttribute.Folder, objectAttribute.Extension);
-            if (EditorGui_Draw.DrawPopup_String(position, label, tagetFiles.ToArray(), ref fileName))
+            if (EditorGui_Draw.DrawPopup_String(position, label, tagetFiles.ToArray(), fileName, out int index))
+            {
+                fileName = tagetFiles[index];
                 property.objectReferenceValue = Asset_GetObject(objectAttribute.Folder, fileName, objectAttribute.Extension, typeElement);
+            }
         }
         #endregion
 

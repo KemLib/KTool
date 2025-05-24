@@ -1,3 +1,5 @@
+﻿using UnityEngine;
+
 namespace KTool.Attribute
 {
     public enum GetComponentType
@@ -14,5 +16,13 @@ namespace KTool.Attribute
         /// Get Component in all Children
         /// </summary>
         InAllChildren,
+        /// <summary>
+        /// Get Component in curent GameObject and first Children
+        /// </summary>
+        InGameObject_Children,
+        /// <summary>
+        /// Get Component in curent GameObject and all Children
+        /// </summary>
+        InGameObject_AllChildren,
     }
 }

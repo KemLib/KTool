@@ -13,14 +13,7 @@ namespace KTool_Demo.Attribute
         #endregion
 
         #region Methods Unity
-        private void Start()
-        {
 
-        }
-        private void Update()
-        {
-
-        }
         #endregion
 
         #region Methods

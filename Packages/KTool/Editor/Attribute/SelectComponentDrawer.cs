@@ -11,8 +11,8 @@ namespace KTool.Attribute.Editor
         #region Properties
         public const string ERROR_TYPE = "type of property not is Component or Component[]",
             ERROR_LIST_COMPONENT_IS_EMPTY_FORMAT = "List Component[{0}] in setting is empty";
-        private const string COMPONENT_NAME_FORMAT = "{0} - Id[{1}]",
-            COMPONENT_NAME_IN_CHILD_FORMAT = "{0} - {1} - Id[{2}]";
+        private const string COMPONENT_NAME_NULL = "Null",
+            COMPONENT_NAME_FORMAT = "{0} - {1} - Id[{2}]";
         #endregion
 
         #region Constructor
@@ -47,7 +47,9 @@ namespace KTool.Attribute.Editor
             SelectComponentAttribute objectAttribute = attribute as SelectComponentAttribute;
             MonoBehaviour mono = property.serializedObject.targetObject as MonoBehaviour;
             List<Component> components = new List<Component>();
-            GetComponentDrawer.GetComponent(mono, typeElement, objectAttribute.GetComponentType, objectAttribute.IncludeInactive, components);
+            if (objectAttribute.AllowNull)
+                components.Add(null);
+            GetComponentDrawer.GetComponent(mono, typeElement, objectAttribute.GetComponentType, objectAttribute.AllowInactive, components);
             if (components.Count == 0)
             {
                 property.objectReferenceValue = null;
@@ -58,31 +60,34 @@ namespace KTool.Attribute.Editor
             //
             List<string> listComponentName = new List<string>();
             foreach (Component component in components)
-                listComponentName.Add(GetComponentName(component, objectAttribute.GetComponentType));
+                listComponentName.Add(GetComponentName(component));
             //
-            if (property.objectReferenceValue == null)
+            Component currentComponent;
+            if (property.objectReferenceValue == null && !objectAttribute.AllowNull)
                 property.objectReferenceValue = components[0];
-            Component currentComponent = property.objectReferenceValue as Component;
-            string fileName = GetComponentName(currentComponent, objectAttribute.GetComponentType);
-            if (EditorGui_Draw.DrawPopup_String(position, label, listComponentName.ToArray(), ref fileName))
+            if (property.objectReferenceValue == null)
+                currentComponent = null;
+            else
+                currentComponent = property.objectReferenceValue as Component;
+            if (currentComponent != null && !GetComponentDrawer.Children_Check(mono, currentComponent, objectAttribute.GetComponentType, objectAttribute.AllowInactive))
             {
-                for (int i = 0; i < components.Count; i++)
-                    if (listComponentName[i] == fileName)
-                    {
-                        property.objectReferenceValue = components[i];
-                        break;
-                    }
+                property.objectReferenceValue = components[0];
+                currentComponent = property.objectReferenceValue as Component;
+            }
+            string fileName = GetComponentName(currentComponent);
+            if (EditorGui_Draw.DrawPopup_String(position, label, listComponentName.ToArray(), fileName, out int index))
+            {
+                property.objectReferenceValue = components[index];
             }
         }
         #endregion
 
         #region Methods
-        private string GetComponentName(Component component, GetComponentType getComponentType)
+        private string GetComponentName(Component component)
         {
-            if (getComponentType == GetComponentType.InGameObject)
-                return string.Format(COMPONENT_NAME_FORMAT, component.GetType().Name, component.GetInstanceID());
-            //
-            return string.Format(COMPONENT_NAME_IN_CHILD_FORMAT, component.gameObject.name, component.GetType().Name, component.GetInstanceID());
+            if (component == null)
+                return COMPONENT_NAME_NULL;
+            return string.Format(COMPONENT_NAME_FORMAT, component.gameObject.name, component.GetType().Name, component.GetInstanceID());
         }
         #endregion
     }

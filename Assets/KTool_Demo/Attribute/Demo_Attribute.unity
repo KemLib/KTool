@@ -228,7 +228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463a4d8c232d41449804ac81f34d88f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider2d: {fileID: 1834232282}
+  collider2d: {fileID: 0}
   collider2ds:
   - {fileID: 306479529}
   - {fileID: 306479529}
@@ -2296,7 +2296,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider2d: {fileID: 1292311324}
-  collider2ds: []
+  collider2ds:
+  - {fileID: 1292311324}
 --- !u!1 &1351609493
 GameObject:
   m_ObjectHideFlags: 0
