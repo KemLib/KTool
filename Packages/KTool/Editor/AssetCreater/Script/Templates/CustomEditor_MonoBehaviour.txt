@@ -4,8 +4,8 @@ using UnityEngine;
 namespace [Namespace]
 {
 
-    [CustomEditor(typeof([ClassName]))]
-    [ClassAccessModifiers] class [ClassName] : UnityEditor.Editor
+    [CustomEditor(typeof([NameScript]))]
+    [AccessModifier] class [NameScriptEditor] : UnityEditor.Editor
     {
         #region Properties
 

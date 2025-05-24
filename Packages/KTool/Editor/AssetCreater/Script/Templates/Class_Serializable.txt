@@ -3,7 +3,7 @@ using UnityEngine;
 namespace [Namespace]
 {
     [System.Serializable]
-    [ClassAccessModifiers] class [ClassName]
+    [AccessModifier] class [NameScript]
     {
         #region Properties
 

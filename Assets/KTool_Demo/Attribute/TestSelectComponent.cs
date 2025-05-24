@@ -6,9 +6,9 @@ namespace KTool_Demo.Attribute
     public class TestSelectComponent : MonoBehaviour
     {
         #region Properties
-        [SerializeField, SelectComponent]
+        [SerializeField, SelectComponent(allowNull: true)]
         private Collider2D collider2d;
-        [SerializeField, SelectComponent]
+        [SerializeField, SelectComponent(allowNull: true)]
         private Collider2D[] collider2ds;
         #endregion
 

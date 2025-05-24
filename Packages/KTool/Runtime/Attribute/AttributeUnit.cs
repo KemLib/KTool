@@ -72,7 +72,7 @@ namespace KTool.Attribute
             for (int i = 0; i < sceneCount; i++)
             {
                 EditorBuildSettingsScene scene = EditorBuildSettings.scenes[i];
-                if(!scene.enabled)
+                if (!scene.enabled)
                     continue;
                 string sceneName = System.IO.Path.GetFileNameWithoutExtension(scene.path);
                 scenes.Add(sceneName);

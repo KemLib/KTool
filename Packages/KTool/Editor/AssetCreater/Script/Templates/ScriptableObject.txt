@@ -2,18 +2,15 @@ using UnityEngine;
 
 namespace [Namespace]
 {
-    [CreateAssetMenu(fileName = "[ClassName]", menuName = "ScriptableObject/[ClassName]")]
-    [ClassAccessModifiers] class [ClassName] : ScriptableObject
+    [CreateAssetMenu(fileName = "[NameScript]", menuName = "ScriptableObject/[NameScript]")]
+    [AccessModifier] class [NameScript] : ScriptableObject
     {
         #region Properties
 
         #endregion
 
         #region Methods Unity
-        private void OnEnable()
-        {
 
-        }
         #endregion
 
         #region Methods

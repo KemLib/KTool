@@ -48,19 +48,10 @@ namespace KTool.Init
             int index = 0;
             while (index < items.Count)
             {
-                try
-                {
-                    TrackEntry trackEntry = items[index].InitBegin();
-                    if (trackEntry is not null)
-                        dicTrackEntry.Add(items[index], trackEntry);
-                    index++;
-                }
-                catch (Exception ex)
-                {
-                    items.RemoveAt(index);
-                    string message = string.Format(ERROR_ITEM_INIT_BEGIN, index, ex.Message);
-                    Debug.LogError(message);
-                }
+                TrackEntry trackEntry = items[index].InitBegin();
+                if (trackEntry is not null)
+                    dicTrackEntry.Add(items[index], trackEntry);
+                index++;
             }
 
         }
@@ -68,15 +59,7 @@ namespace KTool.Init
         {
             for (int i = 0; i < items.Count; i++)
             {
-                try
-                {
-                    items[i].InitEnd();
-                }
-                catch (Exception ex)
-                {
-                    string message = string.Format(ERROR_ITEM_INIT_END, i, ex.Message);
-                    Debug.LogError(message);
-                }
+                items[i].InitEnd();
             }
             //
             items.Clear();

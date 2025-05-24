@@ -35,17 +35,18 @@ namespace KTool.Attribute.Editor
                 property.stringValue = options[index];
             }
         }
-        public static bool DrawPopup_String(Rect position, GUIContent label, string[] options, ref string value)
+        public static bool DrawPopup_String(Rect position, GUIContent label, string[] options, string value, out int index)
         {
             if (options.Length == 0)
             {
                 value = string.Empty;
                 EditorGUI.LabelField(position, label, new GUIContent(ERROR_OPTION_EMPTY));
+                index = -1;
                 return true;
             }
             //
             bool isChange = false;
-            int index = ArrayString_IndexOf(value, options);
+            index = ArrayString_IndexOf(value, options);
             if (index < 0)
             {
                 index = 0;

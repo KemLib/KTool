@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace [Namespace]
 {
-    [ClassAccessModifiers] class [ClassName] : MonoBehaviour
+    [AccessModifier] class [NameScript] : MonoBehaviour
     {
         #region Properties
-        public static [ClassName] Instance
+        public static [NameScript] Instance
         {
             get;
             private set;
@@ -28,14 +28,6 @@ namespace [Namespace]
         {
             if (Instance != null && Instance.GetInstanceID() == GetInstanceID())
                 Instance = null;
-        }
-        private void Start()
-        {
-        
-        }
-        private void Update()
-        {
-        
         }
         #endregion
 

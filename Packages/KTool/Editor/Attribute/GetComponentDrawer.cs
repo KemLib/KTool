@@ -47,14 +47,14 @@ namespace KTool.Attribute.Editor
             if (property.objectReferenceValue != null)
             {
                 Component component = property.objectReferenceValue as Component;
-                if (Children_Check(mono, component.transform, objectAttribute.GetComponentType, objectAttribute.IncludeInactive))
+                if (Children_Check(mono, component, objectAttribute.GetComponentType, objectAttribute.AllowInactive))
                 {
                     EditorGUI.PropertyField(position, property, label);
                     return;
                 }
             }
             //
-            property.objectReferenceValue = GetComponent(mono, fieldInfo.FieldType, objectAttribute.GetComponentType, objectAttribute.IncludeInactive);
+            property.objectReferenceValue = GetComponent(mono, fieldInfo.FieldType, objectAttribute.GetComponentType, objectAttribute.AllowInactive);
             EditorGUI.PropertyField(position, property, label);
         }
         private void OnGui_Fields(Rect position, GUIContent label, SerializedProperty property, Type typeElement)
@@ -76,7 +76,7 @@ namespace KTool.Attribute.Editor
             GetComponentAttribute objectAttribute = attribute as GetComponentAttribute;
             MonoBehaviour mono = property.serializedObject.targetObject as MonoBehaviour;
             List<Component> components = new List<Component>();
-            GetComponent(mono, typeElement, objectAttribute.GetComponentType, objectAttribute.IncludeInactive, components);
+            GetComponent(mono, typeElement, objectAttribute.GetComponentType, objectAttribute.AllowInactive, components);
             //
             SerializedProperty propertyRoot = EditorGui_Draw.PropertyElement_GetPropertyRoot(property);
             EditorGui_Draw.ArrayAsync_Component(components, propertyRoot);
@@ -86,59 +86,71 @@ namespace KTool.Attribute.Editor
         }
         #endregion
 
-        #region Children
-        public static Component GetComponent(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool includeInactive)
+        #region GetComponent
+        public static Component GetComponent(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool allowInactive)
         {
-            if (getComponentType == GetComponentType.InGameObject)
-                return mono.GetComponent(typeElement);
-            //
-            return GetComponent_InChildren(mono, typeElement, getComponentType, includeInactive);
+            Component component;
+            if (IsInGameObject(getComponentType))
+            {
+                component = mono.GetComponent(typeElement);
+                if (component != null)
+                    return component;
+            }
+            if (IsInChildren(getComponentType))
+                component = GetComponent_InChildren(mono, typeElement, getComponentType, allowInactive);
+            else
+                component = null;
+            return component;
         }
-        public static Component GetComponent_InChildren(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool includeInactive)
+        private static Component GetComponent_InChildren(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool allowInactive)
         {
             int childCount = mono.transform.childCount;
             for (int i = 0; i < childCount; i++)
             {
                 Transform child = mono.transform.GetChild(i);
-                if (!includeInactive && !child.gameObject.activeSelf)
+                if (!allowInactive && !child.gameObject.activeSelf)
                     continue;
-                Component component = GetComponent_InChildren(child, typeElement, getComponentType, includeInactive);
+                Component component = GetComponent_InChildren(child, typeElement, getComponentType, allowInactive);
                 if (component != null)
                     return component;
             }
             return null;
         }
-        public static Component GetComponent_InChildren(Transform transform, Type typeElement, GetComponentType getComponentType, bool includeInactive)
+        private static Component GetComponent_InChildren(Transform transform, Type typeElement, GetComponentType getComponentType, bool allowInactive)
         {
             Component component = transform.GetComponent(typeElement);
             if (component != null)
                 return component;
-            //
-            if (getComponentType != GetComponentType.InAllChildren)
+            if (!IsInAllChildren(getComponentType))
                 return null;
+            //
             int childCount = transform.childCount;
             for (int i = 0; i < childCount; i++)
             {
                 Transform child = transform.GetChild(i);
-                if (!includeInactive && !child.gameObject.activeSelf)
+                if (!allowInactive && !child.gameObject.activeSelf)
                     continue;
-                component = GetComponent_InChildren(child, typeElement, getComponentType, includeInactive);
+                component = GetComponent_InChildren(child, typeElement, getComponentType, allowInactive);
                 if (component != null)
                     return component;
             }
             return null;
         }
+
         public static void GetComponent(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool includeInactive, List<Component> components)
         {
-            if (getComponentType == GetComponentType.InGameObject)
+            List<Component> tmps = new List<Component>();
+            if (IsInGameObject(getComponentType))
             {
-                mono.GetComponents(typeElement, components);
-                return;
+                mono.GetComponents(typeElement, tmps);
+                if (tmps.Count > 0)
+                    components.AddRange(tmps);
             }
             //
-            GetComponent_InChildren(mono, typeElement, getComponentType, includeInactive, components);
+            if (IsInChildren(getComponentType))
+                GetComponent_InChildren(mono, typeElement, getComponentType, includeInactive, components, tmps);
         }
-        public static void GetComponent_InChildren(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool includeInactive, List<Component> components)
+        private static void GetComponent_InChildren(MonoBehaviour mono, Type typeElement, GetComponentType getComponentType, bool includeInactive, List<Component> components, List<Component> tmps)
         {
             int childCount = mono.transform.childCount;
             for (int i = 0; i < childCount; i++)
@@ -146,41 +158,58 @@ namespace KTool.Attribute.Editor
                 Transform child = mono.transform.GetChild(i);
                 if (!includeInactive && !child.gameObject.activeSelf)
                     continue;
-                GetComponent_InChildren(child, typeElement, getComponentType, includeInactive, components);
+                GetComponent_InChildren(child, typeElement, getComponentType, includeInactive, components, tmps);
             }
         }
-        public static void GetComponent_InChildren(Transform transform, Type typeElement, GetComponentType getComponentType, bool includeInactive, List<Component> components)
+        private static void GetComponent_InChildren(Transform transform, Type typeElement, GetComponentType getComponentType, bool includeInactive, List<Component> components, List<Component> tmps)
         {
-            List<Component> tmp = new List<Component>();
-            transform.GetComponents(typeElement, tmp);
-            if (tmp.Count > 0)
-                components.AddRange(tmp);
-            //
-            if (getComponentType != GetComponentType.InAllChildren)
+            transform.GetComponents(typeElement, tmps);
+            if (tmps.Count > 0)
+                components.AddRange(tmps);
+            if (!IsInAllChildren(getComponentType))
                 return;
+            //
             int childCount = transform.childCount;
             for (int i = 0; i < childCount; i++)
             {
                 Transform child = transform.GetChild(i);
                 if (!includeInactive && !child.gameObject.activeSelf)
                     continue;
-                GetComponent_InChildren(child, typeElement, getComponentType, includeInactive, components);
+                GetComponent_InChildren(child, typeElement, getComponentType, includeInactive, components, tmps);
             }
         }
-        public static bool Children_Check(MonoBehaviour mono, Transform child, GetComponentType getComponentType, bool includeInactive)
+        private static bool IsInGameObject(GetComponentType getComponentType)
         {
-            if (getComponentType == GetComponentType.InGameObject)
-                return mono.gameObject.GetInstanceID() == child.gameObject.GetInstanceID();
-            //
-            if (!includeInactive && !child.gameObject.activeSelf)
+            return getComponentType == GetComponentType.InGameObject || getComponentType == GetComponentType.InGameObject_Children || getComponentType == GetComponentType.InGameObject_AllChildren;
+        }
+        private static bool IsInChildren(GetComponentType getComponentType)
+        {
+            return getComponentType == GetComponentType.InChildren || getComponentType == GetComponentType.InAllChildren || getComponentType == GetComponentType.InGameObject_Children || getComponentType == GetComponentType.InGameObject_AllChildren;
+        }
+        private static bool IsInAllChildren(GetComponentType getComponentType)
+        {
+            return getComponentType == GetComponentType.InAllChildren || getComponentType == GetComponentType.InGameObject_AllChildren;
+        }
+
+        public static bool Children_Check(MonoBehaviour mono, Component component, GetComponentType getComponentType, bool allowInactive)
+        {
+            if (IsInGameObject(getComponentType) && mono.gameObject.GetInstanceID() == component.gameObject.GetInstanceID())
+                return true;
+            if (IsInChildren(getComponentType))
+                return Children_Check(mono, component.transform, getComponentType, allowInactive);
+            return false;
+        }
+        private static bool Children_Check(MonoBehaviour mono, Transform child, GetComponentType getComponentType, bool allowInactive)
+        {
+            if (!allowInactive && !child.gameObject.activeSelf)
                 return false;
             Transform childParent = child.parent;
             if (childParent == null)
                 return false;
             if (childParent.GetInstanceID() == mono.transform.GetInstanceID())
                 return true;
-            if (getComponentType == GetComponentType.InAllChildren)
-                return Children_Check(mono, childParent, getComponentType, includeInactive);
+            if (IsInAllChildren(getComponentType))
+                return Children_Check(mono, childParent, getComponentType, allowInactive);
             return false;
         }
         #endregion

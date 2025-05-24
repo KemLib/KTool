@@ -8,17 +8,17 @@ namespace KTool.Attribute
     {
         #region Properties
         private GetComponentType getComponentType;
-        private bool includeInactive;
+        private bool allowInactive;
 
         public GetComponentType GetComponentType => getComponentType;
-        public bool IncludeInactive => includeInactive;
+        public bool AllowInactive => allowInactive;
         #endregion Properties
 
         #region Constructor
-        public GetComponentAttribute(GetComponentType getComponentType = GetComponentType.InGameObject, bool includeInactive = false) : base()
+        public GetComponentAttribute(GetComponentType getComponentType = GetComponentType.InGameObject, bool allowInactive = false) : base()
         {
             this.getComponentType = getComponentType;
-            this.includeInactive = includeInactive;
+            this.allowInactive = allowInactive;
         }
         #endregion Constructor
 

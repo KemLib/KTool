@@ -9,44 +9,42 @@ namespace KTool.AssetCreater.Script.Editor
     public class CreaterScript : ICreater
     {
         #region Properties
-        public const char CHAR_DOT = '.',
-            CHAR_BACKSLASH = '/',
-            CHAR_UN_BACKSLASH = '\\',
-            CHAR_SPACE = ' ',
-            CHAR_SLIP = '_';
-        private const string FOLDER_NAME_PACKAGES = "Packages",
-            FOLDER_NAME_ASSETS = "Assets",
-            FOLDER_NAME_RUNTIME = "Runtime",
-            FOLDER_NAME_EDITOR = "Editor";
         private const string CREATER_NAME = "Creater Script";
-        private const string DEFAULT_CLASS_NAME = "NewScript";
         private const string SCRIPT_FILE_EXTENSION = "cs";
-        private const string ERROR_NAMESPACE_IS_EMPTY = "Create script fail: Namespace is empty",
-            ERROR_CLASS_NAME_IS_EMPTY = "Create script fail: ClassName is empty",
-            ERROR_LOAD_SETTING_FAIL = "Create script fail: canot load Setting",
-            ERROR_LOAD_SETTING_TEMPALE_FAIL = "Create script fail: canot load SettingTemplate";
+        private const string FILE_PATH_FORMAT = "{0}\\{1}.{2}";
+        private const string FILE_PATH_TITLE = "Path";
+        private const string GUI_ERROR_TITLE = "Error!",
+            ERROR_LOAD_SETTING_FAIL = "Canot load Setting",
+            ERROR_LOAD_SETTING_TEMPALE_FAIL = "Canot load SettingTemplate";
 
-        public static string[] arrayAccessModifier = Enum.GetNames(typeof(AccessModifiers));
-
-        private string txtNameSpace;
-        private int indexAccessModifiers;
-        private string txtClassName;
-        private int indexTemplate;
-        private string txtTemplate;
+        private SettingCreateScript setting;
+        private string selectFolder,
+            selectAsset,
+            folderName,
+            fileName;
+        private SettingTemplate settingTemplate;
+        private List<Replace> listReplace;
         private Vector2 scrollTextTemplate;
+        private string[] arrayTemplateName;
+        private int indexTemplate;
 
         public string CreaterName => CREATER_NAME;
         public bool SaveAndClose => true;
-        private SettingCreateScript Setting => SettingCreateScript.Instance;
-        private AccessModifiers AccessModifier
+        public string SelectFolder => selectFolder;
+        public string SelectAsset => selectAsset;
+        public string FolderName
         {
-            get
-            {
-                if (Enum.TryParse(arrayAccessModifier[indexAccessModifiers], out AccessModifiers accessModifier))
-                    return accessModifier;
-                return AccessModifiers.PUBLIC;
-            }
+            get => folderName;
+            set => folderName = value;
         }
+        public string FileName
+        {
+            get => fileName;
+            set => fileName = value;
+        }
+        public SettingTemplate SettingTemplate => settingTemplate;
+        public int Count => listReplace.Count;
+        public Replace this[int index] => listReplace[index];
         #endregion
 
         #region Construction
@@ -57,6 +55,27 @@ namespace KTool.AssetCreater.Script.Editor
         #endregion
 
         #region Method
+        private void LoadSettingTemplate()
+        {
+            if (indexTemplate < 0)
+                indexTemplate = 0;
+            else if (indexTemplate >= setting.Count)
+                indexTemplate = setting.Count - 1;
+            //
+            settingTemplate = setting[indexTemplate];
+            listReplace.Clear();
+            for (int i = 0; i < settingTemplate.Count; i++)
+                listReplace.Add(settingTemplate[i].GetReplace(this));
+        }
+        private static string FixFileName(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return string.Empty;
+            //
+            fileName = fileName.Substring(0, fileName.LastIndexOf(Replace.CHAR_DOT));
+            //
+            return fileName;
+        }
         [MenuItem("Assets/KTool/Create Script")]
         private static void MenuItem_ShowWindow()
         {
@@ -68,174 +87,111 @@ namespace KTool.AssetCreater.Script.Editor
         #region Method Creater
         public void OnGuiShow(CreateWindow createWindow)
         {
-            txtNameSpace = GetNamespace(createWindow.SelectFolder);
-            indexAccessModifiers = 0;
-            txtClassName = DEFAULT_CLASS_NAME;
-            if (Setting == null || Setting.Count == 0)
+            setting = SettingCreateScript.Instance;
+            selectFolder = createWindow.SelectFolder;
+            selectAsset = createWindow.SelectAsset;
+            folderName = createWindow.SelectFolder;
+            fileName = FixFileName(createWindow.SelectAsset);
+            settingTemplate = null;
+            listReplace = new List<Replace>();
+            if (setting == null || setting.Count == 0)
             {
+                arrayTemplateName = new string[0];
                 indexTemplate = -1;
-                txtTemplate = string.Empty;
             }
             else
             {
+                arrayTemplateName = new string[setting.Count];
+                for (int i = 0; i < setting.Count; i++)
+                    arrayTemplateName[i] = setting[i].Name;
                 indexTemplate = 0;
-                txtTemplate = Setting[indexTemplate].TextTemplate;
+                //
+                LoadSettingTemplate();
             }
+            //
+            scrollTextTemplate = Vector2.zero;
         }
         public void OnGuiDraw(CreateWindow createWindow)
         {
-            EditorGUILayout.BeginHorizontal();
-            txtNameSpace = EditorGUILayout.TextField("NameSpace", txtNameSpace);
-            txtNameSpace = FixName(txtNameSpace);
-            if (GUILayout.Button("Auto Namespace"))
+            EditorGUI.BeginDisabledGroup(true);
+            string path = string.Format(FILE_PATH_FORMAT, folderName, fileName, SCRIPT_FILE_EXTENSION);
+            EditorGUILayout.TextField(FILE_PATH_TITLE, path);
+            EditorGUI.EndDisabledGroup();
+            //
+            OnGuiDrawSelectTemplate();
+            //
+            GUILayout.Space(10);
+            //
+            OnGuiDrawReplace();
+            //
+            GUILayout.FlexibleSpace();
+        }
+        private void OnGuiDrawSelectTemplate()
+        {
+            if (setting == null || setting.Count == 0)
             {
-                txtNameSpace = GetNamespace(createWindow.SelectFolder);
-            }
-            EditorGUILayout.EndHorizontal();
-            //
-            indexAccessModifiers = EditorGUILayout.Popup("Access Modifier", indexAccessModifiers, arrayAccessModifier);
-            //
-            txtClassName = EditorGUILayout.TextField("Class Name", txtClassName);
-            txtClassName = FixName(txtClassName);
-            //
-            string templateName = string.Empty;
-            if (Setting != null && Setting.Count > 0)
-            {
-                EditorGUILayout.Space(10);
-                string[] arrayTemplateName = new string[Setting.Count];
-                for (int i = 0; i < Setting.Count; i++)
-                    arrayTemplateName[i] = Setting[i].Name;
-                if (indexTemplate < 0)
-                    indexTemplate = 0;
-                else if (indexTemplate >= Setting.Count)
-                    indexTemplate = Setting.Count - 1;
-                //
-                EditorGUI.BeginChangeCheck();
-                indexTemplate = EditorGUILayout.Popup("Template", indexTemplate, arrayTemplateName);
-                if (EditorGUI.EndChangeCheck())
-                    txtTemplate = Setting[indexTemplate].TextTemplate;
-                EditorGUILayout.Space(10);
-                //
-                templateName = Setting[indexTemplate].Name;
+                if (setting == null)
+                    EditorGUILayout.LabelField(GUI_ERROR_TITLE, ERROR_LOAD_SETTING_FAIL);
+                else
+                    EditorGUILayout.LabelField(GUI_ERROR_TITLE, ERROR_LOAD_SETTING_TEMPALE_FAIL);
+                return;
             }
             //
-            GUILayout.BeginVertical("Script " + templateName, "window");
+            EditorGUI.BeginChangeCheck();
+            indexTemplate = EditorGUILayout.Popup("Template", indexTemplate, arrayTemplateName);
+            if (EditorGUI.EndChangeCheck())
+            {
+                LoadSettingTemplate();
+            }
+        }
+        private void OnGuiDrawReplace()
+        {
+            if (settingTemplate == null)
+                return;
+            //
+            string previewText = settingTemplate.TextTemplate;
+            foreach (var replace in listReplace)
+            {
+                try
+                {
+                    previewText = replace.OnGuiDraw(previewText);
+                }
+                catch (Exception ex)
+                {
+                    EditorGUILayout.LabelField(replace.Setting.name, ex.Message);
+                }
+            }
+            //
+            GUILayout.Space(10);
+            //
+            GUIStyle textStyle = new GUIStyle();
+            textStyle.normal.textColor = Color.white;
+            textStyle.wordWrap = true;
+            textStyle.richText = true;
+            GUILayout.BeginVertical("Script " + settingTemplate.Name, "window");
             scrollTextTemplate = EditorGUILayout.BeginScrollView(scrollTextTemplate);
-            txtTemplate = EditorGUILayout.TextArea(txtTemplate, GUILayout.Height(createWindow.position.height));
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.TextArea(previewText, textStyle);
+            EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndScrollView();
             GUILayout.EndVertical();
-            //
-            EditorGUILayout.Space(10);
         }
         public void OnSave(CreateWindow createWindow)
         {
-            if (Setting == null)
-            {
-                Debug.LogError(ERROR_LOAD_SETTING_FAIL);
+            if (settingTemplate == null)
                 return;
-            }
-            if (indexTemplate < 0 || indexTemplate >= Setting.Count)
-            {
-                Debug.LogError(ERROR_LOAD_SETTING_TEMPALE_FAIL);
-                return;
-            }
-            if (string.IsNullOrEmpty(txtNameSpace))
-            {
-                Debug.LogError(ERROR_NAMESPACE_IS_EMPTY);
-                return;
-            }
             //
-            if (string.IsNullOrEmpty(txtClassName))
-            {
-                Debug.LogError(ERROR_CLASS_NAME_IS_EMPTY);
-                return;
-            }
-            //
-            string txtAccessModifier = AccessModifier.ToString().ToLower().Replace(CHAR_SLIP, CHAR_SPACE),
-                scriptData = txtTemplate;
-            scriptData = scriptData.Replace(Setting[indexTemplate].KeyNamespace, txtNameSpace);
-            scriptData = scriptData.Replace(Setting[indexTemplate].KeyAccessModifiers, txtAccessModifier);
-            scriptData = scriptData.Replace(Setting[indexTemplate].KeyClassname, txtClassName);
-            createWindow.WriteFile(txtClassName, SCRIPT_FILE_EXTENSION, scriptData);
+            string text = settingTemplate.TextTemplate;
+            foreach (var replace in listReplace)
+                text = replace.OnSave(text);
+            createWindow.WriteFile(FolderName, FileName, SCRIPT_FILE_EXTENSION, text);
         }
         public void OnCancel(CreateWindow createWindow)
         {
-
-        }
-        #endregion
-
-        #region Utility
-        public static string GetNamespace(string folder)
-        {
-            folder = FixName(folder);
-            //
-            List<string> listFolder = new List<string>(folder.Split(CHAR_DOT));
-            if (listFolder.Count > 0)
+            foreach (var replace in listReplace)
             {
-                if (listFolder[0] == FOLDER_NAME_ASSETS)
-                {
-                    if (listFolder.Count >= 3)
-                    {
-                        if (listFolder[2] == FOLDER_NAME_EDITOR)
-                        {
-                            listFolder.RemoveAt(2);
-                            listFolder.Add(FOLDER_NAME_EDITOR);
-                        }
-                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
-                        {
-                            listFolder.RemoveAt(2);
-                        }
-                    }
-                    listFolder.RemoveAt(0);
-                }
-                else if (listFolder[0] == FOLDER_NAME_PACKAGES)
-                {
-                    if (listFolder.Count >= 3)
-                    {
-                        if (listFolder[2] == FOLDER_NAME_EDITOR)
-                        {
-                            listFolder.RemoveAt(2);
-                            listFolder.Add(FOLDER_NAME_EDITOR);
-                        }
-                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
-                        {
-                            listFolder.RemoveAt(2);
-                        }
-                    }
-                    listFolder.RemoveAt(0);
-                }
+                replace.OnCancel();
             }
-            string nameSpace = string.Join(CHAR_DOT, listFolder.ToArray());
-            return nameSpace;
-        }
-        public static string FixName(string name)
-        {
-            name = StringRemoveStartSpace(name);
-            name = StringRemoveEndSpace(name);
-            name = name.Replace(CHAR_BACKSLASH, CHAR_DOT);
-            name = name.Replace(CHAR_UN_BACKSLASH, CHAR_DOT);
-            name = name.Replace(CHAR_SPACE, CHAR_SLIP);
-            return name;
-        }
-        private static string StringRemoveStartSpace(string text)
-        {
-            while (text.StartsWith(CHAR_SPACE))
-            {
-                if (text.Length <= 1)
-                    return string.Empty;
-                text = text.Substring(1);
-            }
-            return text;
-        }
-        private static string StringRemoveEndSpace(string text)
-        {
-            while (text.EndsWith(CHAR_SPACE))
-            {
-                if (text.Length <= 1)
-                    return string.Empty;
-                text = text.Substring(0, text.Length - 1);
-            }
-            return text;
         }
         #endregion
     }

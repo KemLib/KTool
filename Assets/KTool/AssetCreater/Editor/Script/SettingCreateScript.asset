@@ -13,48 +13,58 @@ MonoBehaviour:
   m_Name: SettingCreateScript
   m_EditorClassIdentifier: 
   templates:
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+  - displayName: MonoBehaviour
     assetTemplate: {fileID: 4900000, guid: 43e1fb6978cd7eb4ca2ae3d0fadaf01d, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: MonoBehaviour_Instance
     assetTemplate: {fileID: 4900000, guid: 196428e0d5f57e141a11ff536cfa808f, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: ScriptableObject
     assetTemplate: {fileID: 4900000, guid: 90a259615ccc1c94e8ce62b93ae3ca09, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: Class
     assetTemplate: {fileID: 4900000, guid: 956e52a610afdb9498c397d5217a4872, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: Class_Serializable
     assetTemplate: {fileID: 4900000, guid: 54a60de232a7a5d4d962aebc10f21aac, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: Interface
     assetTemplate: {fileID: 4900000, guid: dc5cca93ad12d7b4ca5d76352bf71e9a, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: Struct
     assetTemplate: {fileID: 4900000, guid: 71e6642031a02b34d9ba39e79bb46a11, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: Enum
     assetTemplate: {fileID: 4900000, guid: 2f0f663acdbfa714a8e180d71bf88290, type: 3}
-  - displayName: 
-    keyNamespace: '[Namespace]'
-    keyAccessModifiers: '[ClassAccessModifiers]'
-    keyClassname: '[ClassName]'
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 698c835cb39d0be478927d54ff35720a, type: 2}
+  - displayName: CustomEditor_MonoBehaviour
     assetTemplate: {fileID: 4900000, guid: c4c6993bb43463d4087579a7af91a4e8, type: 3}
+    replaces:
+    - {fileID: 11400000, guid: 56721a7aecf7a0548926dd937c551340, type: 2}
+    - {fileID: 11400000, guid: b08d2720269e29749b2739699ce46f61, type: 2}
+    - {fileID: 11400000, guid: 5cdbbc13ff0cb2940a4202b15e6c88ee, type: 2}
+    - {fileID: 11400000, guid: adc0e5318fb3eef4cad711da2c3b3e85, type: 2}

@@ -2,17 +2,14 @@ using UnityEngine;
 
 namespace [Namespace]
 {
-    [ClassAccessModifiers] class [ClassName]
+    [AccessModifier] class [NameScript]
     {
         #region Properties
 
         #endregion
 
         #region Construction
-        public [ClassName]()
-        {
-            
-        }
+
         #endregion
 
         #region Methods
