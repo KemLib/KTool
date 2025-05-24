@@ -39,7 +39,6 @@ namespace KTool.Attribute.Editor
         {
             if (options.Length == 0)
             {
-                value = string.Empty;
                 EditorGUI.LabelField(position, label, new GUIContent(ERROR_OPTION_EMPTY));
                 index = -1;
                 return true;
@@ -50,7 +49,6 @@ namespace KTool.Attribute.Editor
             if (index < 0)
             {
                 index = 0;
-                value = options[index];
                 isChange = true;
             }
             //
@@ -58,7 +56,6 @@ namespace KTool.Attribute.Editor
             if (newIndex != index)
             {
                 index = newIndex;
-                value = options[index];
                 isChange = true;
             }
             return isChange;

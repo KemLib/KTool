@@ -12,6 +12,7 @@ namespace KTool.Attribute.Editor
         #region Properties
         public const string ERROR_TYPE = "type of property not is UnityEngine.Object or UnityEngine.Object[]",
             ERROR_FOLDER_NOT_FOUND = "Folder not found";
+        private const string FILE_NAME_NULL = "Null";
         public const string FORMAT_PATH_ASSET = "{0}/{1}.{2}";
         #endregion
 
@@ -66,12 +67,22 @@ namespace KTool.Attribute.Editor
                 else
                     indexTagetFile++;
             }
+            if (objectAttribute.AllowNull)
+                tagetFiles.Insert(0, FILE_NAME_NULL);
             //
-            string fileName = Asset_GetFileName(property, tagetFiles, objectAttribute.Folder, objectAttribute.Extension);
+            string fileName;
+            if (objectAttribute.AllowNull && property.objectReferenceValue == null)
+                fileName = FILE_NAME_NULL;
+            else
+                fileName = Asset_GetFileName(property, tagetFiles, objectAttribute.Folder, objectAttribute.Extension);
             if (EditorGui_Draw.DrawPopup_String(position, label, tagetFiles.ToArray(), fileName, out int index))
             {
-                fileName = tagetFiles[index];
-                property.objectReferenceValue = Asset_GetObject(objectAttribute.Folder, fileName, objectAttribute.Extension, typeElement);
+                if (objectAttribute.AllowNull && index == 0)
+                    property.objectReferenceValue = null;
+                else if (index >= 0)
+                    property.objectReferenceValue = Asset_GetObject(objectAttribute.Folder, tagetFiles[index], objectAttribute.Extension, typeElement);
+                else
+                    property.objectReferenceValue = null;
             }
         }
         #endregion
