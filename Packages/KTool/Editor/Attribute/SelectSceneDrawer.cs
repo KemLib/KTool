@@ -29,7 +29,7 @@ namespace KTool.Attribute.Editor
             //
             if (fieldInfo.FieldType == typeof(string) || fieldInfo.FieldType == typeof(string[]))
             {
-                EditorGui_Draw.DrawPopup_String(position, label, options, property);
+                EditorGui_Draw.DrawPopup_String(position, label, options, property, out _);
                 return;
             }
             if (fieldInfo.FieldType == typeof(int) || fieldInfo.FieldType == typeof(int[]))

@@ -12,7 +12,7 @@ namespace KTool.Attribute.Editor
         #region Properties
         public const string ERROR_TYPE = "type of property not is UnityEngine.Object or UnityEngine.Object[]",
             ERROR_FOLDER_NOT_FOUND = "Folder not found";
-        private const string FILE_NAME_NULL = "Null";
+        private const string FILE_NAME_NULL = "<Null>";
         public const string FORMAT_PATH_ASSET = "{0}/{1}.{2}";
         #endregion
 
@@ -35,7 +35,15 @@ namespace KTool.Attribute.Editor
             if (fieldInfo.FieldType == typeof(string) || fieldInfo.FieldType == typeof(string[]))
             {
                 List<string> files = AssetFinder.GetAllFile(objectAttribute.Folder, objectAttribute.Extension, false);
-                EditorGui_Draw.DrawPopup_String(position, label, files.ToArray(), property);
+                if (objectAttribute.AllowNull)
+                {
+                    files.Insert(0, FILE_NAME_NULL);
+                    if (string.IsNullOrEmpty(property.stringValue))
+                        property.stringValue = FILE_NAME_NULL;
+                }
+                EditorGui_Draw.DrawPopup_String(position, label, files.ToArray(), property, out int index);
+                if (objectAttribute.AllowNull && index == 0)
+                    property.stringValue = string.Empty;
                 return;
             }
             if (fieldInfo.FieldType.IsSubclassOf(typeof(UnityEngine.Object)))

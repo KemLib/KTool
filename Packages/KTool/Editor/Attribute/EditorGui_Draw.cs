@@ -12,16 +12,17 @@ namespace KTool.Attribute.Editor
         #endregion
 
         #region Unity Event
-        public static void DrawPopup_String(Rect position, GUIContent label, string[] options, SerializedProperty property)
+        public static void DrawPopup_String(Rect position, GUIContent label, string[] options, SerializedProperty property, out int index)
         {
             if (options.Length == 0)
             {
                 property.stringValue = string.Empty;
                 EditorGUI.LabelField(position, label, new GUIContent(ERROR_OPTION_EMPTY));
+                index = -1;
                 return;
             }
             //
-            int index = ArrayString_IndexOf(property.stringValue, options);
+            index = ArrayString_IndexOf(property.stringValue, options);
             if (index < 0)
             {
                 index = 0;
