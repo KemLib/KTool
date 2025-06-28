@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace KTool.Data.Editor
 {
-    public static class MenuData
+    public static class MenuItemData
     {
         #region Properties
 
