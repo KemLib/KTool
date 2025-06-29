@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace KTool.Init
 {
-    public class TrackEntrySource : TrackEntry
+    public class InitTrackingSource : InitTracking
     {
         #region Progperties
         public const string ERROR_UNKNOWN = "unknown error";
@@ -36,7 +36,7 @@ namespace KTool.Init
         #endregion
 
         #region Construction
-        public TrackEntrySource()
+        public InitTrackingSource()
         {
             progress = new InterValueFloat(0);
             isComplete = new InterValueBool(false);
@@ -67,23 +67,23 @@ namespace KTool.Init
             IsSuccessfully = false;
             ErrorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
         }
-        public static TrackEntry CreateTraskEntrySuccess()
+        public static InitTracking CreateSuccess()
         {
-            TrackEntrySource trackLoaderSource = new TrackEntrySource();
-            trackLoaderSource.CompleteSuccess();
-            return trackLoaderSource;
+            InitTrackingSource trackSource = new InitTrackingSource();
+            trackSource.CompleteSuccess();
+            return trackSource;
         }
-        public static TrackEntry CreateTraskEntryFail()
+        public static InitTracking CreateFail()
         {
-            TrackEntrySource trackLoaderSource = new TrackEntrySource();
-            trackLoaderSource.CompleteFail();
-            return trackLoaderSource;
+            InitTrackingSource trackSource = new InitTrackingSource();
+            trackSource.CompleteFail();
+            return trackSource;
         }
-        public static TrackEntry CreateTraskEntryFail(string errorMessage)
+        public static InitTracking CreateFail(string errorMessage)
         {
-            TrackEntrySource trackLoaderSource = new TrackEntrySource();
-            trackLoaderSource.CompleteFail(errorMessage);
-            return trackLoaderSource;
+            InitTrackingSource trackSource = new InitTrackingSource();
+            trackSource.CompleteFail(errorMessage);
+            return trackSource;
         }
         #endregion
     }

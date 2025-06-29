@@ -1,10 +1,10 @@
 namespace KTool.Init
 {
-    public interface TrackEntry
+    public interface InitTracking
     {
         #region Progperties
-        public static TrackEntry TrackLoaderSuccess = TrackEntrySource.CreateTraskEntrySuccess(),
-            TrackLoaderFail = TrackEntrySource.CreateTraskEntryFail();
+        public static InitTracking Success = InitTrackingSource.CreateSuccess(),
+            Fail = InitTrackingSource.CreateFail();
 
         public float Progress
         {
