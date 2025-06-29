@@ -9,7 +9,7 @@ namespace KTool.Advertisement
         private static AdBanner instance;
         public static AdBanner Instance
         {
-            get => instance;
+            get => instance == null ? AdDemoBanner.InstanceAdDemo : instance;
             protected set => instance = value;
         }
 
@@ -57,10 +57,6 @@ namespace KTool.Advertisement
         #region Methods
         public abstract AdBannerTracking Show();
         public abstract void Hide();
-        public static AdBanner GetInstance()
-        {
-            return Instance ?? AdBannerDemo.InstanceAdBanner;
-        }
         #endregion
 
         #region Event

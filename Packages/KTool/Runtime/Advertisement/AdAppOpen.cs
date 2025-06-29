@@ -2,17 +2,17 @@
 
 namespace KTool.Advertisement
 {
-    public abstract class AdInterstitial : Ad
+    public abstract class AdAppOpen : Ad
     {
         #region Properties
-        private static AdInterstitial instance;
-        public static AdInterstitial Instance
+        private static AdAppOpen instance;
+        public static AdAppOpen Instance
         {
-            get => instance == null ? AdDemoInterstitial.InstanceAdDemo : instance;
+            get => instance == null ? AdDemoAppOpen.InstanceAdDemo : instance;
             protected set => instance = value;
         }
 
-        public override AdType AdType => AdType.Interstitial;
+        public override AdType AdType => AdType.AppOpen;
         #endregion
 
         #region Methods

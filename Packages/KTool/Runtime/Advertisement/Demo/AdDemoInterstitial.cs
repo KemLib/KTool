@@ -4,15 +4,17 @@ using UnityEngine.UI;
 
 namespace KTool.Advertisement.Demo
 {
-    public class AdInterstitialDemo : AdInterstitial
+    public class AdDemoInterstitial : AdInterstitial
     {
         #region Properties
         private const string ERROR_IS_SHOW = "Ad is show";
-        public static AdInterstitialDemo InstanceAdInterstitial => AdManagerDemo.Instance.AdInterstitial;
+        public static AdDemoInterstitial InstanceAdDemo => AdDemoManager.Instance.AdInterstitial;
 
         [SerializeField]
-        private Image interstitial,
+        private Image panelMenu,
             imgProgress;
+        [SerializeField]
+        private Button btnClose;
         [SerializeField, Min(0)]
         private float showTime;
 
@@ -37,15 +39,11 @@ namespace KTool.Advertisement.Demo
             //
             currentTrackingSource?.ShowComplete(true);
             PushEvent_ShowComplete(true);
-            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdManagerDemo.AdSource, string.Empty, AdManagerDemo.adCountryCode, string.Empty, AdType.Banner, 1, AdManagerDemo.AdCurrency);
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 1, AdDemoManager.AdCurrency);
             PushEvent_RevenuePaid(adRevenuePaid);
             currentTrackingSource.RevenuePaid(adRevenuePaid);
             //
-            interstitial.gameObject.SetActive(false);
-            currentTrackingSource?.Hidden();
-            PushEvent_Hidden();
-            //
-            State = AdState.Inited;
+            btnClose.gameObject.SetActive(true);
         }
         #endregion
 
@@ -68,7 +66,8 @@ namespace KTool.Advertisement.Demo
             //
             currentTrackingSource = new AdInterstitialTrackingSource();
             //
-            interstitial.gameObject.SetActive(true);
+            panelMenu.gameObject.SetActive(true);
+            btnClose.gameObject.SetActive(false);
             StartCoroutine(IE_Show());
             //
             State = AdState.Show;
@@ -91,6 +90,17 @@ namespace KTool.Advertisement.Demo
             //
             currentTrackingSource?.Clicked();
             PushEvent_Clicked();
+        }
+        public void OnClick_Close()
+        {
+            if (!IsShow)
+                return;
+            //
+            panelMenu.gameObject.SetActive(false);
+            currentTrackingSource?.Hidden();
+            PushEvent_Hidden();
+            //
+            State = AdState.Inited;
         }
         #endregion
     }

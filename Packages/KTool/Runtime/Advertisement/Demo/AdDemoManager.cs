@@ -2,7 +2,7 @@
 
 namespace KTool.Advertisement.Demo
 {
-    public class AdManagerDemo : MonoBehaviour
+    public class AdDemoManager : MonoBehaviour
     {
         #region Properties
         private const string RESOURCES_PATH = "KTool/Advertisement/Demo/AdManagerDemo";
@@ -11,14 +11,14 @@ namespace KTool.Advertisement.Demo
             AdCurrency = "tmp",
             adCountryCode = "VN";
 
-        private static AdManagerDemo instance;
-        public static AdManagerDemo Instance
+        private static AdDemoManager instance;
+        public static AdDemoManager Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    AdManagerDemo prefab = Resources.Load<AdManagerDemo>(RESOURCES_PATH);
+                    AdDemoManager prefab = Resources.Load<AdDemoManager>(RESOURCES_PATH);
                     instance = Instantiate(prefab);
                     instance.gameObject.name = GAME_OBJECT_NAME;
                     DontDestroyOnLoad(instance.gameObject);
@@ -28,15 +28,18 @@ namespace KTool.Advertisement.Demo
         }
 
         [SerializeField]
-        private AdBannerDemo adBanner;
+        private AdDemoAppOpen adAppOpen;
         [SerializeField]
-        private AdInterstitialDemo adInterstitial;
+        private AdDemoBanner adBanner;
         [SerializeField]
-        private AdRewardedDemo adRewarded;
+        private AdDemoInterstitial adInterstitial;
+        [SerializeField]
+        private AdDemoRewarded adRewarded;
 
-        public AdBannerDemo AdBanner => adBanner;
-        public AdInterstitialDemo AdInterstitial => adInterstitial;
-        public AdRewardedDemo AdRewarded => adRewarded;
+        public AdDemoAppOpen AdAppOpen => adAppOpen;
+        public AdDemoBanner AdBanner => adBanner;
+        public AdDemoInterstitial AdInterstitial => adInterstitial;
+        public AdDemoRewarded AdRewarded => adRewarded;
         #endregion
 
         #region Methods Unity

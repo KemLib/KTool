@@ -3,20 +3,16 @@ using UnityEngine.UI;
 
 namespace KTool.Advertisement.Demo
 {
-    public class AdBannerDemo : AdBanner
+    public class AdDemoBanner : AdBanner
     {
         #region Properties
         private const string ERROR_IS_SHOW = "Ad is show";
-        public static AdBannerDemo InstanceAdBanner => AdManagerDemo.Instance.AdBanner;
+        public static AdDemoBanner InstanceAdDemo => AdDemoManager.Instance.AdBanner;
 
         [SerializeField]
         private Image bannerBot,
             bannerMid,
             bannerTop;
-        [SerializeField]
-        private Vector2 sizeStandard,
-            sizeMedium,
-            sizeFullSize;
 
         private Image currentBanner;
         private AdBannerTrackingSource currentTrackingSource;
@@ -41,23 +37,6 @@ namespace KTool.Advertisement.Demo
                         return bannerBot;
                     default:
                         return bannerBot;
-                }
-            }
-        }
-        private Vector2 BannerSize
-        {
-            get
-            {
-                switch (SizeType)
-                {
-                    case AdSize.Standard:
-                        return sizeStandard;
-                    case AdSize.Medium:
-                        return sizeMedium;
-                    case AdSize.FullSize:
-                        return sizeFullSize;
-                    default:
-                        return sizeStandard;
                 }
             }
         }
@@ -92,8 +71,6 @@ namespace KTool.Advertisement.Demo
             //
             IsExpanded = false;
             currentBanner = BannerSelect;
-            RectTransform rtfBanner = currentBanner.GetComponent<RectTransform>();
-            rtfBanner.sizeDelta = BannerSize;
             currentBanner.gameObject.SetActive(true);
             //
             State = AdState.Show;
@@ -110,7 +87,7 @@ namespace KTool.Advertisement.Demo
             //
             currentTrackingSource?.ShowComplete(true);
             PushEvent_ShowComplete(true);
-            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdManagerDemo.AdSource, string.Empty, AdManagerDemo.adCountryCode, string.Empty, AdType.Banner, 1, AdManagerDemo.AdCurrency);
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 1, AdDemoManager.AdCurrency);
             PushEvent_RevenuePaid(adRevenuePaid);
             currentTrackingSource.RevenuePaid(adRevenuePaid);
             //
