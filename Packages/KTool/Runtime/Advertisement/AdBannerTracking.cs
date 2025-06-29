@@ -28,7 +28,7 @@ namespace KTool.Advertisement
         }
         public AdBannerTracking()
         {
-            IsShow = false;
+            IsShow = true;
             ErrorMessage = string.Empty;
         }
         #endregion
