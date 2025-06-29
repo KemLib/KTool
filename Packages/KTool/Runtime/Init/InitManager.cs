@@ -99,13 +99,16 @@ namespace KTool.Init
         private void Init(Scene scene)
         {
             InitContainer initContainer = GetComponent<InitContainer>(scene);
-            if (initContainer == null || initContainer.Count == 0)
+            if (initContainer == null)
                 return;
             //
             IsInit = true;
             Progress = 0;
             TaskName = string.Empty;
-            if (initContainer.TimeLimit > 0)
+            //
+            if (initContainer.Count == 0)
+                Init_End(initContainer);
+            else if (initContainer.TimeLimit > 0)
                 StartCoroutine(Init_TimeLimit(initContainer));
             else
                 StartCoroutine(Init_TimeUnLimit(initContainer));
@@ -123,7 +126,7 @@ namespace KTool.Init
             {
                 Progress = 1;
                 TaskName = string.Empty;
-                onComplete?.Invoke();
+                IsInit = false;
             }
         }
         private IEnumerator Init_TimeLimit(InitContainer initContainer)
@@ -213,7 +216,7 @@ namespace KTool.Init
         {
             Progress = 1;
             TaskName = string.Empty;
-            onComplete?.Invoke();
+            IsInit = false;
         }
         private IEnumerator LoadScene_IE(string sceneName, LoadSceneMode sceneMode = LoadSceneMode.Single)
         {

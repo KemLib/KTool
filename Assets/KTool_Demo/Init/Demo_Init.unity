@@ -393,14 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLimit: 0
-  steps:
-  - stepName: Init Step 1
-    gameobjects:
-    - {fileID: 1873387012}
-  - stepName: Init Step 2
-    gameobjects:
-    - {fileID: 925424052}
-    - {fileID: 1477824579}
+  steps: []
   afterInit: 1
   nextScene: Demo_Init_2
   loadSceneMode: 0
