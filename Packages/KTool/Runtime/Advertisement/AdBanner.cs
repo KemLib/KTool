@@ -1,4 +1,5 @@
 ﻿using KTool.Advertisement.Demo;
+using System;
 using UnityEngine;
 
 namespace KTool.Advertisement
@@ -6,6 +7,8 @@ namespace KTool.Advertisement
     public abstract class AdBanner : Ad
     {
         #region Properties
+        internal const string ERROR_AD_EVENT_EXPANDED_EXCEPTION = "Ad {0} call event Expanded exception: {1}";
+
         private static AdBanner instance;
         public static AdBanner Instance
         {
@@ -13,7 +16,7 @@ namespace KTool.Advertisement
             protected set => instance = value;
         }
 
-        public delegate void AdExpandedDelegate(bool isExpanded);
+        public delegate void AdExpandedDelegate(AdBanner source, bool isExpanded);
 
         [SerializeField]
         private AdPosition adPosition;
@@ -49,7 +52,7 @@ namespace KTool.Advertisement
         }
         public virtual bool IsExpanded
         {
-            get => isExpanded;
+            get => IsShow && isExpanded;
             protected set => isExpanded = value;
         }
         #endregion
@@ -62,7 +65,14 @@ namespace KTool.Advertisement
         #region Event
         protected void PushEvent_Expanded(bool isSuccess)
         {
-            OnAdExpanded?.Invoke(isSuccess);
+            try
+            {
+                OnAdExpanded?.Invoke(this, isSuccess);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(ERROR_AD_EVENT_EXPANDED_EXCEPTION, AdType.Banner, ex.Message));
+            }
         }
         #endregion
     }

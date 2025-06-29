@@ -6,7 +6,10 @@ namespace KTool.Advertisement.Demo
     public class AdDemoBanner : AdBanner
     {
         #region Properties
-        private const string ERROR_IS_SHOW = "Ad is show";
+        private const string ERROR_IS_DESTROY = "Ad is destroy",
+            ERROR_NOT_READY = "Ad not ready",
+            ERROR_IS_SHOW = "Ad is show";
+
         public static AdDemoBanner InstanceAdDemo => AdDemoManager.Instance.AdBanner;
 
         [SerializeField]
@@ -53,29 +56,40 @@ namespace KTool.Advertisement.Demo
         #region Ad
         public override void Init()
         {
-            State = AdState.Inited;
+            if (IsDestroy || IsInited)
+                return;
+            //
+            IsInited = true;
             PushEvent_Inited();
         }
         public override void Load()
         {
-            State = AdState.Loaded;
+            if (!IsInited || IsLoaded)
+                return;
+            //
+            IsLoaded = true;
+            IsReady = true;
             PushEvent_Loaded(true);
-            State = AdState.Ready;
         }
         public override AdBannerTracking Show()
         {
+            if (IsDestroy)
+                return new AdBannerTrackingSource(ERROR_IS_DESTROY);
+            if (!IsReady)
+                return new AdBannerTrackingSource(ERROR_NOT_READY);
             if (IsShow)
                 return new AdBannerTrackingSource(ERROR_IS_SHOW);
             //
-            currentTrackingSource = new AdBannerTrackingSource();
+            currentTrackingSource = new AdBannerTrackingSource(this);
             //
+            IsShow = true;
             IsExpanded = false;
+            //
             currentBanner = BannerSelect;
             currentBanner.gameObject.SetActive(true);
-            //
-            State = AdState.Show;
             currentTrackingSource.Displayed(true);
             PushEvent_Displayed(true);
+            //
             return currentTrackingSource;
         }
         public override void Hide()
@@ -83,23 +97,25 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            IsExpanded = false;
-            //
-            currentTrackingSource?.ShowComplete(true);
-            PushEvent_ShowComplete(true);
             AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 1, AdDemoManager.AdCurrency);
             PushEvent_RevenuePaid(adRevenuePaid);
             currentTrackingSource.RevenuePaid(adRevenuePaid);
             //
+            IsExpanded = false;
+            IsShow = false;
+            //
             currentBanner.gameObject.SetActive(false);
             currentTrackingSource?.Hidden();
             PushEvent_Hidden();
-            //
-            State = AdState.Inited;
         }
         public override void Destroy()
         {
-            State = AdState.Destroy;
+            if (IsDestroy)
+                return;
+            //
+            IsDestroy = true;
+            if (IsShow)
+                Hide();
             PushEvent_Destroy();
         }
         #endregion

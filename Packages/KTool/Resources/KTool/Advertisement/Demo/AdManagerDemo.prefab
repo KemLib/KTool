@@ -616,7 +616,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 748b409024fe2714da2fb60e222dd52f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: RewardedDemo
+  adName: AdDemoRewarded
   isAutoReload: 0
   panelMenu: {fileID: 4355560338618232482}
   imgProgress: {fileID: 3369454682632957037}
@@ -1479,7 +1479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c613a924fab5c7443b24fff0a4b0f77b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: BannerDemo
+  adName: AdDemoBanner
   isAutoReload: 0
   adPosition: 8
   adSize: 1
@@ -2036,7 +2036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c8be013010cdeb4baaf0714d3b84b1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: AppOpenDemo
+  adName: AdDemoAppOpen
   isAutoReload: 0
   panelMenu: {fileID: 7366958345101815071}
   imgProgress: {fileID: 6559073414563007901}
@@ -2377,7 +2377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e3c578756d90d04abc6a5fe92b408a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: InterstitialDemo
+  adName: AdDemoInterstitial
   isAutoReload: 0
   panelMenu: {fileID: 4583644710578990034}
   imgProgress: {fileID: 213125089783752654}

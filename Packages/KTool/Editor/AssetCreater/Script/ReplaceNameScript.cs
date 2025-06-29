@@ -25,7 +25,7 @@ namespace KTool.AssetCreater.Script.Editor
             else
                 textNameScript = CreaterScript.FileName;
             textNameScript = FixName(textNameScript);
-            if(setting.EditFileName)
+            if (setting.EditFileName)
                 CreaterScript.FileName = TextNameScript;
         }
         #endregion

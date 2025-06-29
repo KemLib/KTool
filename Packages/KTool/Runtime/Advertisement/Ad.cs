@@ -9,20 +9,18 @@ namespace KTool.Advertisement
         internal const string ERROR_AD_EVENT_INIT_EXCEPTION = "Ad {0} call event Init exception: {1}",
             ERROR_AD_EVENT_LOADED_EXCEPTION = "Ad {0} call event Loaded exception: {1}",
             ERROR_AD_EVENT_DISPLAYED_EXCEPTION = "Ad {0} call event Init exception: {1}",
-            ERROR_AD_EVENT_SHOW_COMPLETE_EXCEPTION = "Ad {0} call event ShowComplete exception: {1}",
             ERROR_AD_EVENT_HIDDEN_EXCEPTION = "Ad {0} call event Hidden exception: {1}",
             ERROR_AD_EVENT_DESTROY_EXCEPTION = "Ad {0} call event Destroy exception: {1}",
             ERROR_AD_EVENT_CLICKED_EXCEPTION = "Ad {0} call event Clicked exception: {1}",
             ERROR_AD_EVENT_REVENUEPAID_EXCEPTION = "Ad {0} call event Init exception: {1}";
 
-        public delegate void AdInitDelegate();
-        public delegate void AdLoadedDelegate(bool isSuccess);
-        public delegate void AdDisplayedDelegate(bool isSuccess);
-        public delegate void AdShowCompleteDelegate(bool isSuccess);
-        public delegate void AdHiddenDelegate();
-        public delegate void AdDestroyDelegate();
-        public delegate void AdClickedDelegate();
-        public delegate void AdRevenuePaidDelegate(AdRevenuePaid revenuePaid);
+        public delegate void AdInitDelegate(Ad source);
+        public delegate void AdLoadedDelegate(Ad source, bool isSuccess);
+        public delegate void AdDisplayedDelegate(Ad source, bool isSuccess);
+        public delegate void AdHiddenDelegate(Ad source);
+        public delegate void AdDestroyDelegate(Ad source);
+        public delegate void AdClickedDelegate(Ad source);
+        public delegate void AdRevenuePaidDelegate(Ad source, AdRevenuePaid revenuePaid);
 
         [SerializeField]
         private string adName;
@@ -30,36 +28,64 @@ namespace KTool.Advertisement
         private bool isAutoReload;
 
         private AdState state;
+        private bool isReady,
+            isShow;
 
         public event AdInitDelegate OnAdInited;
         public event AdLoadedDelegate OnAdLoaded;
         public event AdDisplayedDelegate OnAdDisplayed;
-        public event AdShowCompleteDelegate OnAdShowComplete;
         public event AdHiddenDelegate OnAdHidden;
         public event AdDestroyDelegate OnAdDestroy;
         public event AdClickedDelegate OnAdClicked;
         public event AdRevenuePaidDelegate OnAdRevenuePaid;
 
+        public virtual string Name => string.IsNullOrEmpty(adName) ? gameObject.name : adName;
         public abstract AdType AdType
         {
             get;
         }
-        public virtual string Name => string.IsNullOrEmpty(adName) ? gameObject.name : adName;
-        public virtual AdState State
+        public virtual bool IsInited
         {
-            get => state;
-            protected set => state = value;
+            get => state == AdState.Inited || state == AdState.Loaded;
+            protected set
+            {
+                if (state == AdState.None && value)
+                    state = AdState.Inited;
+            }
+        }
+        public virtual bool IsLoaded
+        {
+            get => state == AdState.Loaded;
+            protected set
+            {
+                if (IsInited)
+                    state = value ? AdState.Loaded : AdState.Inited;
+            }
+        }
+        public virtual bool IsDestroy
+        {
+            get => state == AdState.Destroy;
+            protected set
+            {
+                if (value)
+                    state = AdState.Destroy;
+            }
+        }
+        public virtual bool IsReady
+        {
+            get => IsLoaded && isReady && !isShow;
+            protected set => isReady = value;
+        }
+        public virtual bool IsShow
+        {
+            get => isShow;
+            protected set => isShow = value;
         }
         public virtual bool IsAutoReload
         {
             get => isAutoReload;
             protected set => isAutoReload = value;
         }
-        public virtual bool IsInited => State == AdState.Inited || State == AdState.Loaded || State == AdState.Ready || State == AdState.Show;
-        public virtual bool IsLoaded => State == AdState.Loaded || State == AdState.Ready || State == AdState.Show;
-        public virtual bool IsReady => State == AdState.Ready;
-        public virtual bool IsShow => State == AdState.Show;
-        public virtual bool IsDestroy => State == AdState.Destroy;
         #endregion
 
         #region Methods
@@ -73,7 +99,7 @@ namespace KTool.Advertisement
         {
             try
             {
-                OnAdInited?.Invoke();
+                OnAdInited?.Invoke(this);
             }
             catch (Exception ex)
             {
@@ -84,7 +110,7 @@ namespace KTool.Advertisement
         {
             try
             {
-                OnAdLoaded?.Invoke(isSuccess);
+                OnAdLoaded?.Invoke(this, isSuccess);
             }
             catch (Exception ex)
             {
@@ -95,29 +121,18 @@ namespace KTool.Advertisement
         {
             try
             {
-                OnAdDisplayed?.Invoke(isSuccess);
+                OnAdDisplayed?.Invoke(this, isSuccess);
             }
             catch (Exception ex)
             {
                 Debug.LogError(string.Format(ERROR_AD_EVENT_DISPLAYED_EXCEPTION, AdType.ToString(), ex.Message));
             }
         }
-        protected void PushEvent_ShowComplete(bool isSuccess)
-        {
-            try
-            {
-                OnAdShowComplete?.Invoke(isSuccess);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_SHOW_COMPLETE_EXCEPTION, AdType.ToString(), ex.Message));
-            }
-        }
         protected void PushEvent_Hidden()
         {
             try
             {
-                OnAdHidden?.Invoke();
+                OnAdHidden?.Invoke(this);
             }
             catch (Exception ex)
             {
@@ -128,7 +143,7 @@ namespace KTool.Advertisement
         {
             try
             {
-                OnAdDestroy?.Invoke();
+                OnAdDestroy?.Invoke(this);
             }
             catch (Exception ex)
             {
@@ -139,7 +154,7 @@ namespace KTool.Advertisement
         {
             try
             {
-                OnAdClicked?.Invoke();
+                OnAdClicked?.Invoke(this);
             }
             catch (Exception ex)
             {
@@ -150,7 +165,7 @@ namespace KTool.Advertisement
         {
             try
             {
-                OnAdRevenuePaid?.Invoke(revenuePaid);
+                OnAdRevenuePaid?.Invoke(this, revenuePaid);
             }
             catch (Exception ex)
             {

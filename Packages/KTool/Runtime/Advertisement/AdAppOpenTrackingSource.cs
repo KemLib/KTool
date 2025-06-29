@@ -1,17 +1,17 @@
 ﻿namespace KTool.Advertisement
 {
-    public class AdRewardedTrackingSource : AdRewardedTracking
+    public class AdAppOpenTrackingSource : AdAppOpenTracking
     {
         #region Properties
-        private readonly AdRewarded adSource;
+        private readonly AdAppOpen adSource;
         #endregion
 
         #region Contruction
-        public AdRewardedTrackingSource(string errorMessage) : base(errorMessage)
+        public AdAppOpenTrackingSource(string errorMessage) : base(errorMessage)
         {
 
         }
-        public AdRewardedTrackingSource(AdRewarded adSource) : base()
+        public AdAppOpenTrackingSource(AdAppOpen adSource) : base()
         {
             this.adSource = adSource;
         }
@@ -33,10 +33,6 @@
         public void RevenuePaid(AdRevenuePaid adRevenuePaid)
         {
             PushEvent_RevenuePaid(adSource, adRevenuePaid);
-        }
-        public void ReceivedReward(AdRewardReceived adRewardReceived)
-        {
-            PushEvent_ReceivedReward(adSource, adRewardReceived);
         }
         #endregion
     }
