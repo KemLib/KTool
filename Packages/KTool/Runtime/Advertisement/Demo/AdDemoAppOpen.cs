@@ -68,7 +68,6 @@ namespace KTool.Advertisement.Demo
                 return;
             //
             IsLoaded = true;
-            IsReady = true;
             PushEvent_Loaded(true);
         }
         public override AdAppOpenTracking Show()

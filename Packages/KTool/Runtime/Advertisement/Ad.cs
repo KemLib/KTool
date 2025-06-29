@@ -28,8 +28,7 @@ namespace KTool.Advertisement
         private bool isAutoReload;
 
         private AdState state;
-        private bool isReady,
-            isShow;
+        private bool isShow;
 
         public event AdInitDelegate OnAdInited;
         public event AdLoadedDelegate OnAdLoaded;
@@ -71,11 +70,7 @@ namespace KTool.Advertisement
                     state = AdState.Destroy;
             }
         }
-        public virtual bool IsReady
-        {
-            get => IsLoaded && isReady && !isShow;
-            protected set => isReady = value;
-        }
+        public virtual bool IsReady => IsLoaded && !isShow;
         public virtual bool IsShow
         {
             get => isShow;
