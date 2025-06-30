@@ -5,12 +5,8 @@ namespace KTool.Advertisement
     public abstract class AdAppOpen : Ad
     {
         #region Properties
-        private static AdAppOpen instance;
-        public static AdAppOpen Instance
-        {
-            get => instance == null ? AdDemoAppOpen.InstanceAdDemo : instance;
-            protected set => instance = value;
-        }
+        protected static AdAppOpen instance;
+        public static AdAppOpen Instance => instance == null ? AdDemoAppOpen.InstanceAdDemo : instance;
 
         public override AdType AdType => AdType.AppOpen;
         #endregion

@@ -9,12 +9,8 @@ namespace KTool.Advertisement
         #region Properties
         internal const string ERROR_AD_EVENT_RECEIVED_REWARD_EXCEPTION = "Ad {0} call event ReceivedReward exception: {1}";
 
-        private static AdRewarded instance;
-        public static AdRewarded Instance
-        {
-            get => instance == null ? AdDemoRewarded.InstanceAdDemo : instance;
-            protected set => instance = value;
-        }
+        protected static AdRewarded instance;
+        public static AdRewarded Instance => instance == null ? AdDemoRewarded.InstanceAdDemo : instance;
 
         public delegate void AdReceivedRewardDelegate(AdRewarded source, AdRewardReceived rewardReceived);
 

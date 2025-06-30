@@ -82,7 +82,6 @@ namespace KTool.Advertisement.Demo
             currentTrackingSource = new AdBannerTrackingSource(this);
             //
             IsShow = true;
-            IsExpanded = false;
             //
             currentBanner = BannerSelect;
             currentBanner.gameObject.SetActive(true);
@@ -100,7 +99,6 @@ namespace KTool.Advertisement.Demo
             PushEvent_RevenuePaid(adRevenuePaid);
             currentTrackingSource.RevenuePaid(adRevenuePaid);
             //
-            IsExpanded = false;
             IsShow = false;
             //
             currentBanner.gameObject.SetActive(false);
@@ -133,7 +131,6 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            IsExpanded = !IsExpanded;
             currentTrackingSource?.Expanded(IsExpanded);
         }
         #endregion

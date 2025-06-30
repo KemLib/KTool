@@ -9,12 +9,8 @@ namespace KTool.Advertisement
         #region Properties
         internal const string ERROR_AD_EVENT_EXPANDED_EXCEPTION = "Ad {0} call event Expanded exception: {1}";
 
-        private static AdBanner instance;
-        public static AdBanner Instance
-        {
-            get => instance == null ? AdDemoBanner.InstanceAdDemo : instance;
-            protected set => instance = value;
-        }
+        protected static AdBanner instance;
+        public static AdBanner Instance => instance == null ? AdDemoBanner.InstanceAdDemo : instance;
 
         public delegate void AdExpandedDelegate(AdBanner source, bool isExpanded);
 
@@ -50,11 +46,7 @@ namespace KTool.Advertisement
             get => size;
             protected set => size = value;
         }
-        public virtual bool IsExpanded
-        {
-            get => IsShow && isExpanded;
-            protected set => isExpanded = value;
-        }
+        public virtual bool IsExpanded => IsShow && isExpanded;
         #endregion
 
         #region Methods
@@ -63,11 +55,12 @@ namespace KTool.Advertisement
         #endregion
 
         #region Event
-        protected void PushEvent_Expanded(bool isSuccess)
+        protected void PushEvent_Expanded(bool isExpanded)
         {
+            this.isExpanded = isExpanded;
             try
             {
-                OnAdExpanded?.Invoke(this, isSuccess);
+                OnAdExpanded?.Invoke(this, isExpanded);
             }
             catch (Exception ex)
             {
