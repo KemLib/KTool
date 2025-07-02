@@ -1,5 +1,6 @@
 ﻿using KTool.Attribute;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace KTool.Init
@@ -17,6 +18,9 @@ namespace KTool.Init
         private string nextScene;
         [SerializeField]
         private LoadSceneMode loadSceneMode;
+        [SerializeField]
+        private UnityEvent onBegin,
+            onEnd;
 
         public float TimeLimit => timeLimit;
         public int Count => steps.Length;
@@ -31,7 +35,14 @@ namespace KTool.Init
         #endregion
 
         #region Methods
-
+        internal void PushEvent_OnBegin()
+        {
+            onBegin?.Invoke();
+        }
+        internal void PushEvent_OnEnd()
+        {
+            onBegin?.Invoke();
+        }
         #endregion
     }
 }

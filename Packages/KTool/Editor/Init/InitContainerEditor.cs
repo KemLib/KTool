@@ -7,34 +7,45 @@ namespace KTool.Init.Editor
     public class InitContainerEditor : UnityEditor.Editor
     {
         #region Properties
-        private SerializedProperty propertTimeLimit,
-            propertSteps,
-            propertAfterInit,
-            propertNextScene,
-            propertLoadSceneMode;
+        private SerializedProperty propertyTimeLimit,
+            propertySteps,
+            propertyAfterInit,
+            propertyNextScene,
+            propertyLoadSceneMode,
+            propertyOnBegin,
+            propertyOnEnd;
         #endregion
+
         #region Unity Methods
         private void OnEnable()
         {
-            propertTimeLimit = serializedObject.FindProperty("timeLimit");
-            propertSteps = serializedObject.FindProperty("steps");
-            propertAfterInit = serializedObject.FindProperty("afterInit");
-            propertNextScene = serializedObject.FindProperty("nextScene");
-            propertLoadSceneMode = serializedObject.FindProperty("loadSceneMode");
+            propertyTimeLimit = serializedObject.FindProperty("timeLimit");
+            propertySteps = serializedObject.FindProperty("steps");
+            propertyAfterInit = serializedObject.FindProperty("afterInit");
+            propertyNextScene = serializedObject.FindProperty("nextScene");
+            propertyLoadSceneMode = serializedObject.FindProperty("loadSceneMode");
+            propertyOnBegin = serializedObject.FindProperty("onBegin");
+            propertyOnEnd = serializedObject.FindProperty("onEnd");
         }
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
             //
-            EditorGUILayout.PropertyField(propertTimeLimit, new GUIContent("Time Limit"));
-            propertTimeLimit.floatValue = Mathf.Max(0, propertTimeLimit.floatValue);
-            EditorGUILayout.PropertyField(propertSteps, new GUIContent("Steps"));
-            EditorGUILayout.PropertyField(propertAfterInit, new GUIContent("After Init"));
-            if (propertAfterInit.boolValue)
+            EditorGUILayout.PropertyField(propertyTimeLimit, new GUIContent("Time Limit"));
+            propertyTimeLimit.floatValue = Mathf.Max(0, propertyTimeLimit.floatValue);
+            EditorGUILayout.PropertyField(propertySteps, new GUIContent("Steps"));
+            //
+            EditorGUILayout.Space(10);
+            EditorGUILayout.PropertyField(propertyAfterInit, new GUIContent("After Init"));
+            if (propertyAfterInit.boolValue)
             {
-                EditorGUILayout.PropertyField(propertNextScene, new GUIContent("Next Scene"));
-                EditorGUILayout.PropertyField(propertLoadSceneMode, new GUIContent("Load SceneMode"));
+                EditorGUILayout.PropertyField(propertyNextScene, new GUIContent("Next Scene"));
+                EditorGUILayout.PropertyField(propertyLoadSceneMode, new GUIContent("Load SceneMode"));
             }
+            //
+            EditorGUILayout.Space(10);
+            EditorGUILayout.PropertyField(propertyOnBegin, new GUIContent("On Begin"));
+            EditorGUILayout.PropertyField(propertyOnEnd, new GUIContent("On End"));
             //
             serializedObject.ApplyModifiedProperties();
         }

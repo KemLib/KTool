@@ -117,6 +117,7 @@ namespace KTool.Init
         {
             for (int i = 0; i < initContainer.Count; i++)
                 initContainer[i].Item_InitEnded();
+            initContainer.PushEvent_OnEnd();
             //
             if (initContainer.AfterInit)
             {
@@ -131,6 +132,8 @@ namespace KTool.Init
         }
         private IEnumerator Init_TimeLimit(InitContainer initContainer)
         {
+            initContainer.PushEvent_OnBegin();
+            //
             float originProgress = progress,
                 maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1),
                 stepProgress = maxProgress / initContainer.Count;
@@ -158,6 +161,8 @@ namespace KTool.Init
         }
         private IEnumerator Init_TimeUnLimit(InitContainer initContainer)
         {
+            initContainer.PushEvent_OnBegin();
+            //
             float originProgress = progress,
                 maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1),
                 stepProgress = maxProgress / initContainer.Count;
