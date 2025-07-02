@@ -41,7 +41,7 @@ namespace KTool.Init
         }
         internal void PushEvent_OnEnd()
         {
-            onBegin?.Invoke();
+            onEnd?.Invoke();
         }
         #endregion
     }
