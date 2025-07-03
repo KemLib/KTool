@@ -21,7 +21,7 @@ namespace KTool.Init
         #region Method
         public void Init()
         {
-            List<IIniter> items = GetAll_Initer(gameobjects);
+            items = GetAll_Initer(gameobjects);
             listInitTracking = new List<InitTracking>();
         }
         private static List<IIniter> GetAll_Initer(GameObject[] gameobjects)
