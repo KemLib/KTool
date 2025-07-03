@@ -13,7 +13,7 @@ namespace KTool.Init
         private GameObject[] gameobjects;
 
         private List<IIniter> items;
-        private Dictionary<IIniter, InitTracking> dicTracking;
+        private List<InitTracking> listInitTracking;
 
         public string StepName => stepName;
         #endregion
@@ -21,8 +21,8 @@ namespace KTool.Init
         #region Method
         public void Init()
         {
-            items = GetAll_Initer(gameobjects);
-            dicTracking = new Dictionary<IIniter, InitTracking>();
+            List<IIniter> items = GetAll_Initer(gameobjects);
+            listInitTracking = new List<InitTracking>();
         }
         private static List<IIniter> GetAll_Initer(GameObject[] gameobjects)
         {
@@ -46,7 +46,7 @@ namespace KTool.Init
             {
                 InitTracking initTracking = items[index].InitBegin();
                 if (initTracking is not null)
-                    dicTracking.Add(items[index], initTracking);
+                    listInitTracking.Add(initTracking);
                 index++;
             }
 
@@ -59,29 +59,29 @@ namespace KTool.Init
             }
             //
             items.Clear();
-            dicTracking.Clear();
+            listInitTracking.Clear();
         }
         public float Item_GetProgress()
         {
-            if (dicTracking.Count == 0)
+            if (listInitTracking.Count == 0)
                 return 1;
             //
             float totalProgress = 0;
-            foreach (var value in dicTracking.Values)
+            foreach (var value in listInitTracking)
                 totalProgress += value.Progress;
-            return totalProgress / dicTracking.Count;
+            return totalProgress / listInitTracking.Count;
         }
         public bool Item_IsCompleteAll()
         {
-            foreach (var value in dicTracking.Values)
+            foreach (var value in listInitTracking)
                 if (!value.IsComplete)
                     return false;
             return true;
         }
         public bool Item_IsCompleteAllRequired()
         {
-            foreach (IIniter initer in dicTracking.Keys)
-                if (initer.RequiredConditions && !dicTracking[initer].IsComplete)
+            foreach (var value in listInitTracking)
+                if (value.Indispensable && !value.IsComplete)
                     return false;
             return true;
         }

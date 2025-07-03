@@ -6,6 +6,10 @@ namespace KTool.Init
         public static InitTracking Success = InitTrackingSource.CreateSuccess(),
             Fail = InitTrackingSource.CreateFail();
 
+        public bool Indispensable
+        {
+            get;
+        }
         public float Progress
         {
             get;

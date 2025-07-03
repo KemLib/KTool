@@ -8,6 +8,7 @@ namespace KTool.Init
     public class InitManager : MonoBehaviour
     {
         #region Properties
+        private const string LOG_INIT_COMPLETE = "Init complete: {0} - time[{1}]";
         private const string LOAD_SCENE_TASK_NAME_FORMAT = "Load scene: {0}";
         public static InitManager Instance
         {
@@ -27,6 +28,7 @@ namespace KTool.Init
         private bool isInit;
         private float progress;
         private string taskName;
+        private float initTime;
 
         public bool IsInit
         {
@@ -38,9 +40,15 @@ namespace KTool.Init
                 //
                 isInit = value;
                 if (isInit)
+                {
+                    initTime = 0;
                     onInit?.Invoke();
+                }
                 else
+                {
+                    Debug.Log(string.Format(LOG_INIT_COMPLETE, name, initTime));
                     onComplete?.Invoke();
+                }
             }
         }
         public float Progress
@@ -88,6 +96,11 @@ namespace KTool.Init
         {
             Scene scene = GetSceneActive();
             Init(scene);
+        }
+        private void Update()
+        {
+            if (IsInit)
+                initTime += Time.unscaledDeltaTime;
         }
         #endregion
 

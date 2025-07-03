@@ -8,11 +8,9 @@ namespace KTool_Demo.Init
     {
         #region Properties
         [SerializeField]
-        private bool requiredConditions;
+        private bool initIndispensable;
         [SerializeField]
         private float timeInit;
-
-        public bool RequiredConditions => requiredConditions;
         #endregion
 
         #region Unity Event
@@ -22,7 +20,7 @@ namespace KTool_Demo.Init
         public InitTracking InitBegin()
         {
             Debug.Log("Demo Init Begin");
-            InitTrackingSource initTrackingSource = new InitTrackingSource();
+            InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable);
             StartCoroutine(IE_Init(initTrackingSource));
             return initTrackingSource;
         }
