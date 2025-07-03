@@ -39,7 +39,7 @@ namespace KTool.Init
         private void Update()
         {
             if (isIniting)
-                timeLimit += Time.unscaledDeltaTime;
+                initTime += Time.unscaledDeltaTime;
         }
         #endregion
 

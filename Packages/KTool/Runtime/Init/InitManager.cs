@@ -159,7 +159,7 @@ namespace KTool.Init
                 TaskName = step.StepName;
                 step.Item_Init();
                 //
-                while (!step.Item_IsCompleteAll() && !(time >= initContainer.TimeLimit && step.Item_IsCompleteAllRequired()))
+                while (!step.Item_IsCompleteAllRequired() || (time < initContainer.TimeLimit && !step.Item_IsCompleteAll()))
                 {
                     yield return new WaitForEndOfFrame();
                     Progress = originProgress + stepProgress * i + stepProgress * step.Item_GetProgress();
