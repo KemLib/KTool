@@ -56,26 +56,16 @@ namespace KTool.Advertisement.Demo
         #region Ad
         public override void Init()
         {
-            if (IsDestroy || IsInited)
-                return;
-            //
             IsInited = true;
             PushEvent_Inited();
         }
         public override void Load()
         {
-            if (!IsInited || IsLoaded)
-                return;
-            //
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
         public override AdBannerTracking Show()
         {
-            if (IsDestroy)
-                return new AdBannerTrackingSource(ERROR_IS_DESTROY);
-            if (!IsReady)
-                return new AdBannerTrackingSource(ERROR_NOT_READY);
             if (IsShow)
                 return new AdBannerTrackingSource(ERROR_IS_SHOW);
             //
@@ -107,9 +97,6 @@ namespace KTool.Advertisement.Demo
         }
         public override void Destroy()
         {
-            if (IsDestroy)
-                return;
-            //
             IsDestroy = true;
             if (IsShow)
                 Hide();
