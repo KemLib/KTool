@@ -6,7 +6,9 @@ namespace KTool_Demo.Attribute
     public class TestSelectAsset : MonoBehaviour
     {
         #region Properties
-        [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates", KTool.FileIo.ExtensionType.TXT)]
+        [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates", KTool.FileIo.ExtensionType.TXT, true)]
+        private string assetInFolder_string;
+        [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates", KTool.FileIo.ExtensionType.TXT, true)]
         private TextAsset assetInFolder_1;
         [SerializeField, SelectAsset("Packages/com.kem.ktool/Editor/AssetCreater/Script/Templates/Null", KTool.FileIo.ExtensionType.TXT)]
         private TextAsset assetInFolder_2;

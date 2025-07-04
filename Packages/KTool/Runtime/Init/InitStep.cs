@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,16 +7,13 @@ namespace KTool.Init
     public class InitStep
     {
         #region Properties
-        private const string ERROR_ITEM_INIT_BEGIN = "Fail to InitBegin in object [{0}] exception: {1}",
-            ERROR_ITEM_INIT_END = "Fail to InitEnd in object [{0}] exception: {1}";
-
         [SerializeField]
         private string stepName;
         [SerializeField]
         private GameObject[] gameobjects;
 
         private List<IIniter> items;
-        private Dictionary<IIniter, TrackEntry> dicTrackEntry;
+        private List<InitTracking> listInitTracking;
 
         public string StepName => stepName;
         #endregion
@@ -26,7 +22,7 @@ namespace KTool.Init
         public void Init()
         {
             items = GetAll_Initer(gameobjects);
-            dicTrackEntry = new Dictionary<IIniter, TrackEntry>();
+            listInitTracking = new List<InitTracking>();
         }
         private static List<IIniter> GetAll_Initer(GameObject[] gameobjects)
         {
@@ -48,9 +44,9 @@ namespace KTool.Init
             int index = 0;
             while (index < items.Count)
             {
-                TrackEntry trackEntry = items[index].InitBegin();
-                if (trackEntry is not null)
-                    dicTrackEntry.Add(items[index], trackEntry);
+                InitTracking initTracking = items[index].InitBegin();
+                if (initTracking is not null)
+                    listInitTracking.Add(initTracking);
                 index++;
             }
 
@@ -63,29 +59,29 @@ namespace KTool.Init
             }
             //
             items.Clear();
-            dicTrackEntry.Clear();
+            listInitTracking.Clear();
         }
         public float Item_GetProgress()
         {
-            if (dicTrackEntry.Count == 0)
+            if (listInitTracking.Count == 0)
                 return 1;
             //
             float totalProgress = 0;
-            foreach (TrackEntry trackEntry in dicTrackEntry.Values)
-                totalProgress += trackEntry.Progress;
-            return totalProgress / dicTrackEntry.Count;
+            foreach (var value in listInitTracking)
+                totalProgress += value.Progress;
+            return totalProgress / listInitTracking.Count;
         }
         public bool Item_IsCompleteAll()
         {
-            foreach (TrackEntry trackEntry in dicTrackEntry.Values)
-                if (!trackEntry.IsComplete)
+            foreach (var value in listInitTracking)
+                if (!value.IsComplete)
                     return false;
             return true;
         }
         public bool Item_IsCompleteAllRequired()
         {
-            foreach (IIniter initer in dicTrackEntry.Keys)
-                if (initer.RequiredConditions && !dicTrackEntry[initer].IsComplete)
+            foreach (var value in listInitTracking)
+                if (value.Indispensable && !value.IsComplete)
                     return false;
             return true;
         }

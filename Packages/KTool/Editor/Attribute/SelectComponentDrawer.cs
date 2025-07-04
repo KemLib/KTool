@@ -11,7 +11,7 @@ namespace KTool.Attribute.Editor
         #region Properties
         public const string ERROR_TYPE = "type of property not is Component or Component[]",
             ERROR_LIST_COMPONENT_IS_EMPTY_FORMAT = "List Component[{0}] in setting is empty";
-        private const string COMPONENT_NAME_NULL = "Null",
+        private const string COMPONENT_NAME_NULL = "<Null>",
             COMPONENT_NAME_FORMAT = "{0} - {1} - Id[{2}]";
         #endregion
 

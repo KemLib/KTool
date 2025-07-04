@@ -1,4 +1,5 @@
 ﻿using KTool.Advertisement.Demo;
+using System;
 using UnityEngine;
 
 namespace KTool.Advertisement
@@ -6,14 +7,12 @@ namespace KTool.Advertisement
     public abstract class AdBanner : Ad
     {
         #region Properties
-        private static AdBanner instance;
-        public static AdBanner Instance
-        {
-            get => instance;
-            protected set => instance = value;
-        }
+        internal const string ERROR_AD_EVENT_EXPANDED_EXCEPTION = "Ad {0} call event Expanded exception: {1}";
 
-        public delegate void AdExpandedDelegate(bool isExpanded);
+        protected static AdBanner instance;
+        public static AdBanner Instance => instance == null ? AdDemoBanner.InstanceAdDemo : instance;
+
+        public delegate void AdExpandedDelegate(AdBanner source, bool isExpanded);
 
         [SerializeField]
         private AdPosition adPosition;
@@ -47,26 +46,26 @@ namespace KTool.Advertisement
             get => size;
             protected set => size = value;
         }
-        public virtual bool IsExpanded
-        {
-            get => isExpanded;
-            protected set => isExpanded = value;
-        }
+        public virtual bool IsExpanded => IsShow && isExpanded;
         #endregion
 
         #region Methods
         public abstract AdBannerTracking Show();
         public abstract void Hide();
-        public static AdBanner GetInstance()
-        {
-            return Instance ?? AdBannerDemo.InstanceAdBanner;
-        }
         #endregion
 
         #region Event
-        protected void PushEvent_Expanded(bool isSuccess)
+        protected void PushEvent_Expanded(bool isExpanded)
         {
-            OnAdExpanded?.Invoke(isSuccess);
+            this.isExpanded = isExpanded;
+            try
+            {
+                OnAdExpanded?.Invoke(this, isExpanded);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(ERROR_AD_EVENT_EXPANDED_EXCEPTION, AdType.Banner, ex.Message));
+            }
         }
         #endregion
     }

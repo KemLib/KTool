@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace KTool.Attribute
+﻿namespace KTool.Attribute
 {
     public enum GetComponentType
     {

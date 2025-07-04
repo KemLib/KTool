@@ -8,6 +8,7 @@ namespace KTool.Init
     public class InitManager : MonoBehaviour
     {
         #region Properties
+        private const string LOG_INIT_COMPLETE = "Init complete: {0} - time[{1}]";
         private const string LOAD_SCENE_TASK_NAME_FORMAT = "Load scene: {0}";
         public static InitManager Instance
         {
@@ -27,6 +28,7 @@ namespace KTool.Init
         private bool isInit;
         private float progress;
         private string taskName;
+        private float initTime;
 
         public bool IsInit
         {
@@ -38,9 +40,15 @@ namespace KTool.Init
                 //
                 isInit = value;
                 if (isInit)
+                {
+                    initTime = 0;
                     onInit?.Invoke();
+                }
                 else
+                {
+                    Debug.Log(string.Format(LOG_INIT_COMPLETE, name, initTime));
                     onComplete?.Invoke();
+                }
             }
         }
         public float Progress
@@ -89,6 +97,11 @@ namespace KTool.Init
             Scene scene = GetSceneActive();
             Init(scene);
         }
+        private void Update()
+        {
+            if (IsInit)
+                initTime += Time.unscaledDeltaTime;
+        }
         #endregion
 
         #region Method
@@ -99,13 +112,16 @@ namespace KTool.Init
         private void Init(Scene scene)
         {
             InitContainer initContainer = GetComponent<InitContainer>(scene);
-            if (initContainer == null || initContainer.Count == 0)
+            if (initContainer == null)
                 return;
             //
             IsInit = true;
             Progress = 0;
             TaskName = string.Empty;
-            if (initContainer.TimeLimit > 0)
+            //
+            if (initContainer.Count == 0)
+                Init_End(initContainer);
+            else if (initContainer.TimeLimit > 0)
                 StartCoroutine(Init_TimeLimit(initContainer));
             else
                 StartCoroutine(Init_TimeUnLimit(initContainer));
@@ -114,6 +130,7 @@ namespace KTool.Init
         {
             for (int i = 0; i < initContainer.Count; i++)
                 initContainer[i].Item_InitEnded();
+            initContainer.PushEvent_OnEnd();
             //
             if (initContainer.AfterInit)
             {
@@ -123,11 +140,13 @@ namespace KTool.Init
             {
                 Progress = 1;
                 TaskName = string.Empty;
-                onComplete?.Invoke();
+                IsInit = false;
             }
         }
         private IEnumerator Init_TimeLimit(InitContainer initContainer)
         {
+            initContainer.PushEvent_OnBegin();
+            //
             float originProgress = progress,
                 maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1),
                 stepProgress = maxProgress / initContainer.Count;
@@ -140,7 +159,7 @@ namespace KTool.Init
                 TaskName = step.StepName;
                 step.Item_Init();
                 //
-                while (!step.Item_IsCompleteAll() && !(time >= initContainer.TimeLimit && step.Item_IsCompleteAllRequired()))
+                while (!step.Item_IsCompleteAllRequired() || (time < initContainer.TimeLimit && !step.Item_IsCompleteAll()))
                 {
                     yield return new WaitForEndOfFrame();
                     Progress = originProgress + stepProgress * i + stepProgress * step.Item_GetProgress();
@@ -155,6 +174,8 @@ namespace KTool.Init
         }
         private IEnumerator Init_TimeUnLimit(InitContainer initContainer)
         {
+            initContainer.PushEvent_OnBegin();
+            //
             float originProgress = progress,
                 maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1),
                 stepProgress = maxProgress / initContainer.Count;
@@ -213,7 +234,7 @@ namespace KTool.Init
         {
             Progress = 1;
             TaskName = string.Empty;
-            onComplete?.Invoke();
+            IsInit = false;
         }
         private IEnumerator LoadScene_IE(string sceneName, LoadSceneMode sceneMode = LoadSceneMode.Single)
         {

@@ -5,8 +5,6 @@
         None,
         Inited,
         Loaded,
-        Ready,
-        Show,
         Destroy
     }
 }

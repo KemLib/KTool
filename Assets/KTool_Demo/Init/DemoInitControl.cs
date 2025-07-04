@@ -8,23 +8,21 @@ namespace KTool_Demo.Init
     {
         #region Properties
         [SerializeField]
-        private bool requiredConditions;
+        private bool initIndispensable;
         [SerializeField]
         private float timeInit;
-
-        public bool RequiredConditions => requiredConditions;
         #endregion
 
         #region Unity Event
         #endregion
 
         #region Method
-        public TrackEntry InitBegin()
+        public InitTracking InitBegin()
         {
             Debug.Log("Demo Init Begin");
-            TrackEntrySource trackEntrySource = new TrackEntrySource();
-            StartCoroutine(IE_Init(trackEntrySource));
-            return trackEntrySource;
+            InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable);
+            StartCoroutine(IE_Init(initTrackingSource));
+            return initTrackingSource;
         }
 
         public void InitEnd()
@@ -32,16 +30,16 @@ namespace KTool_Demo.Init
             Debug.Log("Demo Init Ended");
         }
 
-        private IEnumerator IE_Init(TrackEntrySource trackEntrySource)
+        private IEnumerator IE_Init(InitTrackingSource initTrackingSource)
         {
             float time = 0;
             while (time < timeInit)
             {
                 time += Time.deltaTime;
-                trackEntrySource.Progress = time / timeInit;
+                initTrackingSource.Progress = time / timeInit;
                 yield return new WaitForEndOfFrame();
             }
-            trackEntrySource.CompleteSuccess();
+            initTrackingSource.CompleteSuccess();
             Debug.Log("Init Complete: " + gameObject.name);
         }
         #endregion
