@@ -72,7 +72,7 @@ namespace KTool.Advertisement
             }
             catch (Exception ex)
             {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_REVENUEPAID_EXCEPTION, AdType.Interstitial, ex.Message));
+                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION, AdType.Interstitial, ex.Message));
             }
         }
         #endregion

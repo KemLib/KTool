@@ -7,9 +7,7 @@ namespace KTool.Advertisement.Demo
     public class AdDemoAppOpen : AdAppOpen
     {
         #region Properties
-        private const string ERROR_IS_DESTROY = "Ad is destroy",
-            ERROR_NOT_READY = "Ad not ready",
-            ERROR_IS_SHOW = "Ad is show";
+        private const string ERROR_IS_SHOW = "Ad is show";
 
         public static AdDemoAppOpen InstanceAdDemo => AdDemoManager.Instance.AdAppOpen;
 
@@ -28,9 +26,42 @@ namespace KTool.Advertisement.Demo
 
         #endregion
 
-        #region Methods
+        #region Ad
+        public override void Init()
+        {
+            IsInited = true;
+            PushEvent_Inited(true);
+        }
+        public override void Load()
+        {
+            IsLoaded = true;
+            PushEvent_Loaded(true);
+        }
+        public override AdAppOpenTracking Show()
+        {
+            if (IsShow)
+                return new AdAppOpenTrackingSource(ERROR_IS_SHOW);
+            //
+            if (!IsInited)
+                Init();
+            if (!IsLoaded)
+                Load();
+            IsShow = true;
+            currentTrackingSource = new AdAppOpenTrackingSource(this);
+            StartCoroutine(IE_Show());
+            //
+            return currentTrackingSource;
+        }
+        public override void Destroy()
+        {
+            IsDestroy = true;
+            if (!IsShow)
+                PushEvent_Destroy();
+        }
         private IEnumerator IE_Show()
         {
+            yield return new WaitForEndOfFrame();
+            //
             panelMenu.gameObject.SetActive(true);
             btnClose.gameObject.SetActive(false);
             currentTrackingSource.Displayed(true);
@@ -53,36 +84,6 @@ namespace KTool.Advertisement.Demo
         }
         #endregion
 
-        #region Ad
-        public override void Init()
-        {
-            IsInited = true;
-            PushEvent_Inited();
-        }
-        public override void Load()
-        {
-            IsLoaded = true;
-            PushEvent_Loaded(true);
-        }
-        public override AdAppOpenTracking Show()
-        {
-            if (IsShow)
-                return new AdAppOpenTrackingSource(ERROR_IS_SHOW);
-            //
-            IsShow = true;
-            currentTrackingSource = new AdAppOpenTrackingSource(this);
-            StartCoroutine(IE_Show());
-            //
-            return currentTrackingSource;
-        }
-        public override void Destroy()
-        {
-            IsDestroy = true;
-            if (!IsShow)
-                PushEvent_Destroy();
-        }
-        #endregion
-
         #region Unity Ui Event
         public void OnClick_Ad()
         {
@@ -97,8 +98,9 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            IsShow = false;
             panelMenu.gameObject.SetActive(false);
+            btnClose.gameObject.SetActive(false);
+            IsShow = false;
             currentTrackingSource?.Hidden();
             PushEvent_Hidden();
             if (IsDestroy)
