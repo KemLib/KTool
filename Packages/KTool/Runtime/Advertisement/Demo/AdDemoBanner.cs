@@ -63,10 +63,10 @@ namespace KTool.Advertisement.Demo
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
-        public override AdBannerTracking Show()
+        public override IAdBannerTracking Show()
         {
             if (IsShow)
-                return new AdBannerTrackingSource(ERROR_IS_SHOW);
+                return new AdBannerTrackingSource(this, ERROR_IS_SHOW);
             //
             if (!IsInited)
                 Init();
@@ -85,7 +85,7 @@ namespace KTool.Advertisement.Demo
             //
             currentBanner.gameObject.SetActive(false);
             IsShow = false;
-            currentTrackingSource?.Hidden();
+            currentTrackingSource?.PushEvent_Hidden();
             PushEvent_Hidden();
         }
         public override void Destroy()
@@ -101,14 +101,14 @@ namespace KTool.Advertisement.Demo
             //
             currentBanner = BannerSelect;
             currentBanner.gameObject.SetActive(true);
-            currentTrackingSource.Displayed(true);
+            currentTrackingSource.PushEvent_Displayed(true);
             PushEvent_Displayed(true);
             //
             yield return new WaitForEndOfFrame();
             //
-            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 1, AdDemoManager.AdCurrency);
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
             PushEvent_RevenuePaid(adRevenuePaid);
-            currentTrackingSource.RevenuePaid(adRevenuePaid);
+            currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
         }
         #endregion
 
@@ -118,7 +118,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.Clicked();
+            currentTrackingSource?.PushEvent_Clicked();
             PushEvent_Clicked();
         }
         public void OnClick_Expanded()
@@ -126,7 +126,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.Expanded(IsExpanded);
+            currentTrackingSource?.PushEvent_Expanded(IsExpanded);
         }
         #endregion
     }

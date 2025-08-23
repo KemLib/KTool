@@ -13,7 +13,7 @@ namespace KTool.Init
         private GameObject[] gameobjects;
 
         private List<IIniter> items;
-        private List<InitTracking> listInitTracking;
+        private List<IInitTracking> listInitTracking;
 
         public string StepName => stepName;
         #endregion
@@ -22,7 +22,7 @@ namespace KTool.Init
         public void Init()
         {
             items = GetAll_Initer(gameobjects);
-            listInitTracking = new List<InitTracking>();
+            listInitTracking = new List<IInitTracking>();
         }
         private static List<IIniter> GetAll_Initer(GameObject[] gameobjects)
         {
@@ -44,7 +44,7 @@ namespace KTool.Init
             int index = 0;
             while (index < items.Count)
             {
-                InitTracking initTracking = items[index].InitBegin();
+                IInitTracking initTracking = items[index].InitBegin();
                 if (initTracking is not null)
                     listInitTracking.Add(initTracking);
                 index++;

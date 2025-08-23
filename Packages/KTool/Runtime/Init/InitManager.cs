@@ -8,7 +8,6 @@ namespace KTool.Init
     public class InitManager : MonoBehaviour
     {
         #region Properties
-        private const string LOG_INIT_COMPLETE = "Init complete: {0} - time[{1}]";
         private const string LOAD_SCENE_TASK_NAME_FORMAT = "Load scene: {0}";
         public static InitManager Instance
         {
@@ -46,7 +45,6 @@ namespace KTool.Init
                 }
                 else
                 {
-                    Debug.Log(string.Format(LOG_INIT_COMPLETE, name, initTime));
                     onComplete?.Invoke();
                 }
             }

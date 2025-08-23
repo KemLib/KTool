@@ -65,7 +65,8 @@ namespace KTool.FileIo
             {
                 case ExtensionType.NONE:
                     return string.Empty;
-                case ExtensionType.SCRIPTABLE_OBJECT | ExtensionType.MAT:
+                case ExtensionType.SCRIPTABLE_OBJECT:
+                case ExtensionType.MAT:
                     return ExtensionType.ASSET.ToString().ToLower();
                 default:
                     return extension.ToString().ToLower();
@@ -83,7 +84,8 @@ namespace KTool.FileIo
             {
                 case ExtensionType.NONE:
                     return SEARCH_PATTERN_NONE;
-                case ExtensionType.SCRIPTABLE_OBJECT | ExtensionType.MAT:
+                case ExtensionType.SCRIPTABLE_OBJECT:
+                case ExtensionType.MAT:
                     return string.Format(FORMAT_SEARCH_PATTERN, GetExtension(ExtensionType.ASSET));
                 default:
                     return string.Format(FORMAT_SEARCH_PATTERN, GetExtension(extension));

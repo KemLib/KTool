@@ -17,9 +17,8 @@ namespace KTool_Demo.Init
         #endregion
 
         #region Method
-        public InitTracking InitBegin()
+        public IInitTracking InitBegin()
         {
-            Debug.Log("Demo Init Begin");
             InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable);
             StartCoroutine(IE_Init(initTrackingSource));
             return initTrackingSource;
@@ -27,7 +26,6 @@ namespace KTool_Demo.Init
 
         public void InitEnd()
         {
-            Debug.Log("Demo Init Ended");
         }
 
         private IEnumerator IE_Init(InitTrackingSource initTrackingSource)
@@ -40,7 +38,6 @@ namespace KTool_Demo.Init
                 yield return new WaitForEndOfFrame();
             }
             initTrackingSource.CompleteSuccess();
-            Debug.Log("Init Complete: " + gameObject.name);
         }
         #endregion
     }

@@ -7,7 +7,7 @@ namespace KTool.Init
         #endregion
 
         #region Method
-        public InitTracking InitBegin();
+        public IInitTracking InitBegin();
         public void InitEnd();
         #endregion
     }

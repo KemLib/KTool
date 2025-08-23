@@ -1,42 +1,36 @@
-﻿namespace KTool.Advertisement
+﻿using System;
+using UnityEngine;
+
+namespace KTool.Advertisement
 {
-    public class AdRewardedTrackingSource : AdRewardedTracking
+    public class AdRewardedTrackingSource : AdTrackingSource, IAdRewardedTracking
     {
         #region Properties
-        private readonly AdRewarded adSource;
+        public event AdRewarded.AdReceivedRewardDelegate OnAdReceivedReward;
         #endregion
 
         #region Contruction
-        public AdRewardedTrackingSource(string errorMessage) : base(errorMessage)
+        public AdRewardedTrackingSource(AdRewarded adSource) : base(adSource)
         {
 
         }
-        public AdRewardedTrackingSource(AdRewarded adSource) : base()
+        public AdRewardedTrackingSource(AdRewarded adSource, string errorMessage) : base(adSource, errorMessage)
         {
-            this.adSource = adSource;
+
         }
         #endregion
 
         #region Event
-        public void Displayed(bool isSuccess)
+        public void PushEvent_ReceivedReward(AdRewardReceived adRewardReceived)
         {
-            PushEvent_Displayed(adSource, isSuccess);
-        }
-        public void Hidden()
-        {
-            PushEvent_Hidden(adSource);
-        }
-        public void Clicked()
-        {
-            PushEvent_Clicked(adSource);
-        }
-        public void RevenuePaid(AdRevenuePaid adRevenuePaid)
-        {
-            PushEvent_RevenuePaid(adSource, adRevenuePaid);
-        }
-        public void ReceivedReward(AdRewardReceived adRewardReceived)
-        {
-            PushEvent_ReceivedReward(adSource, adRewardReceived);
+            try
+            {
+                OnAdReceivedReward?.Invoke(adSource as AdRewarded, adRewardReceived);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(AdRewarded.ERROR_AD_EVENT_RECEIVED_REWARD_EXCEPTION, AdType.Rewarded, ex.Message));
+            }
         }
         #endregion
     }

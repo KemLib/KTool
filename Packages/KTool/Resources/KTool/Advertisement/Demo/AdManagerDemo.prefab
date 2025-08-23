@@ -621,7 +621,7 @@ MonoBehaviour:
   panelMenu: {fileID: 4355560338618232482}
   imgProgress: {fileID: 3369454682632957037}
   btnClose: {fileID: 245633169918543410}
-  showTime: 20
+  showTime: 5
 --- !u!1 &1432010011384444224
 GameObject:
   m_ObjectHideFlags: 0
@@ -2041,7 +2041,7 @@ MonoBehaviour:
   panelMenu: {fileID: 7366958345101815071}
   imgProgress: {fileID: 6559073414563007901}
   btnClose: {fileID: 5836903618318272866}
-  showTime: 5
+  showTime: 3
 --- !u!1 &4264059794153933947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2382,7 +2382,7 @@ MonoBehaviour:
   panelMenu: {fileID: 4583644710578990034}
   imgProgress: {fileID: 213125089783752654}
   btnClose: {fileID: 6922095519326849556}
-  showTime: 15
+  showTime: 3
 --- !u!1 &5497331411963247597
 GameObject:
   m_ObjectHideFlags: 0

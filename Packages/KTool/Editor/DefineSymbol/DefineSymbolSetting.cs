@@ -1,5 +1,4 @@
-﻿using KTool.AssetCreater.Script.Editor;
-using KTool.FileIo;
+﻿using KTool.FileIo;
 using UnityEditor;
 using UnityEngine;
 

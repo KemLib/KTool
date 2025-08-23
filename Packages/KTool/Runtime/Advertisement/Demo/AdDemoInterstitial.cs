@@ -37,10 +37,10 @@ namespace KTool.Advertisement.Demo
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
-        public override AdInterstitialTracking Show()
+        public override IAdTracking Show()
         {
             if (IsShow)
-                return new AdInterstitialTrackingSource(ERROR_IS_SHOW);
+                return new AdInterstitialTrackingSource(this, ERROR_IS_SHOW);
             //
             if (!IsInited)
                 Init();
@@ -64,21 +64,21 @@ namespace KTool.Advertisement.Demo
             //
             panelMenu.gameObject.SetActive(true);
             btnClose.gameObject.SetActive(false);
-            currentTrackingSource.Displayed(true);
+            currentTrackingSource.PushEvent_Displayed(true);
             PushEvent_Displayed(true);
             //
             float delay = Mathf.Clamp(showTime, 3, 60),
                 time = 0;
             while (!IsDestroy && time < delay)
             {
-                time += Time.deltaTime;
+                time += Time.unscaledDeltaTime;
                 imgProgress.fillAmount = time / delay;
                 yield return new WaitForEndOfFrame();
             }
             //
-            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 1, AdDemoManager.AdCurrency);
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
             PushEvent_RevenuePaid(adRevenuePaid);
-            currentTrackingSource.RevenuePaid(adRevenuePaid);
+            currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
             //
             btnClose.gameObject.SetActive(true);
         }
@@ -90,7 +90,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.Clicked();
+            currentTrackingSource?.PushEvent_Clicked();
             PushEvent_Clicked();
         }
         public void OnClick_Close()
@@ -101,7 +101,7 @@ namespace KTool.Advertisement.Demo
             panelMenu.gameObject.SetActive(false);
             btnClose.gameObject.SetActive(false);
             IsShow = false;
-            currentTrackingSource?.Hidden();
+            currentTrackingSource?.PushEvent_Hidden();
             PushEvent_Hidden();
             if (IsDestroy)
                 PushEvent_Destroy();
