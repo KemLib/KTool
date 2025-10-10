@@ -18,15 +18,13 @@ namespace KTool.Init
         #endregion
 
         #region Construction
-        public InitTrackingSource(bool indispensable) : base()
-        {
-            this.indispensable = indispensable;
-            progress = new InterValueFloat(0);
-        }
         public InitTrackingSource(bool indispensable, bool isSuccess) : base(isSuccess)
         {
             this.indispensable = indispensable;
-            progress = new InterValueFloat(1);
+            if(isSuccess)
+                progress = new InterValueFloat(0);
+            else
+                progress = new InterValueFloat(1);
         }
         public InitTrackingSource(bool indispensable, string errorMessage) : base(errorMessage)
         {
