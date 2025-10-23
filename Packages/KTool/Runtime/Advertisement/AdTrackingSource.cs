@@ -15,7 +15,7 @@ namespace KTool.Advertisement
         #endregion
 
         #region Contruction
-        public AdTrackingSource(Ad adSource) : base(true)
+        public AdTrackingSource(Ad adSource) : base()
         {
             this.adSource = adSource;
         }

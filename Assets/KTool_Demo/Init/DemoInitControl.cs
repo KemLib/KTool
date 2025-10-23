@@ -19,7 +19,7 @@ namespace KTool_Demo.Init
         #region Method
         public IInitTracking InitBegin()
         {
-            InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable, true);
+            InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable);
             StartCoroutine(IE_Init(initTrackingSource));
             return initTrackingSource;
         }

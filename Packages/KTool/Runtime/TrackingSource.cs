@@ -25,6 +25,12 @@ namespace KTool
         #endregion
 
         #region Construction
+        public TrackingSource()
+        {
+            isComplete = new InterValueBool(false);
+            isSuccessfully = new InterValueBool(false);
+            errorMessage = new InterValueClass<string>(ERROR_UNKNOWN);
+        }
         public TrackingSource(bool isSuccess)
         {
             isComplete = new InterValueBool(true);
