@@ -3,25 +3,40 @@ using UnityEngine;
 
 namespace KTool.Advertisement
 {
-    public class AdTrackingSource : TrackingSource, IAdTracking
+    public class AdTrackingSource : IAdTracking
     {
         #region Properties
+        public const string ERROR_UNKNOWN = "unknown error";
+
         protected readonly Ad adSource;
+        private readonly bool isComplete;
+        private readonly string errorMessage;
+        private bool isHided;
 
         public event Ad.AdDisplayedDelegate OnAdDisplayed;
         public event Ad.AdHiddenDelegate OnAdHidden;
         public event Ad.AdClickedDelegate OnAdClicked;
         public event Ad.AdRevenuePaidDelegate OnAdRevenuePaid;
+
+        public bool IsComplete => isComplete;
+        public string ErrorMessage => errorMessage;
+        public bool IsHided => isHided;
         #endregion
 
         #region Contruction
         public AdTrackingSource(Ad adSource) : base()
         {
             this.adSource = adSource;
+            isComplete = true;
+            errorMessage = ERROR_UNKNOWN;
+            isHided = false;
         }
-        public AdTrackingSource(Ad adSource, string errorMessage) : base(errorMessage)
+        public AdTrackingSource(Ad adSource, string errorMessage)
         {
             this.adSource = adSource;
+            isComplete = false;
+            errorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
+            isHided = true;
         }
         #endregion
 
@@ -38,7 +53,7 @@ namespace KTool.Advertisement
             }
             //
             if (!isSuccess)
-                CompleteFail();
+                isHided = true;
         }
         public void PushEvent_Hidden()
         {
@@ -51,7 +66,7 @@ namespace KTool.Advertisement
                 Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_HIDDEN_EXCEPTION, AdType.Interstitial, ex.Message));
             }
             //
-            CompleteSuccess();
+            isHided = true;
         }
         public void PushEvent_Clicked()
         {
