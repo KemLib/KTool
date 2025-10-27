@@ -101,7 +101,7 @@ namespace KTool.Advertisement.Demo
             panelMenu.gameObject.SetActive(false);
             btnClose.gameObject.SetActive(false);
             IsShow = false;
-            currentTrackingSource?.PushEvent_Clicked();
+            currentTrackingSource?.PushEvent_Hidden();
             PushEvent_Hidden();
             if (IsDestroy)
                 PushEvent_Destroy();
