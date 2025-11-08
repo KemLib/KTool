@@ -6,15 +6,15 @@ namespace KTool.Advertisement
     public abstract class Ad : MonoBehaviour
     {
         #region Properties
-        internal const string ERROR_AD_EVENT_INIT_EXCEPTION = "Ad {0} call event Init exception: {1}",
+        internal const string ERROR_AD_EVENT_INIT_EXCEPTION = "Ad {0} call event Inited exception: {1}",
             ERROR_AD_EVENT_LOADED_EXCEPTION = "Ad {0} call event Loaded exception: {1}",
-            ERROR_AD_EVENT_DISPLAYED_EXCEPTION = "Ad {0} call event Init exception: {1}",
+            ERROR_AD_EVENT_DISPLAYED_EXCEPTION = "Ad {0} call event Displayed exception: {1}",
             ERROR_AD_EVENT_HIDDEN_EXCEPTION = "Ad {0} call event Hidden exception: {1}",
             ERROR_AD_EVENT_DESTROY_EXCEPTION = "Ad {0} call event Destroy exception: {1}",
             ERROR_AD_EVENT_CLICKED_EXCEPTION = "Ad {0} call event Clicked exception: {1}",
-            ERROR_AD_EVENT_REVENUEPAID_EXCEPTION = "Ad {0} call event Init exception: {1}";
+            ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION = "Ad {0} call event RevenuePaid exception: {1}";
 
-        public delegate void AdInitDelegate(Ad source);
+        public delegate void AdInitedDelegate(Ad source, bool isSuccess);
         public delegate void AdLoadedDelegate(Ad source, bool isSuccess);
         public delegate void AdDisplayedDelegate(Ad source, bool isSuccess);
         public delegate void AdHiddenDelegate(Ad source);
@@ -30,7 +30,7 @@ namespace KTool.Advertisement
         private AdState state;
         private bool isShow;
 
-        public event AdInitDelegate OnAdInited;
+        public event AdInitedDelegate OnAdInited;
         public event AdLoadedDelegate OnAdLoaded;
         public event AdDisplayedDelegate OnAdDisplayed;
         public event AdHiddenDelegate OnAdHidden;
@@ -90,11 +90,11 @@ namespace KTool.Advertisement
         #endregion
 
         #region Event
-        protected void PushEvent_Inited()
+        protected void PushEvent_Inited(bool isSuccess)
         {
             try
             {
-                OnAdInited?.Invoke(this);
+                OnAdInited?.Invoke(this, isSuccess);
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@ namespace KTool.Advertisement
             }
             catch (Exception ex)
             {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_REVENUEPAID_EXCEPTION, AdType.ToString(), ex.Message));
+                Debug.LogError(string.Format(ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION, AdType.ToString(), ex.Message));
             }
         }
         #endregion

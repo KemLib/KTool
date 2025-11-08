@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace KTool.Init
@@ -8,7 +7,6 @@ namespace KTool.Init
     public class InitManager : MonoBehaviour
     {
         #region Properties
-        private const string LOG_INIT_COMPLETE = "Init complete: {0} - time[{1}]";
         private const string LOAD_SCENE_TASK_NAME_FORMAT = "Load scene: {0}";
         public static InitManager Instance
         {
@@ -18,18 +16,18 @@ namespace KTool.Init
 
 
         [SerializeField]
-        private UnityEvent onInit,
-            onComplete;
-        [SerializeField]
-        private UnityEvent<float> onProgress;
-        [SerializeField]
-        private UnityEvent<string> onTaskName;
+        private GameObject objectListener;
 
+        public IInitListener initListener;
         private bool isInit;
         private float progress;
         private string taskName;
-        private float initTime;
 
+        public IInitListener InitListener
+        {
+            get => initListener;
+            set => initListener = value;
+        }
         public bool IsInit
         {
             get => isInit;
@@ -41,13 +39,11 @@ namespace KTool.Init
                 isInit = value;
                 if (isInit)
                 {
-                    initTime = 0;
-                    onInit?.Invoke();
+                    initListener?.Init_OnShow();
                 }
                 else
                 {
-                    Debug.Log(string.Format(LOG_INIT_COMPLETE, name, initTime));
-                    onComplete?.Invoke();
+                    initListener?.Init_OnHide();
                 }
             }
         }
@@ -59,7 +55,7 @@ namespace KTool.Init
                 if (value == progress)
                     return;
                 progress = Mathf.Clamp(value, 0, 1);
-                onProgress?.Invoke(progress);
+                initListener?.Init_OnProgress(progress);
             }
         }
         public string TaskName
@@ -70,7 +66,7 @@ namespace KTool.Init
                 if (value == taskName)
                     return;
                 taskName = value;
-                onTaskName?.Invoke(taskName);
+                initListener?.Init_OnTitle(taskName);
             }
         }
         #endregion
@@ -82,6 +78,11 @@ namespace KTool.Init
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
+                //
+                if (initListener == null && objectListener != null)
+                {
+                    initListener = objectListener.GetComponent<IInitListener>();
+                }
                 return;
             }
             //
@@ -96,11 +97,6 @@ namespace KTool.Init
         {
             Scene scene = GetSceneActive();
             Init(scene);
-        }
-        private void Update()
-        {
-            if (IsInit)
-                initTime += Time.unscaledDeltaTime;
         }
         #endregion
 
@@ -258,7 +254,7 @@ namespace KTool.Init
             Progress = originProgress + maxProgress;
             TaskName = string.Empty;
             //
-            Scene scene = GetScene(sceneName);
+            Scene scene = GetSceneActive(sceneName);
             LoadScene_End(scene);
         }
         private IEnumerator LoadScene_IE(int sceneIndex, LoadSceneMode sceneMode = LoadSceneMode.Single)
@@ -289,7 +285,7 @@ namespace KTool.Init
         #endregion
 
         #region Utillity
-        public static T GetComponent<T>(Scene scene) where T : Component
+        private static T GetComponent<T>(Scene scene) where T : Component
         {
             if (!scene.IsValid() || !scene.isLoaded)
                 return null;
@@ -304,17 +300,17 @@ namespace KTool.Init
             }
             return null;
         }
-        public static Scene GetScene(string sceneName)
+        private static Scene GetSceneActive(string sceneName)
         {
             return SceneManager.GetSceneByName(sceneName);
         }
-        public static Scene GetScene(int sceneIndex)
-        {
-            return SceneManager.GetSceneByBuildIndex(sceneIndex);
-        }
-        public static Scene GetSceneActive()
+        private static Scene GetSceneActive()
         {
             return SceneManager.GetActiveScene();
+        }
+        private static Scene GetScene(int sceneIndex)
+        {
+            return SceneManager.GetSceneByBuildIndex(sceneIndex);
         }
         #endregion
     }

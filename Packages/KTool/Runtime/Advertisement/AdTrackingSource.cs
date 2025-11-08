@@ -3,35 +3,45 @@ using UnityEngine;
 
 namespace KTool.Advertisement
 {
-    public abstract class AdTracking
+    public class AdTrackingSource : IAdTracking
     {
         #region Properties
-        private const string ERROR_UNKNOWN = "unknown error";
+        public const string ERROR_UNKNOWN = "unknown error";
 
-        public readonly bool IsShow;
-        public readonly string ErrorMessage;
+        protected readonly Ad adSource;
+        private readonly bool isComplete;
+        private readonly string errorMessage;
+        private bool isHided;
 
         public event Ad.AdDisplayedDelegate OnAdDisplayed;
         public event Ad.AdHiddenDelegate OnAdHidden;
         public event Ad.AdClickedDelegate OnAdClicked;
         public event Ad.AdRevenuePaidDelegate OnAdRevenuePaid;
+
+        public bool IsComplete => isComplete;
+        public string ErrorMessage => errorMessage;
+        public bool IsHided => isHided;
         #endregion
 
         #region Contruction
-        public AdTracking(string errorMessage)
+        public AdTrackingSource(Ad adSource) : base()
         {
-            IsShow = false;
-            ErrorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
+            this.adSource = adSource;
+            isComplete = true;
+            errorMessage = ERROR_UNKNOWN;
+            isHided = false;
         }
-        public AdTracking()
+        public AdTrackingSource(Ad adSource, string errorMessage)
         {
-            IsShow = true;
-            ErrorMessage = string.Empty;
+            this.adSource = adSource;
+            isComplete = false;
+            errorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
+            isHided = true;
         }
         #endregion
 
         #region Event
-        protected void PushEvent_Displayed(Ad adSource, bool isSuccess)
+        public void PushEvent_Displayed(bool isSuccess)
         {
             try
             {
@@ -41,8 +51,11 @@ namespace KTool.Advertisement
             {
                 Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_DISPLAYED_EXCEPTION, AdType.Interstitial, ex.Message));
             }
+            //
+            if (!isSuccess)
+                isHided = true;
         }
-        protected void PushEvent_Hidden(Ad adSource)
+        public void PushEvent_Hidden()
         {
             try
             {
@@ -52,8 +65,10 @@ namespace KTool.Advertisement
             {
                 Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_HIDDEN_EXCEPTION, AdType.Interstitial, ex.Message));
             }
+            //
+            isHided = true;
         }
-        protected void PushEvent_Clicked(Ad adSource)
+        public void PushEvent_Clicked()
         {
             try
             {
@@ -64,7 +79,7 @@ namespace KTool.Advertisement
                 Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_CLICKED_EXCEPTION, AdType.Interstitial, ex.Message));
             }
         }
-        protected void PushEvent_RevenuePaid(Ad adSource, AdRevenuePaid adRevenuePaid)
+        public void PushEvent_RevenuePaid(AdRevenuePaid adRevenuePaid)
         {
             try
             {
@@ -72,7 +87,7 @@ namespace KTool.Advertisement
             }
             catch (Exception ex)
             {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_REVENUEPAID_EXCEPTION, AdType.Interstitial, ex.Message));
+                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION, AdType.Interstitial, ex.Message));
             }
         }
         #endregion

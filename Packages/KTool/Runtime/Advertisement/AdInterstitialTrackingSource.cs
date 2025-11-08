@@ -1,39 +1,24 @@
 ﻿namespace KTool.Advertisement
 {
-    public class AdInterstitialTrackingSource : AdInterstitialTracking
+    public class AdInterstitialTrackingSource : AdTrackingSource
     {
         #region Properties
-        private readonly AdInterstitial adSource;
+
         #endregion
 
         #region Contruction
-        public AdInterstitialTrackingSource(string errorMessage) : base(errorMessage)
+        public AdInterstitialTrackingSource(AdInterstitial adSource) : base(adSource)
         {
 
         }
-        public AdInterstitialTrackingSource(AdInterstitial adSource) : base()
+        public AdInterstitialTrackingSource(AdInterstitial adSource, string errorMessage) : base(adSource, errorMessage)
         {
-            this.adSource = adSource;
+
         }
         #endregion
 
         #region Event
-        public void Displayed(bool isSuccess)
-        {
-            PushEvent_Displayed(adSource, isSuccess);
-        }
-        public void Hidden()
-        {
-            PushEvent_Hidden(adSource);
-        }
-        public void Clicked()
-        {
-            PushEvent_Clicked(adSource);
-        }
-        public void RevenuePaid(AdRevenuePaid adRevenuePaid)
-        {
-            PushEvent_RevenuePaid(adSource, adRevenuePaid);
-        }
+
         #endregion
     }
 }

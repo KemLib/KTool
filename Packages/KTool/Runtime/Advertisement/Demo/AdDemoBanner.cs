@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace KTool.Advertisement.Demo
@@ -6,9 +7,7 @@ namespace KTool.Advertisement.Demo
     public class AdDemoBanner : AdBanner
     {
         #region Properties
-        private const string ERROR_IS_DESTROY = "Ad is destroy",
-            ERROR_NOT_READY = "Ad not ready",
-            ERROR_IS_SHOW = "Ad is show";
+        private const string ERROR_IS_SHOW = "Ad is show";
 
         public static AdDemoBanner InstanceAdDemo => AdDemoManager.Instance.AdBanner;
 
@@ -57,26 +56,25 @@ namespace KTool.Advertisement.Demo
         public override void Init()
         {
             IsInited = true;
-            PushEvent_Inited();
+            PushEvent_Inited(true);
         }
         public override void Load()
         {
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
-        public override AdBannerTracking Show()
+        public override IAdBannerTracking Show()
         {
             if (IsShow)
-                return new AdBannerTrackingSource(ERROR_IS_SHOW);
+                return new AdBannerTrackingSource(this, ERROR_IS_SHOW);
             //
-            currentTrackingSource = new AdBannerTrackingSource(this);
-            //
+            if (!IsInited)
+                Init();
+            if (!IsLoaded)
+                Load();
             IsShow = true;
-            //
-            currentBanner = BannerSelect;
-            currentBanner.gameObject.SetActive(true);
-            currentTrackingSource.Displayed(true);
-            PushEvent_Displayed(true);
+            currentTrackingSource = new AdBannerTrackingSource(this);
+            StartCoroutine(IE_Show());
             //
             return currentTrackingSource;
         }
@@ -85,14 +83,9 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 1, AdDemoManager.AdCurrency);
-            PushEvent_RevenuePaid(adRevenuePaid);
-            currentTrackingSource.RevenuePaid(adRevenuePaid);
-            //
-            IsShow = false;
-            //
             currentBanner.gameObject.SetActive(false);
-            currentTrackingSource?.Hidden();
+            IsShow = false;
+            currentTrackingSource?.PushEvent_Hidden();
             PushEvent_Hidden();
         }
         public override void Destroy()
@@ -102,6 +95,21 @@ namespace KTool.Advertisement.Demo
                 Hide();
             PushEvent_Destroy();
         }
+        private IEnumerator IE_Show()
+        {
+            yield return new WaitForEndOfFrame();
+            //
+            currentBanner = BannerSelect;
+            currentBanner.gameObject.SetActive(true);
+            currentTrackingSource.PushEvent_Displayed(true);
+            PushEvent_Displayed(true);
+            //
+            yield return new WaitForEndOfFrame();
+            //
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
+            PushEvent_RevenuePaid(adRevenuePaid);
+            currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
+        }
         #endregion
 
         #region Unity Ui Event
@@ -110,7 +118,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.Clicked();
+            currentTrackingSource?.PushEvent_Clicked();
             PushEvent_Clicked();
         }
         public void OnClick_Expanded()
@@ -118,7 +126,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.Expanded(IsExpanded);
+            currentTrackingSource?.PushEvent_Expanded(IsExpanded);
         }
         #endregion
     }

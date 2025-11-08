@@ -1,10 +1,11 @@
+using KTool.Init;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace KTool_Demo.Loading
 {
-    public class LoadUi : MonoBehaviour
+    public class LoadUi : MonoBehaviour, IInitListener
     {
         #region Properties
         private const string TEXT_PROGRESS_FORMAT = "{0} %";
@@ -62,6 +63,26 @@ namespace KTool_Demo.Loading
 
         #region Method
 
+        #endregion
+
+        #region Init
+        public void Init_OnShow()
+        {
+            Show();
+        }
+        public void Init_OnHide()
+        {
+            Hide();
+        }
+        public void Init_OnProgress(float progress)
+        {
+            Progress = progress;
+        }
+
+        public void Init_OnTitle(string title)
+        {
+            TaskName = title;
+        }
         #endregion
 
         #region Menu Anim

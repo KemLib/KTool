@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -151,66 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11fe5fbd15868e241b5e4570bd4db2a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onInit:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 435028453}
-        m_TargetAssemblyTypeName: KTool_Demo.Loading.LoadUi, Assembly-CSharp
-        m_MethodName: Show
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onComplete:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 435028453}
-        m_TargetAssemblyTypeName: KTool_Demo.Loading.LoadUi, Assembly-CSharp
-        m_MethodName: Hide
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onProgress:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 435028453}
-        m_TargetAssemblyTypeName: KTool_Demo.Loading.LoadUi, Assembly-CSharp
-        m_MethodName: set_Progress
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onTaskName:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 435028453}
-        m_TargetAssemblyTypeName: KTool_Demo.Loading.LoadUi, Assembly-CSharp
-        m_MethodName: set_TaskName
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  objectListener: {fileID: 1273061058}
 --- !u!4 &75198091
 Transform:
   m_ObjectHideFlags: 0
@@ -260,17 +198,6 @@ Transform:
   - {fileID: 1477824581}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &435028453 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 487835215276360773, guid: 2f2cbe191e597ea458c2b6cb9a3c55b2, type: 3}
-  m_PrefabInstance: {fileID: 1655732258}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf409b20bdd09a14db81a2b796928e13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &925424052
 GameObject:
   m_ObjectHideFlags: 0
@@ -317,6 +244,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 122603730}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1273061058 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1792497991469692640, guid: 2f2cbe191e597ea458c2b6cb9a3c55b2, type: 3}
+  m_PrefabInstance: {fileID: 1655732258}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1477824579
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,7 +324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45ef6a147176a154f8dd85044d0902ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 3
+  timeLimit: 10
   steps:
   - stepName: 
     gameobjects:

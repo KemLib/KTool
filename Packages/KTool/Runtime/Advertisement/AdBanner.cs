@@ -50,7 +50,7 @@ namespace KTool.Advertisement
         #endregion
 
         #region Methods
-        public abstract AdBannerTracking Show();
+        public abstract IAdBannerTracking Show();
         public abstract void Hide();
         #endregion
 

@@ -1,42 +1,36 @@
-﻿namespace KTool.Advertisement
+﻿using System;
+using UnityEngine;
+
+namespace KTool.Advertisement
 {
-    public class AdBannerTrackingSource : AdBannerTracking
+    public class AdBannerTrackingSource : AdTrackingSource, IAdBannerTracking
     {
         #region Properties
-        private readonly AdBanner adSource;
+        public event AdBanner.AdExpandedDelegate OnAdExpanded;
         #endregion
 
         #region Contruction
-        public AdBannerTrackingSource(string errorMessage) : base(errorMessage)
+        public AdBannerTrackingSource(AdBanner adSource) : base(adSource)
         {
 
         }
-        public AdBannerTrackingSource(AdBanner adSource) : base()
+        public AdBannerTrackingSource(AdBanner adSource, string errorMessage) : base(adSource, errorMessage)
         {
-            this.adSource = adSource;
+
         }
         #endregion
 
         #region Event
-        public void Displayed(bool isSuccess)
+        public void PushEvent_Expanded(bool isSuccess)
         {
-            PushEvent_Displayed(adSource, isSuccess);
-        }
-        public void Hidden()
-        {
-            PushEvent_Hidden(adSource);
-        }
-        public void Clicked()
-        {
-            PushEvent_Clicked(adSource);
-        }
-        public void RevenuePaid(AdRevenuePaid adRevenuePaid)
-        {
-            PushEvent_RevenuePaid(adSource, adRevenuePaid);
-        }
-        public void Expanded(bool isSuccess)
-        {
-            PushEvent_Expanded(adSource, isSuccess);
+            try
+            {
+                OnAdExpanded?.Invoke(adSource as AdBanner, isSuccess);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(AdBanner.ERROR_AD_EVENT_EXPANDED_EXCEPTION, AdType.Banner.ToString(), ex.Message));
+            }
         }
         #endregion
     }

@@ -20,7 +20,7 @@ namespace KTool.Advertisement
         #endregion
 
         #region Methods
-        public abstract AdRewardedTracking Show();
+        public abstract IAdRewardedTracking Show();
         #endregion
 
         #region Event

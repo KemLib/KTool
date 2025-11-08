@@ -7,9 +7,7 @@ namespace KTool.Advertisement.Demo
     public class AdDemoAppOpen : AdAppOpen
     {
         #region Properties
-        private const string ERROR_IS_DESTROY = "Ad is destroy",
-            ERROR_NOT_READY = "Ad not ready",
-            ERROR_IS_SHOW = "Ad is show";
+        private const string ERROR_IS_SHOW = "Ad is show";
 
         public static AdDemoAppOpen InstanceAdDemo => AdDemoManager.Instance.AdAppOpen;
 
@@ -28,47 +26,26 @@ namespace KTool.Advertisement.Demo
 
         #endregion
 
-        #region Methods
-        private IEnumerator IE_Show()
-        {
-            panelMenu.gameObject.SetActive(true);
-            btnClose.gameObject.SetActive(false);
-            currentTrackingSource.Displayed(true);
-            PushEvent_Displayed(true);
-            //
-            float delay = Mathf.Clamp(showTime, 3, 60),
-                time = 0;
-            while (!IsDestroy && time < delay)
-            {
-                time += Time.deltaTime;
-                imgProgress.fillAmount = time / delay;
-                yield return new WaitForEndOfFrame();
-            }
-            //
-            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 1, AdDemoManager.AdCurrency);
-            PushEvent_RevenuePaid(adRevenuePaid);
-            currentTrackingSource.RevenuePaid(adRevenuePaid);
-            //
-            btnClose.gameObject.SetActive(true);
-        }
-        #endregion
-
         #region Ad
         public override void Init()
         {
             IsInited = true;
-            PushEvent_Inited();
+            PushEvent_Inited(true);
         }
         public override void Load()
         {
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
-        public override AdAppOpenTracking Show()
+        public override IAdTracking Show()
         {
             if (IsShow)
-                return new AdAppOpenTrackingSource(ERROR_IS_SHOW);
+                return new AdAppOpenTrackingSource(this, ERROR_IS_SHOW);
             //
+            if (!IsInited)
+                Init();
+            if (!IsLoaded)
+                Load();
             IsShow = true;
             currentTrackingSource = new AdAppOpenTrackingSource(this);
             StartCoroutine(IE_Show());
@@ -81,6 +58,30 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 PushEvent_Destroy();
         }
+        private IEnumerator IE_Show()
+        {
+            yield return new WaitForEndOfFrame();
+            //
+            panelMenu.gameObject.SetActive(true);
+            btnClose.gameObject.SetActive(false);
+            currentTrackingSource.PushEvent_Displayed(true);
+            PushEvent_Displayed(true);
+            //
+            float delay = Mathf.Clamp(showTime, 3, 60),
+                time = 0;
+            while (!IsDestroy && time < delay)
+            {
+                time += Time.unscaledDeltaTime;
+                imgProgress.fillAmount = time / delay;
+                yield return new WaitForEndOfFrame();
+            }
+            //
+            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
+            PushEvent_RevenuePaid(adRevenuePaid);
+            currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
+            //
+            btnClose.gameObject.SetActive(true);
+        }
         #endregion
 
         #region Unity Ui Event
@@ -89,7 +90,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.Clicked();
+            currentTrackingSource?.PushEvent_Clicked();
             PushEvent_Clicked();
         }
         public void OnClick_Close()
@@ -97,9 +98,10 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            IsShow = false;
             panelMenu.gameObject.SetActive(false);
-            currentTrackingSource?.Hidden();
+            btnClose.gameObject.SetActive(false);
+            IsShow = false;
+            currentTrackingSource?.PushEvent_Hidden();
             PushEvent_Hidden();
             if (IsDestroy)
                 PushEvent_Destroy();
