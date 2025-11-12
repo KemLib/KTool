@@ -106,9 +106,9 @@ namespace KTool.Advertisement.Demo
             //
             yield return new WaitForEndOfFrame();
             //
-            AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
-            PushEvent_RevenuePaid(adRevenuePaid);
-            currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
+            //AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
+            //PushEvent_RevenuePaid(adRevenuePaid);
+            //currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
         }
         #endregion
 
