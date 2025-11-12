@@ -37,7 +37,7 @@ namespace KTool.Advertisement.Demo
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
-        public override IAdTracking Show()
+        public override IAdTracking Show(string placement = "")
         {
             if (IsShow)
                 return new AdInterstitialTrackingSource(this, ERROR_IS_SHOW);

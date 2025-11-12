@@ -12,7 +12,7 @@ namespace KTool.Advertisement
         #endregion
 
         #region Methods
-        public abstract IAdTracking Show();
+        public abstract IAdTracking Show(string placement = "");
         #endregion
     }
 }
