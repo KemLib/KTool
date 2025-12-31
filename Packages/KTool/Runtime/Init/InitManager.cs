@@ -17,6 +17,8 @@ namespace KTool.Init
 
         [SerializeField]
         private GameObject objectListener;
+        [SerializeField]
+        private float wait_time;
 
         public IInitListener initListener;
         private bool isInit;
@@ -157,7 +159,10 @@ namespace KTool.Init
                 //
                 while (!step.Item_IsCompleteAllRequired() || (time < initContainer.TimeLimit && !step.Item_IsCompleteAll()))
                 {
-                    yield return new WaitForEndOfFrame();
+                    if (wait_time <= 0)
+                        yield return new WaitForEndOfFrame();
+                    else
+                        yield return new WaitForSecondsRealtime(wait_time);
                     Progress = originProgress + stepProgress * i + stepProgress * step.Item_GetProgress();
                     time = Mathf.Min(time + Time.unscaledDeltaTime, initContainer.TimeLimit);
                 }
@@ -185,7 +190,10 @@ namespace KTool.Init
                 //
                 while (!step.Item_IsCompleteAll())
                 {
-                    yield return new WaitForEndOfFrame();
+                    if (wait_time <= 0)
+                        yield return new WaitForEndOfFrame();
+                    else
+                        yield return new WaitForSecondsRealtime(wait_time);
                     Progress = originProgress + stepProgress * i + stepProgress * step.Item_GetProgress();
                 }
                 //
@@ -249,7 +257,10 @@ namespace KTool.Init
             while (!ao.isDone)
             {
                 Progress = originProgress + maxProgress * ao.progress;
-                yield return new WaitForEndOfFrame();
+                if (wait_time <= 0)
+                    yield return new WaitForEndOfFrame();
+                else
+                    yield return new WaitForSecondsRealtime(wait_time);
             }
             Progress = originProgress + maxProgress;
             TaskName = string.Empty;
@@ -274,7 +285,10 @@ namespace KTool.Init
             while (!ao.isDone)
             {
                 Progress = originProgress + maxProgress * ao.progress;
-                yield return new WaitForEndOfFrame();
+                if (wait_time <= 0)
+                    yield return new WaitForEndOfFrame();
+                else
+                    yield return new WaitForSecondsRealtime(wait_time);
             }
             Progress = originProgress + maxProgress;
             TaskName = string.Empty;
