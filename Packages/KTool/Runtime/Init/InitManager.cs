@@ -149,7 +149,8 @@ namespace KTool.Init
                 maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1),
                 stepProgress = maxProgress / initContainer.Count;
             //
-            float time = 0;
+            float origin_time = Time.time,
+                delta_time = 0;
             for (int i = 0; i < initContainer.Count; i++)
             {
                 InitStep step = initContainer[i];
@@ -157,14 +158,14 @@ namespace KTool.Init
                 TaskName = step.StepName;
                 step.Item_Init();
                 //
-                while (!step.Item_IsCompleteAllRequired() || (time < initContainer.TimeLimit && !step.Item_IsCompleteAll()))
+                while (!step.Item_IsCompleteAllRequired() || (delta_time < initContainer.TimeLimit && !step.Item_IsCompleteAll()))
                 {
                     if (wait_time <= 0)
                         yield return new WaitForEndOfFrame();
                     else
                         yield return new WaitForSecondsRealtime(wait_time);
                     Progress = originProgress + stepProgress * i + stepProgress * step.Item_GetProgress();
-                    time = Mathf.Min(time + Time.unscaledDeltaTime, initContainer.TimeLimit);
+                    delta_time = Time.time - origin_time;
                 }
                 //
                 Progress = originProgress + stepProgress * i + stepProgress;
