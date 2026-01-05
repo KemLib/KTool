@@ -19,6 +19,7 @@ namespace KTool_Demo.Init
         #region Method
         public IInitTracking InitBegin()
         {
+            Debug.Log("Init begin: " + name);
             InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable);
             StartCoroutine(IE_Init(initTrackingSource));
             return initTrackingSource;
@@ -26,6 +27,7 @@ namespace KTool_Demo.Init
 
         public void InitEnd()
         {
+            Debug.Log("Init end: " + name);
         }
 
         private IEnumerator IE_Init(InitTrackingSource initTrackingSource)

@@ -1,7 +1,6 @@
-﻿using KTool.Attribute;
+﻿using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 namespace KTool.Init
 {
@@ -13,44 +12,53 @@ namespace KTool.Init
         [SerializeField]
         private InitStep[] steps;
         [SerializeField]
-        private bool afterInit;
-        [SerializeField, SelectScene]
-        private string nextScene;
-        [SerializeField]
-        private LoadSceneMode loadSceneMode;
-        [SerializeField]
-        private UnityEvent onBegin,
+        private UnityEvent onStep,
+            onProgress,
+            onBegin,
             onEnd;
 
-        private bool isIniting;
-        private float initTime;
+        private int index_step;
+        private float progress;
+        private float stepProgress;
 
         public float TimeLimit => timeLimit;
         public int Count => steps.Length;
         public InitStep this[int index] => steps[index];
-        public bool AfterInit => afterInit;
-        public string NextScene => nextScene;
-        public LoadSceneMode LoadSceneMode => loadSceneMode;
+        internal float StepProgress => stepProgress;
+        public float Progress => progress;
+        public InitStep CurrentStep => index_step < 0 || index_step >= Count ? null : steps[index_step];
         #endregion
 
         #region Methods Unity
-        private void Update()
-        {
-            if (isIniting)
-                initTime += Time.unscaledDeltaTime;
-        }
+
         #endregion
 
         #region Methods
+        internal void PushEvent_OnStep(int index_step)
+        {
+            this.index_step = index_step;
+            //
+            onStep?.Invoke();
+        }
+        internal void PushEvent_OnProgress()
+        {
+            float tmpProgress = stepProgress * index_step + stepProgress * CurrentStep.Item_GetProgress();
+            if (tmpProgress == progress)
+                return;
+            progress = Mathf.Clamp(tmpProgress, 0, 1);
+            //
+            onStep?.Invoke();
+        }
         internal void PushEvent_OnBegin()
         {
-            isIniting = true;
-            initTime = 0;
+            index_step = -1;
+            progress = -1;
+            stepProgress = Count <= 0 ? 0 : 1f / Count;
+            //
             onBegin?.Invoke();
         }
         internal void PushEvent_OnEnd()
         {
-            isIniting = false;
             onEnd?.Invoke();
         }
         #endregion

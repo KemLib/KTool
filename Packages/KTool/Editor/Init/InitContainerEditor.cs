@@ -9,9 +9,6 @@ namespace KTool.Init.Editor
         #region Properties
         private SerializedProperty propertyTimeLimit,
             propertySteps,
-            propertyAfterInit,
-            propertyNextScene,
-            propertyLoadSceneMode,
             propertyOnBegin,
             propertyOnEnd;
         #endregion
@@ -21,9 +18,6 @@ namespace KTool.Init.Editor
         {
             propertyTimeLimit = serializedObject.FindProperty("timeLimit");
             propertySteps = serializedObject.FindProperty("steps");
-            propertyAfterInit = serializedObject.FindProperty("afterInit");
-            propertyNextScene = serializedObject.FindProperty("nextScene");
-            propertyLoadSceneMode = serializedObject.FindProperty("loadSceneMode");
             propertyOnBegin = serializedObject.FindProperty("onBegin");
             propertyOnEnd = serializedObject.FindProperty("onEnd");
         }
@@ -34,14 +28,6 @@ namespace KTool.Init.Editor
             EditorGUILayout.PropertyField(propertyTimeLimit, new GUIContent("Time Limit"));
             propertyTimeLimit.floatValue = Mathf.Max(0, propertyTimeLimit.floatValue);
             EditorGUILayout.PropertyField(propertySteps, new GUIContent("Steps"));
-            //
-            EditorGUILayout.Space(10);
-            EditorGUILayout.PropertyField(propertyAfterInit, new GUIContent("After Init"));
-            if (propertyAfterInit.boolValue)
-            {
-                EditorGUILayout.PropertyField(propertyNextScene, new GUIContent("Next Scene"));
-                EditorGUILayout.PropertyField(propertyLoadSceneMode, new GUIContent("Load SceneMode"));
-            }
             //
             EditorGUILayout.Space(10);
             EditorGUILayout.PropertyField(propertyOnBegin, new GUIContent("On Begin"));

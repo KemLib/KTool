@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,11 +20,6 @@ namespace KTool.Init
         }
 
         private InitState state;
-        private float progress;
-        private string taskName;
-        private float originProgress,
-            maxProgress,
-            stepProgress;
         private InitContainer initContainer;
         private float initStartTime;
         private int index_step;
@@ -34,26 +28,6 @@ namespace KTool.Init
         private int sceneIndex;
 
         public bool IsInit => state != InitState.None;
-        public float Progress
-        {
-            get => progress;
-            private set
-            {
-                if (value == progress)
-                    return;
-                progress = Mathf.Clamp(value, 0, 1);
-            }
-        }
-        public string TaskName
-        {
-            get => taskName;
-            private set
-            {
-                if (value == taskName)
-                    return;
-                taskName = value;
-            }
-        }
         #endregion
 
         #region Unity Event
@@ -98,11 +72,9 @@ namespace KTool.Init
 
         #endregion
 
-        #region Init FirstScene
+        #region Init
         private void Init(Scene scene)
         {
-            Progress = 0;
-            TaskName = string.Empty;
             InitContainer initContainer = GetComponent<InitContainer>(scene);
             Init(initContainer);
         }
@@ -110,8 +82,6 @@ namespace KTool.Init
         {
             if (initContainer == null)
             {
-                Progress = 1;
-                TaskName = string.Empty;
                 state = InitState.None;
                 return;
             }
@@ -126,29 +96,18 @@ namespace KTool.Init
                 return;
             }
             //
-            originProgress = progress;
-            maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1);
-            stepProgress = maxProgress / initContainer.Count;
             initStartTime = Time.time;
             Init_NextStep(0);
         }
         private void Init_End()
         {
-            for (int i = 0; i < initContainer.Count; i++)
-                initContainer[i].Item_InitEnded();
-            initContainer.PushEvent_OnEnd();
-            //
-            if (initContainer.AfterInit)
-            {
-                LoadScene(initContainer.NextScene, initContainer.LoadSceneMode);
-            }
-            else
-            {
-                Progress = 1;
-                TaskName = string.Empty;
-                state = InitState.None;
-            }
+            InitContainer tmpInitContainer = initContainer;
+            state = InitState.None;
             initContainer = null;
+            //
+            for (int i = 0; i < tmpInitContainer.Count; i++)
+                tmpInitContainer[i].Item_InitEnded();
+            tmpInitContainer.PushEvent_OnEnd();
         }
         private void Init_Update()
         {
@@ -158,13 +117,13 @@ namespace KTool.Init
                 return;
             }
             //
+            initContainer.PushEvent_OnProgress();
             InitStep step = initContainer[index_step];
             if (initContainer.TimeLimit > 0)
             {
                 float delta_time = Time.time - initStartTime;
                 if (!step.Item_IsCompleteAllRequired() || (delta_time < initContainer.TimeLimit && !step.Item_IsCompleteAll()))
                 {
-                    Progress = originProgress + stepProgress * index_step + stepProgress * step.Item_GetProgress();
                     return;
                 }
             }
@@ -172,13 +131,9 @@ namespace KTool.Init
             {
                 if (!step.Item_IsCompleteAll())
                 {
-                    Progress = originProgress + stepProgress * index_step + stepProgress * step.Item_GetProgress();
                     return;
                 }
             }
-            //
-            Progress = originProgress + stepProgress * index_step + stepProgress;
-            TaskName = string.Empty;
             //
             Init_NextStep(index_step + 1);
         }
@@ -191,9 +146,10 @@ namespace KTool.Init
             }
             //
             this.index_step = index_step;
+            initContainer.PushEvent_OnStep(index_step);
+            //
             InitStep step = initContainer[index_step];
             step.Init();
-            TaskName = step.StepName;
             step.Item_Init();
         }
         #endregion
@@ -202,30 +158,20 @@ namespace KTool.Init
         public void LoadScene(string sceneName, LoadSceneMode sceneMode = LoadSceneMode.Single)
         {
             state = InitState.Load_Scene;
-            Progress = 0;
-            TaskName = string.Empty;
             //
             this.sceneName = sceneName;
             sceneIndex = -1;
-            originProgress = progress;
-            maxProgress = (1 - originProgress) / 2;
             //
-            TaskName = string.Format(LOAD_SCENE_TASK_NAME_FORMAT, sceneName);
             async_operation = SceneManager.LoadSceneAsync(sceneName, sceneMode);
             async_operation.allowSceneActivation = true;
         }
         public void LoadScene(int sceneIndex, LoadSceneMode sceneMode = LoadSceneMode.Single)
         {
             state = InitState.Load_Scene;
-            Progress = 0;
-            TaskName = string.Empty;
             //
             sceneName = string.Empty;
             this.sceneIndex = sceneIndex;
-            originProgress = progress;
-            maxProgress = (1 - originProgress) / 2;
             //
-            TaskName = string.Format(LOAD_SCENE_TASK_NAME_FORMAT, sceneIndex + 1);
             async_operation = SceneManager.LoadSceneAsync(sceneIndex, sceneMode);
             async_operation.allowSceneActivation = true;
         }
@@ -250,8 +196,6 @@ namespace KTool.Init
             sceneIndex = -1;
             async_operation = null;
             //
-            Progress = 1;
-            TaskName = string.Empty;
             state = InitState.None;
         }
         private void LoadScene_Update()
@@ -264,19 +208,12 @@ namespace KTool.Init
             //
             if (async_operation.isDone)
             {
-                Progress = originProgress + maxProgress;
-                TaskName = string.Empty;
-                //
                 Scene scene;
                 if (string.IsNullOrEmpty(sceneName))
                     scene = GetScene(sceneIndex);
                 else
                     scene = GetSceneActive(sceneName);
                 LoadScene_End(scene);
-            }
-            else
-            {
-                Progress = originProgress + maxProgress * async_operation.progress;
             }
         }
         #endregion

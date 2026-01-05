@@ -1,4 +1,3 @@
-using KTool.Init;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
