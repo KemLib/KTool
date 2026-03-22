@@ -2,7 +2,7 @@ using KTool.FileIo;
 using UnityEditor;
 using UnityEngine;
 
-namespace KTool.Data.Editor
+namespace KTool.Editor
 {
     public static class MenuItemData
     {
