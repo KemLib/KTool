@@ -23,14 +23,7 @@ namespace KTool.Advertisement
         #region Event
         public void PushEvent_ReceivedReward(AdRewardReceived adRewardReceived)
         {
-            try
-            {
-                OnAdReceivedReward?.Invoke(adSource as AdRewarded, adRewardReceived);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(AdRewarded.ERROR_AD_EVENT_RECEIVED_REWARD_EXCEPTION, AdType.Rewarded, ex.Message));
-            }
+            OnAdReceivedReward?.Invoke(adSource as AdRewarded, adRewardReceived);
         }
         #endregion
     }

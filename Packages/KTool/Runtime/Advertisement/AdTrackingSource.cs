@@ -43,52 +43,24 @@ namespace KTool.Advertisement
         #region Event
         public void PushEvent_Displayed(bool isSuccess)
         {
-            try
-            {
-                OnAdDisplayed?.Invoke(adSource, isSuccess);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_DISPLAYED_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            OnAdDisplayed?.Invoke(adSource, isSuccess);
             //
             if (!isSuccess)
                 isHided = true;
         }
         public void PushEvent_Hidden()
         {
-            try
-            {
-                OnAdHidden?.Invoke(adSource);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_HIDDEN_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            OnAdHidden?.Invoke(adSource);
             //
             isHided = true;
         }
         public void PushEvent_Clicked()
         {
-            try
-            {
-                OnAdClicked?.Invoke(adSource);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_CLICKED_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            OnAdClicked?.Invoke(adSource);
         }
         public void PushEvent_RevenuePaid(AdRevenuePaid adRevenuePaid)
         {
-            try
-            {
-                OnAdRevenuePaid?.Invoke(adSource, adRevenuePaid);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            OnAdRevenuePaid?.Invoke(adSource, adRevenuePaid);
         }
         #endregion
     }

@@ -7,8 +7,6 @@ namespace KTool.Advertisement
     public abstract class AdBanner : Ad
     {
         #region Properties
-        internal const string ERROR_AD_EVENT_EXPANDED_EXCEPTION = "Ad {0} call event Expanded exception: {1}";
-
         protected static AdBanner instance;
         public static AdBanner Instance => instance == null ? AdDemoBanner.InstanceAdDemo : instance;
 
@@ -58,14 +56,7 @@ namespace KTool.Advertisement
         protected void PushEvent_Expanded(bool isExpanded)
         {
             this.isExpanded = isExpanded;
-            try
-            {
-                OnAdExpanded?.Invoke(this, isExpanded);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_EXPANDED_EXCEPTION, AdType.Banner, ex.Message));
-            }
+            OnAdExpanded?.Invoke(this, isExpanded);
         }
         #endregion
     }

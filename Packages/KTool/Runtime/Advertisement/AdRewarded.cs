@@ -7,8 +7,6 @@ namespace KTool.Advertisement
     public abstract class AdRewarded : Ad
     {
         #region Properties
-        internal const string ERROR_AD_EVENT_RECEIVED_REWARD_EXCEPTION = "Ad {0} call event ReceivedReward exception: {1}";
-
         protected static AdRewarded instance;
         public static AdRewarded Instance => instance == null ? AdDemoRewarded.InstanceAdDemo : instance;
 
@@ -26,14 +24,7 @@ namespace KTool.Advertisement
         #region Event
         protected void PushEvent_ReceivedReward(AdRewardReceived rewardReceived)
         {
-            try
-            {
-                OnAdReceivedReward?.Invoke(this, rewardReceived);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_RECEIVED_REWARD_EXCEPTION, AdType.Rewarded, ex.Message));
-            }
+            OnAdReceivedReward?.Invoke(this, rewardReceived);
         }
         #endregion
     }

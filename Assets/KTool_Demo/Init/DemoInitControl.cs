@@ -1,3 +1,4 @@
+using KTool.Cron;
 using KTool.Init;
 using System.Collections;
 using UnityEngine;
@@ -21,7 +22,10 @@ namespace KTool_Demo.Init
         {
             Debug.Log("Init begin: " + name);
             InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable);
-            StartCoroutine(IE_Init(initTrackingSource));
+            CronObject.Create()
+                .Add(ConditionTime.Create(timeInit))
+                .Add(CallbackAction<InitTrackingSource>.Create(Init_OnComplete, initTrackingSource))
+                .Run();
             return initTrackingSource;
         }
 
@@ -30,15 +34,9 @@ namespace KTool_Demo.Init
             Debug.Log("Init end: " + name);
         }
 
-        private IEnumerator IE_Init(InitTrackingSource initTrackingSource)
+        private void Init_OnComplete(InitTrackingSource initTrackingSource)
         {
-            float time = 0;
-            while (time < timeInit)
-            {
-                time += Time.deltaTime;
-                initTrackingSource.Progress = time / timeInit;
-                yield return new WaitForEndOfFrame();
-            }
+            Debug.Log("Init Complete: " + name);
             initTrackingSource.CompleteSuccess();
         }
         #endregion

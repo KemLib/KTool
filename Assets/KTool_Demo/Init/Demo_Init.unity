@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &12266285 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 487835215276360773, guid: 2f2cbe191e597ea458c2b6cb9a3c55b2, type: 3}
+  m_PrefabInstance: {fileID: 1655732258}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf409b20bdd09a14db81a2b796928e13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &75198089
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,7 +219,7 @@ GameObject:
   - component: {fileID: 925424054}
   - component: {fileID: 925424053}
   m_Layer: 0
-  m_Name: DemoInitControl 4
+  m_Name: DemoInitControl 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -227,7 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initIndispensable: 0
-  timeInit: 4
+  timeInit: 1
 --- !u!4 &925424054
 Transform:
   m_ObjectHideFlags: 0
@@ -254,7 +265,7 @@ GameObject:
   - component: {fileID: 1477824581}
   - component: {fileID: 1477824580}
   m_Layer: 0
-  m_Name: DemoInitControl 5
+  m_Name: DemoInitControl 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -273,7 +284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initIndispensable: 0
-  timeInit: 5
+  timeInit: 3
 --- !u!4 &1477824581
 Transform:
   m_ObjectHideFlags: 0
@@ -320,20 +331,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeLimit: 10
   steps:
-  - stepName: 
+  - stepName: Step 1
     gameobjects:
     - {fileID: 1873387012}
+  - stepName: Step 2
+    gameobjects:
     - {fileID: 925424052}
     - {fileID: 1477824579}
-  afterInit: 0
-  nextScene: Demo_Init_2
-  loadSceneMode: 0
   onBegin:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 12266285}
+        m_TargetAssemblyTypeName: KTool_Demo.Loading.LoadUi, Assembly-CSharp
+        m_MethodName: Show
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onStep:
+    m_PersistentCalls:
+      m_Calls: []
+  onProgress:
     m_PersistentCalls:
       m_Calls: []
   onEnd:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 12266285}
+        m_TargetAssemblyTypeName: KTool_Demo.Loading.LoadUi, Assembly-CSharp
+        m_MethodName: Hide
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1526517087
 Transform:
   m_ObjectHideFlags: 0
@@ -500,7 +540,7 @@ GameObject:
   - component: {fileID: 1873387014}
   - component: {fileID: 1873387013}
   m_Layer: 0
-  m_Name: DemoInitControl 3
+  m_Name: DemoInitControl 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -519,7 +559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initIndispensable: 1
-  timeInit: 3
+  timeInit: 2
 --- !u!4 &1873387014
 Transform:
   m_ObjectHideFlags: 0

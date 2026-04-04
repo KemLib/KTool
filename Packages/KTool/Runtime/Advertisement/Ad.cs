@@ -6,14 +6,6 @@ namespace KTool.Advertisement
     public abstract class Ad : MonoBehaviour
     {
         #region Properties
-        internal const string ERROR_AD_EVENT_INIT_EXCEPTION = "Ad {0} call event Inited exception: {1}",
-            ERROR_AD_EVENT_LOADED_EXCEPTION = "Ad {0} call event Loaded exception: {1}",
-            ERROR_AD_EVENT_DISPLAYED_EXCEPTION = "Ad {0} call event Displayed exception: {1}",
-            ERROR_AD_EVENT_HIDDEN_EXCEPTION = "Ad {0} call event Hidden exception: {1}",
-            ERROR_AD_EVENT_DESTROY_EXCEPTION = "Ad {0} call event Destroy exception: {1}",
-            ERROR_AD_EVENT_CLICKED_EXCEPTION = "Ad {0} call event Clicked exception: {1}",
-            ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION = "Ad {0} call event RevenuePaid exception: {1}";
-
         public delegate void AdInitedDelegate(Ad source, bool isSuccess);
         public delegate void AdLoadedDelegate(Ad source, bool isSuccess);
         public delegate void AdDisplayedDelegate(Ad source, bool isSuccess);
@@ -92,80 +84,31 @@ namespace KTool.Advertisement
         #region Event
         protected void PushEvent_Inited(bool isSuccess)
         {
-            try
-            {
-                OnAdInited?.Invoke(this, isSuccess);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_INIT_EXCEPTION, AdType.ToString(), ex.Message));
-            }
+            OnAdInited?.Invoke(this, isSuccess);
         }
         protected void PushEvent_Loaded(bool isSuccess)
         {
-            try
-            {
-                OnAdLoaded?.Invoke(this, isSuccess);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_LOADED_EXCEPTION, AdType.ToString(), ex.Message));
-            }
+            OnAdLoaded?.Invoke(this, isSuccess);
         }
         protected void PushEvent_Displayed(bool isSuccess)
         {
-            try
-            {
-                OnAdDisplayed?.Invoke(this, isSuccess);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_DISPLAYED_EXCEPTION, AdType.ToString(), ex.Message));
-            }
+            OnAdDisplayed?.Invoke(this, isSuccess);
         }
         protected void PushEvent_Hidden()
         {
-            try
-            {
-                OnAdHidden?.Invoke(this);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_HIDDEN_EXCEPTION, AdType.ToString(), ex.Message));
-            }
+            OnAdHidden?.Invoke(this);
         }
         protected void PushEvent_Destroy()
         {
-            try
-            {
-                OnAdDestroy?.Invoke(this);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_DESTROY_EXCEPTION, AdType.ToString(), ex.Message));
-            }
+            OnAdDestroy?.Invoke(this);
         }
         protected void PushEvent_Clicked()
         {
-            try
-            {
-                OnAdClicked?.Invoke(this);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_CLICKED_EXCEPTION, AdType.ToString(), ex.Message));
-            }
+            OnAdClicked?.Invoke(this);
         }
         protected void PushEvent_RevenuePaid(AdRevenuePaid revenuePaid)
         {
-            try
-            {
-                OnAdRevenuePaid?.Invoke(this, revenuePaid);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION, AdType.ToString(), ex.Message));
-            }
+            OnAdRevenuePaid?.Invoke(this, revenuePaid);
         }
         #endregion
     }

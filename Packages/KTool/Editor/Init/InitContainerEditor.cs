@@ -10,6 +10,8 @@ namespace KTool.Init.Editor
         private SerializedProperty propertyTimeLimit,
             propertySteps,
             propertyOnBegin,
+            propertyOnStep,
+            propertyOnProgress,
             propertyOnEnd;
         #endregion
 
@@ -19,6 +21,8 @@ namespace KTool.Init.Editor
             propertyTimeLimit = serializedObject.FindProperty("timeLimit");
             propertySteps = serializedObject.FindProperty("steps");
             propertyOnBegin = serializedObject.FindProperty("onBegin");
+            propertyOnStep = serializedObject.FindProperty("onStep");
+            propertyOnProgress = serializedObject.FindProperty("onProgress");
             propertyOnEnd = serializedObject.FindProperty("onEnd");
         }
         public override void OnInspectorGUI()
@@ -31,6 +35,8 @@ namespace KTool.Init.Editor
             //
             EditorGUILayout.Space(10);
             EditorGUILayout.PropertyField(propertyOnBegin, new GUIContent("On Begin"));
+            EditorGUILayout.PropertyField(propertyOnStep, new GUIContent("On Step"));
+            EditorGUILayout.PropertyField(propertyOnProgress, new GUIContent("On Progress"));
             EditorGUILayout.PropertyField(propertyOnEnd, new GUIContent("On End"));
             //
             serializedObject.ApplyModifiedProperties();

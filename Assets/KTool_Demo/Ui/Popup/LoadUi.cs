@@ -64,26 +64,6 @@ namespace KTool_Demo.Loading
 
         #endregion
 
-        #region Init
-        public void Init_OnShow()
-        {
-            Show();
-        }
-        public void Init_OnHide()
-        {
-            Hide();
-        }
-        public void Init_OnProgress(float progress)
-        {
-            Progress = progress;
-        }
-
-        public void Init_OnTitle(string title)
-        {
-            TaskName = title;
-        }
-        #endregion
-
         #region Menu Anim
         public void Show()
         {
@@ -91,19 +71,7 @@ namespace KTool_Demo.Loading
                 return;
             panelMenu.gameObject.SetActive(true);
         }
-        public void Show(float time)
-        {
-            if (IsShow)
-                return;
-            panelMenu.gameObject.SetActive(true);
-        }
         public void Hide()
-        {
-            if (!IsShow)
-                return;
-            panelMenu.gameObject.SetActive(false);
-        }
-        public void Hide(float time)
         {
             if (!IsShow)
                 return;

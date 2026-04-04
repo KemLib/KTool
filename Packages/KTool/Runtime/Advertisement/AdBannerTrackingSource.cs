@@ -23,14 +23,7 @@ namespace KTool.Advertisement
         #region Event
         public void PushEvent_Expanded(bool isSuccess)
         {
-            try
-            {
-                OnAdExpanded?.Invoke(adSource as AdBanner, isSuccess);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(AdBanner.ERROR_AD_EVENT_EXPANDED_EXCEPTION, AdType.Banner.ToString(), ex.Message));
-            }
+            OnAdExpanded?.Invoke(adSource as AdBanner, isSuccess);
         }
         #endregion
     }
