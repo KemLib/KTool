@@ -67,7 +67,7 @@ namespace KTool.Advertisement.Demo
             currentTrackingSource.PushEvent_Displayed(true);
             PushEvent_Displayed(true);
             //
-            float delay = Mathf.Clamp(showTime, 3, 60),
+            float delay = Mathf.Max(0, showTime),
                 time = 0;
             while (!IsDestroy && time < delay)
             {
@@ -75,10 +75,6 @@ namespace KTool.Advertisement.Demo
                 imgProgress.fillAmount = time / delay;
                 yield return new WaitForEndOfFrame();
             }
-            //
-            //AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
-            //PushEvent_RevenuePaid(adRevenuePaid);
-            //currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
             //
             btnClose.gameObject.SetActive(true);
         }

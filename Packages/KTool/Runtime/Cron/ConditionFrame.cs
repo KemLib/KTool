@@ -5,21 +5,20 @@ namespace KTool.Cron
     public class ConditionFrame : Condition
     {
         #region Properties
-        private int number;
+        private int tagetFrame;
         #endregion
 
         #region Construction
         internal ConditionFrame(int number) : base()
         {
-            this.number = Mathf.Max(1, number);
+            tagetFrame = Time.frameCount + Mathf.Max(0, number);
         }
         #endregion
 
         #region Methods
         protected override void OnCheck()
         {
-            number--;
-            if (number <= 0)
+            if (Time.frameCount >= tagetFrame)
                 SetComplete();
         }
         #endregion

@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace KTool.Cron
 {
-    public class ConditionDelegate : Condition
+    public class ConditionFunc : Condition
     {
         #region Properties
-        public delegate bool CheckConditionDelegate();
-        private CheckConditionDelegate checkMethod;
+        private Func<bool> checkMethod;
         #endregion
 
         #region Construction
-        internal ConditionDelegate(CheckConditionDelegate checkMethod) : base()
+        internal ConditionFunc(Func<bool> checkMethod) : base()
         {
             this.checkMethod = checkMethod;
         }
@@ -34,9 +34,9 @@ namespace KTool.Cron
         #endregion
 
         #region Build
-        public static Condition Create(CheckConditionDelegate checkMethod)
+        public static Condition Create(Func<bool> checkMethod)
         {
-            return new ConditionDelegate(checkMethod);
+            return new ConditionFunc(checkMethod);
         }
         #endregion
     }

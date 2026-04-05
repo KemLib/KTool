@@ -25,6 +25,12 @@ namespace KTool.Cron
         #region Methods
         protected override void OnCheck()
         {
+            if (asyncOperation == null)
+            {
+                SetComplete();
+                return;
+            }
+            //
             if (tagetProgress <= -1)
             {
                 if (asyncOperation.isDone)

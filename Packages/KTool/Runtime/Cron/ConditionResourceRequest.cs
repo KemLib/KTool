@@ -18,6 +18,12 @@ namespace KTool.Cron
         #region Methods
         protected override void OnCheck()
         {
+            if(request == null)
+            {
+                SetComplete();
+                return;
+            }
+            //
             if (request.isDone)
             {
                 SetComplete();

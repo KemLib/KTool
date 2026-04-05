@@ -1,42 +1,43 @@
 ﻿using UnityEngine;
+using System.Threading.Tasks;
 
 namespace KTool.Cron
 {
-    public class ConditionDelegate : Condition
+    public class ConditionTask : Condition
     {
         #region Properties
         public delegate bool CheckConditionDelegate();
-        private CheckConditionDelegate checkMethod;
+        private Task task;
         #endregion
 
         #region Construction
-        internal ConditionDelegate(CheckConditionDelegate checkMethod) : base()
+        internal ConditionTask(Task task) : base()
         {
-            this.checkMethod = checkMethod;
+            this.task = task;
         }
         #endregion
 
         #region Methods
         protected override void OnCheck()
         {
-            if(checkMethod == null)
+            if (task == null)
             {
                 SetComplete();
                 return;
             }
             //
-            if (checkMethod())
+            if (task.IsCompleted)
             {
                 SetComplete();
-                checkMethod = null;
+                task = null;
             }
         }
         #endregion
 
         #region Build
-        public static Condition Create(CheckConditionDelegate checkMethod)
+        public static Condition Create(Task task)
         {
-            return new ConditionDelegate(checkMethod);
+            return new ConditionTask(task);
         }
         #endregion
     }

@@ -21,7 +21,14 @@ namespace KTool.Cron
         #region Methods
         protected override void OnCheck()
         {
-            if (checkMethod != null && checkMethod(state))
+            if (checkMethod == null)
+            {
+                SetComplete();
+                state = default;
+                return;
+            }
+            //
+            if (checkMethod(state))
             {
                 SetComplete();
                 checkMethod = null;

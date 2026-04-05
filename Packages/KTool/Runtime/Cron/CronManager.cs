@@ -25,18 +25,13 @@ namespace KTool.Cron
             }
         }
 
-        private List<CronObject> crons,
-            cronTmp;
+        private List<CronObject> crons;
         #endregion
 
         #region Unity Event
         private void Update()
         {
             Cron_Update();
-        }
-        private void LateUpdate()
-        {
-            Cron_LateUpdate();
         }
         private void OnDestroy()
         {
@@ -49,7 +44,6 @@ namespace KTool.Cron
         private void Init()
         {
             crons = new List<CronObject>();
-            cronTmp = new List<CronObject>();
         }
         #endregion Method
 
@@ -68,16 +62,14 @@ namespace KTool.Cron
                     index++;
             }
         }
-        private void Cron_LateUpdate()
-        {
-            crons.AddRange(cronTmp);
-            cronTmp.Clear();
-        }
         internal void Cron_Add(CronObject cron)
         {
             if (cron == null || cron.IsComplete)
                 return;
-            cronTmp.Add(cron);
+            cron.Update();
+            if (cron.IsComplete)
+                return;
+            crons.Add(cron);
         }
         #endregion
     }

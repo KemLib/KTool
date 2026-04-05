@@ -5,21 +5,20 @@ namespace KTool.Cron
     public class ConditionReadTime : Condition
     {
         #region Properties
-        private float time;
+        private float tagetTime;
         #endregion
 
         #region Construction
         internal ConditionReadTime(float time) : base()
         {
-            this.time = Mathf.Max(0, time);
+            tagetTime = Time.time + Mathf.Max(0, time);
         }
         #endregion
 
         #region Methods
         protected override void OnCheck()
         {
-            time = Mathf.Max(0, time - Time.unscaledDeltaTime);
-            if (time <= 0)
+            if (Time.time >= tagetTime)
                 SetComplete();
         }
         #endregion
