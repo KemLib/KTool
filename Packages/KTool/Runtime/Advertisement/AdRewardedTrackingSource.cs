@@ -7,6 +7,7 @@ namespace KTool.Advertisement
     {
         #region Properties
         public event AdRewarded.AdReceivedRewardDelegate OnAdReceivedReward;
+
         #endregion
 
         #region Contruction
@@ -21,9 +22,9 @@ namespace KTool.Advertisement
         #endregion
 
         #region Event
-        public void PushEvent_ReceivedReward(AdRewardReceived adRewardReceived)
+        public void PushEvent_ReceivedReward(AdRewardReceived adRewardReceived, string placement)
         {
-            OnAdReceivedReward?.Invoke(adSource as AdRewarded, adRewardReceived);
+            OnAdReceivedReward?.Invoke(adSource as AdRewarded, adRewardReceived, placement);
         }
         #endregion
     }

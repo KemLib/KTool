@@ -7,50 +7,80 @@ namespace KTool.Advertisement.Demo
     public class AdDemoInterstitial : AdInterstitial
     {
         #region Properties
-        private const string ERROR_IS_SHOW = "Ad is show";
-
         public static AdDemoInterstitial InstanceAdDemo => AdDemoManager.Instance.AdInterstitial;
 
         [SerializeField]
         private Image panelMenu,
             imgProgress;
-        [SerializeField]
-        private Button btnClose;
         [SerializeField, Min(0)]
-        private float showTime;
+        private float timeShow;
 
-        private AdInterstitialTrackingSource currentTrackingSource;
+        private bool isClick;
+        private float currentTime,
+            tagetTime;
+
+        private bool IsDisplayed
+        {
+            get => panelMenu.gameObject.activeSelf;
+            set
+            {
+                panelMenu.gameObject.SetActive(value);
+            }
+        }
         #endregion
 
         #region Methods Unity
-
+        private void Update()
+        {
+            if (IsShow)
+            {
+                if (IsDisplayed)
+                {
+                    currentTime += Time.unscaledDeltaTime;
+                    if (currentTime >= tagetTime)
+                    {
+                        imgProgress.fillAmount = 1;
+                        //
+                        Hide();
+                    }
+                    else
+                    {
+                        imgProgress.fillAmount = currentTime / tagetTime;
+                    }
+                }
+                else
+                {
+                    IsDisplayed = true;
+                    currentTime = 0;
+                    tagetTime = Mathf.Max(1, timeShow);
+                    //
+                    PushEvent_Displayed(true);
+                }
+            }
+        }
         #endregion
 
         #region Ad
-        public override void Init()
-        {
-            IsInited = true;
-            PushEvent_Inited(true);
-        }
         public override void Load()
         {
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
-        public override IAdTracking Show(string placement = "")
+        protected override bool OnShow(out string error)
         {
             if (IsShow)
-                return new AdInterstitialTrackingSource(this, ERROR_IS_SHOW);
+            {
+                error = AdDemoAppOpen.ERROR_IS_SHOW;
+                return false;
+            }
             //
-            if (!IsInited)
-                Init();
             if (!IsLoaded)
                 Load();
+            isClick = false;
             IsShow = true;
-            currentTrackingSource = new AdInterstitialTrackingSource(this);
-            StartCoroutine(IE_Show());
             //
-            return currentTrackingSource;
+            error = string.Empty;
+            return true;
         }
         public override void Destroy()
         {
@@ -58,35 +88,36 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 PushEvent_Destroy();
         }
-        private IEnumerator IE_Show()
+        private void Hide()
         {
-            yield return new WaitForEndOfFrame();
+            IsDisplayed = false;
+            IsShow = false;
             //
-            panelMenu.gameObject.SetActive(true);
-            btnClose.gameObject.SetActive(false);
-            currentTrackingSource.PushEvent_Displayed(true);
-            PushEvent_Displayed(true);
+            AdRevenuePaid revenue = new AdRevenuePaid(
+                source: AdDemoManager.AdSource,
+                network_name: AdDemoManager.AdNetwork,
+                idAd: AdType.ToString(),
+                adType: AdType,
+                countryCode: AdDemoManager.adCountryCode,
+                placement: Placement,
+                value: 0,
+                currency: AdDemoManager.AdCurrency);
+            PushEvent_RevenuePaid(revenue);
             //
-            float delay = Mathf.Max(0, showTime),
-                time = 0;
-            while (!IsDestroy && time < delay)
-            {
-                time += Time.unscaledDeltaTime;
-                imgProgress.fillAmount = time / delay;
-                yield return new WaitForEndOfFrame();
-            }
-            //
-            btnClose.gameObject.SetActive(true);
+            PushEvent_Hidden();
+            if (IsDestroy)
+                PushEvent_Destroy();
         }
         #endregion
 
         #region Unity Ui Event
         public void OnClick_Ad()
         {
-            if (!IsShow)
+            if (!IsShow || isClick)
                 return;
             //
-            currentTrackingSource?.PushEvent_Clicked();
+            isClick = true;
+            //
             PushEvent_Clicked();
         }
         public void OnClick_Close()
@@ -94,13 +125,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            panelMenu.gameObject.SetActive(false);
-            btnClose.gameObject.SetActive(false);
-            IsShow = false;
-            currentTrackingSource?.PushEvent_Hidden();
-            PushEvent_Hidden();
-            if (IsDestroy)
-                PushEvent_Destroy();
+            Hide();
         }
         #endregion
     }

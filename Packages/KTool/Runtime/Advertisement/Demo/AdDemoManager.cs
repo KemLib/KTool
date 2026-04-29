@@ -7,9 +7,10 @@ namespace KTool.Advertisement.Demo
         #region Properties
         private const string RESOURCES_PATH = "KTool/Advertisement/Demo/AdManagerDemo";
         private const string GAME_OBJECT_NAME = "KTool_AdManagerDemo";
-        public const string AdSource = "KTool Ad Demo",
-            AdCurrency = "USD",
-            adCountryCode = "VN";
+        public const string AdSource = "KTool Ad Source Demo",
+            AdNetwork = "KTool Ad Network Demo",
+            adCountryCode = "VN",
+            AdCurrency = "USD";
 
         private static AdDemoManager instance;
         public static AdDemoManager Instance

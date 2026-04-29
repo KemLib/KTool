@@ -21,9 +21,9 @@ namespace KTool.Advertisement
         #endregion
 
         #region Event
-        public void PushEvent_Expanded(bool isSuccess)
+        public void PushEvent_Expanded(bool isSuccess, string placement)
         {
-            OnAdExpanded?.Invoke(adSource as AdBanner, isSuccess);
+            OnAdExpanded?.Invoke(adSource as AdBanner, isSuccess, placement);
         }
         #endregion
     }

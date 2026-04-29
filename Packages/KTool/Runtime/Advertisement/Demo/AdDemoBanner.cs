@@ -7,8 +7,6 @@ namespace KTool.Advertisement.Demo
     public class AdDemoBanner : AdBanner
     {
         #region Properties
-        private const string ERROR_IS_SHOW = "Ad is show";
-
         public static AdDemoBanner InstanceAdDemo => AdDemoManager.Instance.AdBanner;
 
         [SerializeField]
@@ -17,7 +15,6 @@ namespace KTool.Advertisement.Demo
             bannerTop;
 
         private Image currentBanner;
-        private AdBannerTrackingSource currentTrackingSource;
 
         private Image BannerSelect
         {
@@ -42,10 +39,27 @@ namespace KTool.Advertisement.Demo
                 }
             }
         }
+        private bool IsDisplayed
+        {
+            get => currentBanner == null ? false : currentBanner.gameObject.activeSelf;
+            set
+            {
+                if (currentBanner == null)
+                    return;
+                currentBanner.gameObject.SetActive(value);
+            }
+        }
         #endregion
 
         #region Methods Unity
-
+        private void Update()
+        {
+            if(IsShow)
+            {
+                if (!IsDisplayed)
+                    IsDisplayed = true;
+            }
+        }
         #endregion
 
         #region Methods
@@ -53,40 +67,36 @@ namespace KTool.Advertisement.Demo
         #endregion
 
         #region Ad
-        public override void Init()
-        {
-            IsInited = true;
-            PushEvent_Inited(true);
-        }
         public override void Load()
         {
             IsLoaded = true;
             PushEvent_Loaded(true);
         }
-        public override IAdBannerTracking Show()
+        protected override bool OnShow(out string error)
         {
             if (IsShow)
-                return new AdBannerTrackingSource(this, ERROR_IS_SHOW);
+            {
+                error = AdDemoAppOpen.ERROR_IS_SHOW;
+                return false;
+            }
             //
-            if (!IsInited)
-                Init();
             if (!IsLoaded)
                 Load();
+            currentBanner = BannerSelect;
             IsShow = true;
-            currentTrackingSource = new AdBannerTrackingSource(this);
-            StartCoroutine(IE_Show());
             //
-            return currentTrackingSource;
+            error = string.Empty;
+            return true;
         }
-        public override void Hide()
+        protected override bool OnHide()
         {
             if (!IsShow)
-                return;
+                return false;
             //
-            currentBanner.gameObject.SetActive(false);
+            IsDisplayed = false;
             IsShow = false;
-            currentTrackingSource?.PushEvent_Hidden();
             PushEvent_Hidden();
+            return true;
         }
         public override void Destroy()
         {
@@ -94,21 +104,6 @@ namespace KTool.Advertisement.Demo
             if (IsShow)
                 Hide();
             PushEvent_Destroy();
-        }
-        private IEnumerator IE_Show()
-        {
-            yield return new WaitForEndOfFrame();
-            //
-            currentBanner = BannerSelect;
-            currentBanner.gameObject.SetActive(true);
-            currentTrackingSource.PushEvent_Displayed(true);
-            PushEvent_Displayed(true);
-            //
-            yield return new WaitForEndOfFrame();
-            //
-            //AdRevenuePaid adRevenuePaid = new AdRevenuePaid(AdDemoManager.AdSource, string.Empty, AdDemoManager.adCountryCode, string.Empty, AdType.Banner, 0, AdDemoManager.AdCurrency);
-            //PushEvent_RevenuePaid(adRevenuePaid);
-            //currentTrackingSource.PushEvent_RevenuePaid(adRevenuePaid);
         }
         #endregion
 
@@ -118,7 +113,6 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.PushEvent_Clicked();
             PushEvent_Clicked();
         }
         public void OnClick_Expanded()
@@ -126,7 +120,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            currentTrackingSource?.PushEvent_Expanded(IsExpanded);
+            PushEvent_Expanded(IsExpanded);
         }
         #endregion
     }

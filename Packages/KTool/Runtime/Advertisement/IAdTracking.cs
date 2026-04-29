@@ -3,16 +3,20 @@
     public interface IAdTracking
     {
         #region Properties
-        public event Ad.AdDisplayedDelegate OnAdDisplayed;
-        public event Ad.AdHiddenDelegate OnAdHidden;
-        public event Ad.AdClickedDelegate OnAdClicked;
-        public event Ad.AdRevenuePaidDelegate OnAdRevenuePaid;
+        public event AdBase.AdDisplayedDelegate OnAdDisplayed;
+        public event AdBase.AdHiddenDelegate OnAdHidden;
+        public event AdBase.AdClickedDelegate OnAdClicked;
+        public event AdBase.AdRevenuePaidDelegate OnAdRevenuePaid;
 
         public bool IsComplete
         {
             get;
         }
         public string ErrorMessage
+        {
+            get;
+        }
+        public bool IsDisplayed
         {
             get;
         }

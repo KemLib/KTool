@@ -18,10 +18,6 @@ namespace KTool_Demo.Advertisement
         #endregion
 
         #region Methods Unity Ui
-        public void OnClick_Init()
-        {
-            AdInterstitial.Instance.Init();
-        }
         public void OnClick_Load()
         {
             AdInterstitial.Instance.Load();
