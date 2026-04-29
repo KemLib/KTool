@@ -78,7 +78,7 @@ namespace KTool.Init
                     return false;
             return true;
         }
-        public bool Item_IsCompleteAllRequired()
+        public bool Item_IsCompleteIndispensable()
         {
             foreach (var value in listInitTracking)
                 if (value.Indispensable && !value.IsComplete)

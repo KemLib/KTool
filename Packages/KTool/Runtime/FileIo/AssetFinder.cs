@@ -65,7 +65,7 @@ namespace KTool.FileIo
                 return new List<string>();
             FileInfo[] files = directory.GetFiles(searchPattern);
             if (isSort)
-                SortTmp.SortFileInfo(files);
+                SortString.SortFileInfo(files);
 
             //
             List<string> result = new List<string>();
@@ -123,7 +123,7 @@ namespace KTool.FileIo
             DirectoryInfo directory = new DirectoryInfo(fullFolder);
             DirectoryInfo[] folders = directory.GetDirectories();
             if (isSort)
-                SortTmp.SortDirectoryInfo(folders);
+                SortString.SortDirectoryInfo(folders);
             for (int i = 0; i < folders.Length; i++)
             {
                 if (string.IsNullOrEmpty(folders[i].Name))

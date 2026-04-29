@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace KTool.Cron
 {
-    public class CronManager : MonoBehaviour
+    internal class CronManager : MonoBehaviour
     {
         #region Properties
         private const string GAME_OBJECT_NAME = "KTool_CronUpdateManager";
@@ -50,11 +50,10 @@ namespace KTool.Cron
         #region Cron
         private void Cron_Update()
         {
-            CronObject cron;
             int index = 0;
             while (index < crons.Count)
             {
-                cron = crons[index];
+                CronObject cron = crons[index];
                 cron.Update();
                 if (cron.IsComplete)
                     crons.RemoveAt(index);

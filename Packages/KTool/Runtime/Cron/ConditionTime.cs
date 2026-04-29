@@ -29,7 +29,7 @@ namespace KTool.Cron
             //
             if (Time.frameCount <= startFrame)
                 return;
-            time = Mathf.Max(0, time - Time.deltaTime);
+            time -= Time.deltaTime;
             if (time <= 0)
                 SetComplete();
         }

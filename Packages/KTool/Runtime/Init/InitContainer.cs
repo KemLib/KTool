@@ -24,9 +24,8 @@ namespace KTool.Init
         public float TimeLimit => timeLimit;
         public int Count => steps.Length;
         public int Step => index_step;
-        public float ProgressStep => progresStep;
         public float ProgresTotal => progresTotal;
-        public float CurrentTime => Time.time - initStartTime;
+        public float CurrentTime => Time.realtimeSinceStartup - initStartTime;
         private InitStep CurrentStep => steps[index_step];
         #endregion
 
@@ -37,7 +36,7 @@ namespace KTool.Init
         #region Methods
         internal void Init_Begin()
         {
-            initStartTime = Time.time;
+            initStartTime = Time.realtimeSinceStartup;
             index_step = 0;
             progresTotal = 0;
             progresStep = Count <= 0 ? 0 : 1f / Count;
@@ -61,11 +60,11 @@ namespace KTool.Init
         {
             PushEvent_OnProgress();
             //
-            if (TimeLimit > 0 && Time.time - initStartTime >= TimeLimit)
+            if (TimeLimit > 0 && Time.realtimeSinceStartup - initStartTime >= TimeLimit)
             {
                 while (true)
                 {
-                    if (CurrentStep.Item_IsCompleteAllRequired())
+                    if (CurrentStep.Item_IsCompleteIndispensable())
                     {
                         if (Init_IsComplete())
                             return true;
@@ -108,7 +107,7 @@ namespace KTool.Init
                 return;
             progresTotal = Mathf.Clamp(tmpProgress, 0, 1);
             //
-            onStep?.Invoke();
+            onProgress?.Invoke();
         }
         #endregion
     }

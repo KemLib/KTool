@@ -4,17 +4,16 @@ using System.Text.RegularExpressions;
 
 namespace KTool.FileIo
 {
-    public static class SortTmp
+    public static class SortString
     {
         #region Properties
         private const string TXT_REGULAR = "[^0-9]";
         #endregion Properties
 
         #region Method
-
-        public static void SortString(string[] values)
+        public static void SortText(string[] texts)
         {
-            Array.Sort(values, (a, b) => int.Parse(Regex.Replace(a, TXT_REGULAR, string.Empty)) - int.Parse(Regex.Replace(b, TXT_REGULAR, string.Empty)));
+            Array.Sort(texts, (a, b) => int.Parse(Regex.Replace(a, TXT_REGULAR, string.Empty)) - int.Parse(Regex.Replace(b, TXT_REGULAR, string.Empty)));
         }
         public static void SortFileInfo(FileInfo[] files)
         {

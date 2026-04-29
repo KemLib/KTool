@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ee4704c800981459b92f41062d9227, type: 3}
   m_Name: SettingDefineSymbol
   m_EditorClassIdentifier: 
-  defineSymbols: []
+  defineSymbols:
+  - Hack

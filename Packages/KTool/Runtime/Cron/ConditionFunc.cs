@@ -6,29 +6,29 @@ namespace KTool.Cron
     public class ConditionFunc : Condition
     {
         #region Properties
-        private Func<bool> checkMethod;
+        private Func<bool> method;
         #endregion
 
         #region Construction
-        internal ConditionFunc(Func<bool> checkMethod) : base()
+        internal ConditionFunc(Func<bool> method) : base()
         {
-            this.checkMethod = checkMethod;
+            this.method = method;
         }
         #endregion
 
         #region Methods
         protected override void OnCheck()
         {
-            if(checkMethod == null)
+            if(method == null)
             {
                 SetComplete();
                 return;
             }
             //
-            if (checkMethod())
+            if (method())
             {
                 SetComplete();
-                checkMethod = null;
+                method = null;
             }
         }
         #endregion

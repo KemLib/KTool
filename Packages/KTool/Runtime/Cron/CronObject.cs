@@ -42,6 +42,7 @@ namespace KTool.Cron
                 else
                     index++;
             }
+            //
             if (conditions.Count <= 0)
             {
                 isComplete = true;

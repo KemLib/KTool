@@ -2,19 +2,21 @@
 
 namespace KTool.Cron
 {
-    public class CallbackAction<T> : Callback
+    public class CallbackAction<T1, T2> : Callback
     {
         #region Properties
-        public delegate void ActionDelegate(T state);
+        public delegate void ActionDelegate(T1 state1, T2 state2);
         private ActionDelegate onAction;
-        private T state;
+        private T1 state1;
+        private T2 state2;
         #endregion
 
         #region Construction
-        internal CallbackAction(ActionDelegate onAction, T state) : base()
+        internal CallbackAction(ActionDelegate onAction, T1 state1, T2 state2) : base()
         {
             this.onAction = onAction;
-            this.state = state;
+            this.state1 = state1;
+            this.state2 = state2;
         }
         #endregion
 
@@ -23,10 +25,11 @@ namespace KTool.Cron
         {
             if (onAction != null)
             {
-                onAction(state);
+                onAction(state1, state2);
                 onAction = null;
             }
-            state = default;
+            state1 = default;
+            state2 = default;
         }
         #endregion
     }

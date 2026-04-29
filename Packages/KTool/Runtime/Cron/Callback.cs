@@ -13,7 +13,7 @@ namespace KTool.Cron
         #region Construction
         public Callback()
         {
-
+            isComplete = false;
         }
         #endregion
 

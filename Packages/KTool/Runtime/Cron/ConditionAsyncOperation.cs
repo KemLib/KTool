@@ -18,7 +18,7 @@ namespace KTool.Cron
         internal ConditionAsyncOperation(AsyncOperation asyncOperation, float tagetProgress) : base()
         {
             this.asyncOperation = asyncOperation;
-            this.tagetProgress = Mathf.Max(0, tagetProgress);
+            this.tagetProgress = Mathf.Clamp(tagetProgress, 0, 1);
         }
         #endregion
 

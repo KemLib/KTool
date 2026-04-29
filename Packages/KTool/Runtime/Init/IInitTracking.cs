@@ -6,6 +6,10 @@ namespace KTool.Init
         public static IInitTracking Success = new InitTrackingSource(true, true),
             Fail = new InitTrackingSource(true, false);
 
+        public bool Indispensable
+        {
+            get;
+        }
         public bool IsComplete
         {
             get;
@@ -15,10 +19,6 @@ namespace KTool.Init
             get;
         }
         public string ErrorMessage
-        {
-            get;
-        }
-        public bool Indispensable
         {
             get;
         }

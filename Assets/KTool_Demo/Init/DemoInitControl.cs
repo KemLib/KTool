@@ -24,7 +24,7 @@ namespace KTool_Demo.Init
             InitTrackingSource initTrackingSource = new InitTrackingSource(initIndispensable);
             CronObject.Create()
                 .Add(ConditionTime.Create(timeInit))
-                .Add(CallbackAction<InitTrackingSource>.Create(Init_OnComplete, initTrackingSource))
+                .Add(CallbackAction.Create(Init_OnComplete, initTrackingSource))
                 .Run();
             return initTrackingSource;
         }

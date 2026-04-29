@@ -11,14 +11,14 @@ namespace KTool.Cron
         #region Construction
         internal ConditionReadTime(float time) : base()
         {
-            tagetTime = Time.time + Mathf.Max(0, time);
+            tagetTime = Time.realtimeSinceStartup + Mathf.Max(0, time);
         }
         #endregion
 
         #region Methods
         protected override void OnCheck()
         {
-            if (Time.time >= tagetTime)
+            if (Time.realtimeSinceStartup >= tagetTime)
                 SetComplete();
         }
         #endregion

@@ -62,7 +62,7 @@ namespace KTool.Init
             {
                 CronObject.Create()
                     .Add(ConditionDelegate.Create(initContainer.Init_Update))
-                    .Add(CallbackAction<InitContainer>.Create(Init_End, initContainer))
+                    .Add(CallbackAction.Create(Init_End, initContainer))
                     .Run();
             }
         }
@@ -79,7 +79,7 @@ namespace KTool.Init
             async_operation.allowSceneActivation = true;
             CronObject.Create()
                 .Add(ConditionAsyncOperation.Create(async_operation))
-                .Add(CallbackAction<string>.Create(LoadScene_End, sceneName))
+                .Add(CallbackAction.Create(LoadScene_End, sceneName))
                 .Run();
         }
         public void LoadScene(int sceneIndex, LoadSceneMode sceneMode = LoadSceneMode.Single)
@@ -88,7 +88,7 @@ namespace KTool.Init
             async_operation.allowSceneActivation = true;
             CronObject.Create()
                 .Add(ConditionAsyncOperation.Create(async_operation))
-                .Add(CallbackAction<int>.Create(LoadScene_End, sceneIndex))
+                .Add(CallbackAction.Create(LoadScene_End, sceneIndex))
                 .Run();
         }
         private void LoadScene_End(int sceneIndex)
