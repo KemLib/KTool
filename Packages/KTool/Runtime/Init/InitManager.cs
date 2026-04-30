@@ -1,4 +1,4 @@
-using System.Collections;
+using KTool.Cron;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,67 +7,10 @@ namespace KTool.Init
     public class InitManager : MonoBehaviour
     {
         #region Properties
-        private const string LOAD_SCENE_TASK_NAME_FORMAT = "Load scene: {0}";
         public static InitManager Instance
         {
             get;
             private set;
-        }
-
-
-        [SerializeField]
-        private GameObject objectListener;
-
-        public IInitListener initListener;
-        private bool isInit;
-        private float progress;
-        private string taskName;
-
-        public IInitListener InitListener
-        {
-            get => initListener;
-            set => initListener = value;
-        }
-        public bool IsInit
-        {
-            get => isInit;
-            private set
-            {
-                if (value == isInit)
-                    return;
-                //
-                isInit = value;
-                if (isInit)
-                {
-                    initListener?.Init_OnShow();
-                }
-                else
-                {
-                    initListener?.Init_OnHide();
-                }
-            }
-        }
-        public float Progress
-        {
-            get => progress;
-            private set
-            {
-                if (value == progress)
-                    return;
-                progress = Mathf.Clamp(value, 0, 1);
-                initListener?.Init_OnProgress(progress);
-            }
-        }
-        public string TaskName
-        {
-            get => taskName;
-            private set
-            {
-                if (value == taskName)
-                    return;
-                taskName = value;
-                initListener?.Init_OnTitle(taskName);
-            }
         }
         #endregion
 
@@ -78,11 +21,6 @@ namespace KTool.Init
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                //
-                if (initListener == null && objectListener != null)
-                {
-                    initListener = objectListener.GetComponent<IInitListener>();
-                }
                 return;
             }
             //
@@ -104,183 +42,70 @@ namespace KTool.Init
 
         #endregion
 
-        #region Init FirstScene
+        #region Init
         private void Init(Scene scene)
         {
             InitContainer initContainer = GetComponent<InitContainer>(scene);
+            Init(initContainer);
+        }
+        private void Init(InitContainer initContainer)
+        {
             if (initContainer == null)
                 return;
             //
-            IsInit = true;
-            Progress = 0;
-            TaskName = string.Empty;
-            //
-            if (initContainer.Count == 0)
+            initContainer.Init_Begin();
+            if (initContainer.Count <= 0)
+            {
                 Init_End(initContainer);
-            else if (initContainer.TimeLimit > 0)
-                StartCoroutine(Init_TimeLimit(initContainer));
+            }
             else
-                StartCoroutine(Init_TimeUnLimit(initContainer));
+            {
+                CronObject.Create()
+                    .Add(ConditionDelegate.Create(initContainer.Init_Update))
+                    .Add(CallbackAction.Create(Init_End, initContainer))
+                    .Run();
+            }
         }
         private void Init_End(InitContainer initContainer)
         {
-            for (int i = 0; i < initContainer.Count; i++)
-                initContainer[i].Item_InitEnded();
-            initContainer.PushEvent_OnEnd();
-            //
-            if (initContainer.AfterInit)
-            {
-                StartCoroutine(LoadScene_IE(initContainer.NextScene, initContainer.LoadSceneMode));
-            }
-            else
-            {
-                Progress = 1;
-                TaskName = string.Empty;
-                IsInit = false;
-            }
-        }
-        private IEnumerator Init_TimeLimit(InitContainer initContainer)
-        {
-            initContainer.PushEvent_OnBegin();
-            //
-            float originProgress = progress,
-                maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1),
-                stepProgress = maxProgress / initContainer.Count;
-            //
-            float time = 0;
-            for (int i = 0; i < initContainer.Count; i++)
-            {
-                InitStep step = initContainer[i];
-                step.Init();
-                TaskName = step.StepName;
-                step.Item_Init();
-                //
-                while (!step.Item_IsCompleteAllRequired() || (time < initContainer.TimeLimit && !step.Item_IsCompleteAll()))
-                {
-                    yield return new WaitForEndOfFrame();
-                    Progress = originProgress + stepProgress * i + stepProgress * step.Item_GetProgress();
-                    time = Mathf.Min(time + Time.unscaledDeltaTime, initContainer.TimeLimit);
-                }
-                //
-                Progress = originProgress + stepProgress * i + stepProgress;
-                TaskName = string.Empty;
-            }
-            //
-            Init_End(initContainer);
-        }
-        private IEnumerator Init_TimeUnLimit(InitContainer initContainer)
-        {
-            initContainer.PushEvent_OnBegin();
-            //
-            float originProgress = progress,
-                maxProgress = (1 - originProgress) / (initContainer.AfterInit ? 3 : 1),
-                stepProgress = maxProgress / initContainer.Count;
-            //
-            for (int i = 0; i < initContainer.Count; i++)
-            {
-                InitStep step = initContainer[i];
-                step.Init();
-                TaskName = step.StepName;
-                step.Item_Init();
-                //
-                while (!step.Item_IsCompleteAll())
-                {
-                    yield return new WaitForEndOfFrame();
-                    Progress = originProgress + stepProgress * i + stepProgress * step.Item_GetProgress();
-                }
-                //
-                Progress = originProgress + stepProgress * i + stepProgress;
-                TaskName = string.Empty;
-            }
-            //
-            Init_End(initContainer);
+            initContainer.Init_End();
         }
         #endregion
 
         #region Load Scene
         public void LoadScene(string sceneName, LoadSceneMode sceneMode = LoadSceneMode.Single)
         {
-            IsInit = true;
-            Progress = 0;
-            TaskName = string.Empty;
-            StartCoroutine(LoadScene_IE(sceneName, sceneMode));
+            AsyncOperation async_operation = SceneManager.LoadSceneAsync(sceneName, sceneMode);
+            async_operation.allowSceneActivation = true;
+            CronObject.Create()
+                .Add(ConditionAsyncOperation.Create(async_operation))
+                .Add(CallbackAction.Create(LoadScene_End, sceneName))
+                .Run();
         }
-        public void LoadScene(int sceneindex, LoadSceneMode sceneMode = LoadSceneMode.Single)
+        public void LoadScene(int sceneIndex, LoadSceneMode sceneMode = LoadSceneMode.Single)
         {
-            IsInit = true;
-            Progress = 0;
-            TaskName = string.Empty;
-            StartCoroutine(LoadScene_IE(sceneindex, sceneMode));
+            AsyncOperation async_operation = SceneManager.LoadSceneAsync(sceneIndex, sceneMode);
+            async_operation.allowSceneActivation = true;
+            CronObject.Create()
+                .Add(ConditionAsyncOperation.Create(async_operation))
+                .Add(CallbackAction.Create(LoadScene_End, sceneIndex))
+                .Run();
+        }
+        private void LoadScene_End(int sceneIndex)
+        {
+            Scene scene = GetScene(sceneIndex);
+            LoadScene_End(scene);
+        }
+        private void LoadScene_End(string sceneName)
+        {
+            Scene scene = GetSceneActive(sceneName);
+            LoadScene_End(scene);
         }
         private void LoadScene_End(Scene scene)
         {
             InitContainer initContainer = GetComponent<InitContainer>(scene);
-            if (initContainer == null || initContainer.Count == 0)
-            {
-                LoadScene_End();
-                return;
-            }
-            //
-            if (initContainer.TimeLimit > 0)
-                StartCoroutine(Init_TimeLimit(initContainer));
-            else
-                StartCoroutine(Init_TimeUnLimit(initContainer));
-        }
-        private void LoadScene_End()
-        {
-            Progress = 1;
-            TaskName = string.Empty;
-            IsInit = false;
-        }
-        private IEnumerator LoadScene_IE(string sceneName, LoadSceneMode sceneMode = LoadSceneMode.Single)
-        {
-            AsyncOperation ao = SceneManager.LoadSceneAsync(sceneName, sceneMode);
-            if (ao == null)
-            {
-                LoadScene_End();
-                yield break;
-            }
-            //
-            TaskName = string.Format(LOAD_SCENE_TASK_NAME_FORMAT, sceneName);
-            ao.allowSceneActivation = true;
-            //
-            float originProgress = progress,
-                maxProgress = (1 - originProgress) / 2;
-            while (!ao.isDone)
-            {
-                Progress = originProgress + maxProgress * ao.progress;
-                yield return new WaitForEndOfFrame();
-            }
-            Progress = originProgress + maxProgress;
-            TaskName = string.Empty;
-            //
-            Scene scene = GetSceneActive(sceneName);
-            LoadScene_End(scene);
-        }
-        private IEnumerator LoadScene_IE(int sceneIndex, LoadSceneMode sceneMode = LoadSceneMode.Single)
-        {
-            AsyncOperation ao = SceneManager.LoadSceneAsync(sceneIndex, sceneMode);
-            if (ao == null)
-            {
-                LoadScene_End();
-                yield break;
-            }
-            //
-            TaskName = string.Format(LOAD_SCENE_TASK_NAME_FORMAT, sceneIndex);
-            ao.allowSceneActivation = true;
-            //
-            float originProgress = progress,
-                maxProgress = (1 - originProgress) / 2;
-            while (!ao.isDone)
-            {
-                Progress = originProgress + maxProgress * ao.progress;
-                yield return new WaitForEndOfFrame();
-            }
-            Progress = originProgress + maxProgress;
-            TaskName = string.Empty;
-            //
-            Scene scene = GetScene(sceneIndex);
-            LoadScene_End(scene);
+            if (initContainer != null)
+                Init(initContainer);
         }
         #endregion
 

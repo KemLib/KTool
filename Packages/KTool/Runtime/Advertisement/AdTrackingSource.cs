@@ -8,87 +8,64 @@ namespace KTool.Advertisement
         #region Properties
         public const string ERROR_UNKNOWN = "unknown error";
 
-        protected readonly Ad adSource;
+        protected readonly AdBase adSource;
         private readonly bool isComplete;
         private readonly string errorMessage;
-        private bool isHided;
+        private bool isDisplayed,
+            isHided;
 
-        public event Ad.AdDisplayedDelegate OnAdDisplayed;
-        public event Ad.AdHiddenDelegate OnAdHidden;
-        public event Ad.AdClickedDelegate OnAdClicked;
-        public event Ad.AdRevenuePaidDelegate OnAdRevenuePaid;
+        public event AdBase.AdDisplayedDelegate OnAdDisplayed;
+        public event AdBase.AdHiddenDelegate OnAdHidden;
+        public event AdBase.AdClickedDelegate OnAdClicked;
+        public event AdBase.AdRevenuePaidDelegate OnAdRevenuePaid;
 
         public bool IsComplete => isComplete;
         public string ErrorMessage => errorMessage;
+        public bool IsDisplayed => isDisplayed;
         public bool IsHided => isHided;
         #endregion
 
         #region Contruction
-        public AdTrackingSource(Ad adSource) : base()
+        public AdTrackingSource(AdBase adSource)
         {
             this.adSource = adSource;
             isComplete = true;
             errorMessage = ERROR_UNKNOWN;
+            isDisplayed = false;
             isHided = false;
         }
-        public AdTrackingSource(Ad adSource, string errorMessage)
+        public AdTrackingSource(AdBase adSource, string errorMessage)
         {
             this.adSource = adSource;
             isComplete = false;
-            errorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
+            this.errorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
+            isDisplayed = false;
             isHided = true;
         }
         #endregion
 
         #region Event
-        public void PushEvent_Displayed(bool isSuccess)
+        public void PushEvent_Displayed(bool isSuccess, string placement)
         {
-            try
-            {
-                OnAdDisplayed?.Invoke(adSource, isSuccess);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_DISPLAYED_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            isDisplayed = isSuccess;
+            isHided = !isDisplayed;
             //
-            if (!isSuccess)
-                isHided = true;
+            OnAdDisplayed?.Invoke(adSource, isSuccess, placement);
         }
-        public void PushEvent_Hidden()
+        public void PushEvent_Hidden(string placement)
         {
-            try
-            {
-                OnAdHidden?.Invoke(adSource);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_HIDDEN_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            isDisplayed = false;
+            isHided = !isDisplayed;
             //
-            isHided = true;
+            OnAdHidden?.Invoke(adSource, placement);
         }
-        public void PushEvent_Clicked()
+        public void PushEvent_Clicked(string placement)
         {
-            try
-            {
-                OnAdClicked?.Invoke(adSource);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_CLICKED_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            OnAdClicked?.Invoke(adSource, placement);
         }
-        public void PushEvent_RevenuePaid(AdRevenuePaid adRevenuePaid)
+        public void PushEvent_RevenuePaid(AdRevenuePaid adRevenuePaid, string placement)
         {
-            try
-            {
-                OnAdRevenuePaid?.Invoke(adSource, adRevenuePaid);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(Ad.ERROR_AD_EVENT_REVENUE_PAID_EXCEPTION, AdType.Interstitial, ex.Message));
-            }
+            OnAdRevenuePaid?.Invoke(adSource, adRevenuePaid, placement);
         }
         #endregion
     }

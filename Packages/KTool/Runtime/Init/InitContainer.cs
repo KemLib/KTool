@@ -1,7 +1,5 @@
-﻿using KTool.Attribute;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 namespace KTool.Init
 {
@@ -13,45 +11,103 @@ namespace KTool.Init
         [SerializeField]
         private InitStep[] steps;
         [SerializeField]
-        private bool afterInit;
-        [SerializeField, SelectScene]
-        private string nextScene;
-        [SerializeField]
-        private LoadSceneMode loadSceneMode;
-        [SerializeField]
         private UnityEvent onBegin,
+            onStep,
+            onProgress,
             onEnd;
 
-        private bool isIniting;
-        private float initTime;
+        private float initStartTime;
+        private int index_step;
+        private float progresTotal;
+        private float progresStep;
 
         public float TimeLimit => timeLimit;
         public int Count => steps.Length;
-        public InitStep this[int index] => steps[index];
-        public bool AfterInit => afterInit;
-        public string NextScene => nextScene;
-        public LoadSceneMode LoadSceneMode => loadSceneMode;
+        public int Step => index_step;
+        public float ProgresTotal => progresTotal;
+        public float CurrentTime => Time.realtimeSinceStartup - initStartTime;
+        private InitStep CurrentStep => steps[index_step];
         #endregion
 
         #region Methods Unity
-        private void Update()
-        {
-            if (isIniting)
-                initTime += Time.unscaledDeltaTime;
-        }
+
         #endregion
 
         #region Methods
-        internal void PushEvent_OnBegin()
+        internal void Init_Begin()
         {
-            isIniting = true;
-            initTime = 0;
+            initStartTime = Time.realtimeSinceStartup;
+            index_step = 0;
+            progresTotal = 0;
+            progresStep = Count <= 0 ? 0 : 1f / Count;
+            //
             onBegin?.Invoke();
+            //
+            if (Count > 0)
+            {
+                Init_Step(0);
+                PushEvent_OnProgress();
+            }
         }
-        internal void PushEvent_OnEnd()
+        internal void Init_End()
         {
-            isIniting = false;
+            for (int i = 0; i < steps.Length; i++)
+                steps[i].Item_InitEnded();
+            //
             onEnd?.Invoke();
+        }
+        internal bool Init_Update()
+        {
+            PushEvent_OnProgress();
+            //
+            if (TimeLimit > 0 && Time.realtimeSinceStartup - initStartTime >= TimeLimit)
+            {
+                while (true)
+                {
+                    if (CurrentStep.Item_IsCompleteIndispensable())
+                    {
+                        if (Init_IsComplete())
+                            return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            //
+            if (CurrentStep.Item_IsCompleteAll())
+            {
+                return Init_IsComplete();
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private bool Init_IsComplete()
+        {
+            if (index_step >= Count - 1)
+                return true;
+            Init_Step(index_step + 1);
+            return false;
+        }
+        private void Init_Step(int index_step)
+        {
+            this.index_step = index_step;
+            steps[index_step].Init();
+            steps[index_step].Item_Init();
+            //
+            onStep?.Invoke();
+        }
+        private void PushEvent_OnProgress()
+        {
+            float tmpProgress = progresStep * index_step + progresStep * CurrentStep.Item_GetProgress();
+            if (tmpProgress == progresTotal)
+                return;
+            progresTotal = Mathf.Clamp(tmpProgress, 0, 1);
+            //
+            onProgress?.Invoke();
         }
         #endregion
     }

@@ -8,9 +8,9 @@ namespace KTool.DefineSymbol.Editor
     {
         #region Properties
         private const string PACKAGE_INSTANCE_PATH = "Packages/com.kem.ktool/Editor/DefineSymbol/SettingDefineSymbol.asset",
-            ASSET_INSTANCE_FOLDER = "Assets/KTool/DefineSymbol/Editor",
+            ASSET_INSTANCE_FOLDER = "Assets/KTool/Editor",
             ASSET_INSTANCE_FILE_NAME = "SettingDefineSymbol",
-            ASSET_INSTANCE_PATH = "Assets/KTool/DefineSymbol/Editor/SettingDefineSymbol.asset";
+            ASSET_INSTANCE_PATH = ASSET_INSTANCE_FOLDER + "/" + ASSET_INSTANCE_FILE_NAME + ".asset";
         private const string ERROR_CREATE_ASSET_FAIL = "Failed to copy asset SettingDefineSymbol to Resources folder";
 
         [SerializeField]

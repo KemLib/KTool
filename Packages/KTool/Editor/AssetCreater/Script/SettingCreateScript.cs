@@ -8,9 +8,9 @@ namespace KTool.AssetCreater.Script.Editor
     {
         #region Poperties
         private const string PACKAGE_INSTANCE_PATH = "Packages/com.kem.ktool/Editor/AssetCreater/Script/SettingCreateScript.asset",
-            ASSET_INSTANCE_FOLDER = "Assets/KTool/AssetCreater/Editor/Script",
+            ASSET_INSTANCE_FOLDER = "Assets/KTool/Editor",
             ASSET_INSTANCE_FILE_NAME = "SettingCreateScript",
-            ASSET_INSTANCE_PATH = "Assets/KTool/AssetCreater/Editor/Script/SettingCreateScript.asset";
+            ASSET_INSTANCE_PATH = ASSET_INSTANCE_FOLDER + "/" + ASSET_INSTANCE_FILE_NAME + ".asset";
         private const string ERROR_CREATE_ASSET_FAIL = "Failed to copy asset SettingUsingNamespace to Resources folder";
 
         private static SettingCreateScript instance;

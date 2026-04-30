@@ -4,15 +4,13 @@ using UnityEngine;
 
 namespace KTool.Advertisement
 {
-    public abstract class AdBanner : Ad
+    public abstract class AdBanner : AdBase
     {
         #region Properties
-        internal const string ERROR_AD_EVENT_EXPANDED_EXCEPTION = "Ad {0} call event Expanded exception: {1}";
-
         protected static AdBanner instance;
         public static AdBanner Instance => instance == null ? AdDemoBanner.InstanceAdDemo : instance;
 
-        public delegate void AdExpandedDelegate(AdBanner source, bool isExpanded);
+        public delegate void AdExpandedDelegate(AdBanner source, bool isExpanded, string placement);
 
         [SerializeField]
         private AdPosition adPosition;
@@ -24,6 +22,8 @@ namespace KTool.Advertisement
 
         private bool isExpanded;
         public event AdExpandedDelegate OnAdExpanded;
+        private string placement;
+        private AdBannerTrackingSource trackingSource;
 
         public override AdType AdType => AdType.Banner;
         public virtual AdPosition PositionType
@@ -47,25 +47,64 @@ namespace KTool.Advertisement
             protected set => size = value;
         }
         public virtual bool IsExpanded => IsShow && isExpanded;
+        public string Placement => placement;
         #endregion
 
         #region Methods
-        public abstract IAdBannerTracking Show();
-        public abstract void Hide();
+        public IAdBannerTracking Show(string placement = "")
+        {
+            string oldPlacement = placement;
+            this.placement = string.IsNullOrEmpty(placement) ? AdAppOpen.PLACEMENT_UNKNOWN : placement;
+            //
+            AdBannerTrackingSource trackingSource;
+            if (OnShow(out string error))
+            {
+                trackingSource = new AdBannerTrackingSource(this);
+                this.trackingSource = trackingSource;
+            }
+            else
+            {
+                trackingSource = new AdBannerTrackingSource(this, error);
+                this.placement = oldPlacement;
+            }
+            return trackingSource;
+        }
+        protected abstract bool OnShow(out string error);
+        public void Hide()
+        {
+            if (OnHide())
+                isExpanded = false;
+        }
+        protected abstract bool OnHide();
         #endregion
 
         #region Event
+        protected void PushEvent_Displayed(bool isSuccess)
+        {
+            PushEvent_Displayed(isSuccess, placement);
+            trackingSource?.PushEvent_Displayed(isSuccess, placement);
+        }
+        protected void PushEvent_Hidden()
+        {
+            PushEvent_Hidden(placement);
+            trackingSource?.PushEvent_Hidden(placement);
+        }
+        protected void PushEvent_Clicked()
+        {
+            PushEvent_Clicked(placement);
+            trackingSource?.PushEvent_Clicked(placement);
+        }
+        protected void PushEvent_RevenuePaid(AdRevenuePaid revenuePaid)
+        {
+            PushEvent_RevenuePaid(revenuePaid, placement);
+            trackingSource?.PushEvent_RevenuePaid(revenuePaid, placement);
+        }
         protected void PushEvent_Expanded(bool isExpanded)
         {
             this.isExpanded = isExpanded;
-            try
-            {
-                OnAdExpanded?.Invoke(this, isExpanded);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(string.Format(ERROR_AD_EVENT_EXPANDED_EXCEPTION, AdType.Banner, ex.Message));
-            }
+            //
+            OnAdExpanded?.Invoke(this, isExpanded, placement);
+            trackingSource?.PushEvent_Expanded(isExpanded, placement);
         }
         #endregion
     }

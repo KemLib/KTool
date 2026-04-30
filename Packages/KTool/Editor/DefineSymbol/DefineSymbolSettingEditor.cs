@@ -84,7 +84,7 @@ namespace KTool.DefineSymbol.Editor
         {
             EditorGUILayout.BeginHorizontal();
             newDefineSymbol = EditorGUILayout.TextField("Enter New Value", newDefineSymbol);
-            if (!string.IsNullOrEmpty(newDefineSymbol) && GUILayout.Button("Add"))
+            if (GUILayout.Button("Add") && !string.IsNullOrEmpty(newDefineSymbol) && IndexOf(newDefineSymbol) == -1)
             {
                 propertyDefineSymbols.arraySize += 1;
                 propertyDefineSymbols.GetArrayElementAtIndex(propertyDefineSymbols.arraySize - 1).stringValue = newDefineSymbol;
@@ -129,7 +129,7 @@ namespace KTool.DefineSymbol.Editor
                     while (index < propertyDefineSymbols.arraySize)
                     {
                         SerializedProperty propertyDefineSymbol = propertyDefineSymbols.GetArrayElementAtIndex(index);
-                        OnInspectorGUI(propertyDefineSymbol, index, namedBuildTarget, ref defineSymbols, out bool remove);
+                        OnInspectorGUI(propertyDefineSymbol, namedBuildTarget, ref defineSymbols, out bool remove);
                         if (remove)
                         {
                             propertyDefineSymbols.DeleteArrayElementAtIndex(index);
@@ -144,7 +144,7 @@ namespace KTool.DefineSymbol.Editor
             }
             GUILayout.EndVertical();
         }
-        private void OnInspectorGUI(SerializedProperty propertyDefineSymbol, int index, NamedBuildTarget namedBuildTarget, ref string[] defineSymbols, out bool remove)
+        private void OnInspectorGUI(SerializedProperty propertyDefineSymbol, NamedBuildTarget namedBuildTarget, ref string[] defineSymbols, out bool remove)
         {
             string defineSymbol = propertyDefineSymbol.stringValue;
             //
@@ -188,6 +188,18 @@ namespace KTool.DefineSymbol.Editor
         #endregion
 
         #region Methods
+        private int IndexOf(string defineSymbol)
+        {
+            int index = 0;
+            while (index < propertyDefineSymbols.arraySize)
+            {
+                SerializedProperty propertyDefineSymbol = propertyDefineSymbols.GetArrayElementAtIndex(index);
+                if (propertyDefineSymbol.stringValue == defineSymbol)
+                    return index;
+                index++;
+            }
+            return -1;
+        }
         private int IndexOf(string value, string[] array)
         {
             for (int i = 0; i < array.Length; i++)

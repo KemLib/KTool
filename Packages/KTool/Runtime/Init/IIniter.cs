@@ -3,7 +3,6 @@ namespace KTool.Init
     public interface IIniter
     {
         #region Properties
-
         #endregion
 
         #region Method

@@ -6,7 +6,7 @@ namespace KTool
     public class CoroutineManager : MonoBehaviour
     {
         #region Properties
-        private const string GAME_OBJECT_NAME = "CoroutineManager";
+        private const string GAME_OBJECT_NAME = "KTool_CoroutineManager";
 
         private static CoroutineManager instance;
         public static CoroutineManager Instance
@@ -17,6 +17,7 @@ namespace KTool
                 {
                     GameObject newObject = new GameObject(GAME_OBJECT_NAME);
                     DontDestroyOnLoad(newObject);
+                    //
                     instance = newObject.AddComponent<CoroutineManager>();
                     instance.Init();
                 }
@@ -29,14 +30,12 @@ namespace KTool
         private void OnDestroy()
         {
             if (instance != null && instance.GetInstanceID() == GetInstanceID())
-            {
                 instance = null;
-            }
         }
         #endregion
 
         #region Method
-        public void Init()
+        private void Init()
         {
 
         }

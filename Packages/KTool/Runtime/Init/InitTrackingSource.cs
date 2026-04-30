@@ -14,6 +14,7 @@ namespace KTool.Init
         private readonly bool indispensable;
         private InterValueFloat progress;
 
+        public bool Indispensable => indispensable;
         public bool IsComplete => isComplete;
         public bool IsSuccessfully
         {
@@ -25,7 +26,6 @@ namespace KTool.Init
             get => errorMessage;
             private set => errorMessage.Value = value;
         }
-        public bool Indispensable => indispensable;
         public float Progress
         {
             get => progress;
@@ -36,32 +36,32 @@ namespace KTool.Init
         #region Construction
         public InitTrackingSource(bool indispensable)
         {
+            this.indispensable = indispensable;
             isComplete = new InterValueBool(false);
             isSuccessfully = new InterValueBool(false);
             errorMessage = new InterValueClass<string>(ERROR_UNKNOWN);
-            this.indispensable = indispensable;
             progress = new InterValueFloat(0);
         }
         public InitTrackingSource(bool indispensable, bool isSuccess)
         {
+            this.indispensable = indispensable;
             isComplete = new InterValueBool(true);
             isSuccessfully = new InterValueBool(isSuccess);
             if (isSuccess)
                 errorMessage = new InterValueClass<string>(string.Empty);
             else
                 errorMessage = new InterValueClass<string>(ERROR_UNKNOWN);
-            this.indispensable = indispensable;
             progress = new InterValueFloat(1);
         }
         public InitTrackingSource(bool indispensable, string errorMessage)
         {
+            this.indispensable = indispensable;
             isComplete = new InterValueBool(true);
             isSuccessfully = new InterValueBool(false);
             if (string.IsNullOrEmpty(errorMessage))
                 this.errorMessage = new InterValueClass<string>(ERROR_UNKNOWN);
             else
                 this.errorMessage = new InterValueClass<string>(errorMessage);
-            this.indispensable = indispensable;
             progress = new InterValueFloat(1);
         }
         #endregion

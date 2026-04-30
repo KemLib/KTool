@@ -9,10 +9,9 @@ namespace KTool.Init.Editor
         #region Properties
         private SerializedProperty propertyTimeLimit,
             propertySteps,
-            propertyAfterInit,
-            propertyNextScene,
-            propertyLoadSceneMode,
             propertyOnBegin,
+            propertyOnStep,
+            propertyOnProgress,
             propertyOnEnd;
         #endregion
 
@@ -21,10 +20,9 @@ namespace KTool.Init.Editor
         {
             propertyTimeLimit = serializedObject.FindProperty("timeLimit");
             propertySteps = serializedObject.FindProperty("steps");
-            propertyAfterInit = serializedObject.FindProperty("afterInit");
-            propertyNextScene = serializedObject.FindProperty("nextScene");
-            propertyLoadSceneMode = serializedObject.FindProperty("loadSceneMode");
             propertyOnBegin = serializedObject.FindProperty("onBegin");
+            propertyOnStep = serializedObject.FindProperty("onStep");
+            propertyOnProgress = serializedObject.FindProperty("onProgress");
             propertyOnEnd = serializedObject.FindProperty("onEnd");
         }
         public override void OnInspectorGUI()
@@ -36,15 +34,9 @@ namespace KTool.Init.Editor
             EditorGUILayout.PropertyField(propertySteps, new GUIContent("Steps"));
             //
             EditorGUILayout.Space(10);
-            EditorGUILayout.PropertyField(propertyAfterInit, new GUIContent("After Init"));
-            if (propertyAfterInit.boolValue)
-            {
-                EditorGUILayout.PropertyField(propertyNextScene, new GUIContent("Next Scene"));
-                EditorGUILayout.PropertyField(propertyLoadSceneMode, new GUIContent("Load SceneMode"));
-            }
-            //
-            EditorGUILayout.Space(10);
             EditorGUILayout.PropertyField(propertyOnBegin, new GUIContent("On Begin"));
+            EditorGUILayout.PropertyField(propertyOnStep, new GUIContent("On Step"));
+            EditorGUILayout.PropertyField(propertyOnProgress, new GUIContent("On Progress"));
             EditorGUILayout.PropertyField(propertyOnEnd, new GUIContent("On End"));
             //
             serializedObject.ApplyModifiedProperties();
