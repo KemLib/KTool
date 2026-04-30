@@ -18,6 +18,7 @@ If you want to use the latest version, replace the URL. <https://github.com/KemL
 - **Attribute**: the attribute allow you to easily select the value of the variable in the Inspector.
 - **Script Creater**: editor to create scripts from available templates, automatically adding Namespaces by folder.
 - **FileIo**: file read/write library in asset or data.
+- **Cron**: Wait for the conditions.
 - **Init**: object initialization system.
 
 ### Attribute
@@ -42,6 +43,10 @@ If you want to use the latest version, replace the URL. <https://github.com/KemL
  4. Click [Save]
 
 You can create a new template script, see the SettingCreateScript file in the "Assets/KTool/AssetCreater/Editor/Script" folder.
+
+### Cron
+
+Wait for the conditions to be met and then make a callback.
 
 ### Init
 
