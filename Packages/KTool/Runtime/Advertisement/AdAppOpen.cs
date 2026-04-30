@@ -20,16 +20,19 @@ namespace KTool.Advertisement
         #region Methods
         public IAdTracking Show(string placement = "")
         {
+            string oldPlacement = placement;
+            this.placement = string.IsNullOrEmpty(placement) ? PLACEMENT_UNKNOWN : placement;
+            //
             AdAppOpenTrackingSource trackingSource;
             if (OnShow(out string error))
             {
                 trackingSource = new AdAppOpenTrackingSource(this);
-                this.placement = string.IsNullOrEmpty(placement) ? PLACEMENT_UNKNOWN : placement;
                 this.trackingSource = trackingSource;
             }
             else
             {
                 trackingSource = new AdAppOpenTrackingSource(this, error);
+                this.placement = oldPlacement;
             }
             return trackingSource;
         }
