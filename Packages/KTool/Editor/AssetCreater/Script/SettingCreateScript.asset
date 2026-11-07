@@ -15,28 +15,55 @@ MonoBehaviour:
   templates:
   - displayName: MonoBehaviour
     assetTemplate: {fileID: 4900000, guid: 57fb6838e82373a46b75fea8ff1d8f11, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}
   - displayName: ScriptableObject
     assetTemplate: {fileID: 4900000, guid: e5726a803b46677489ef51d0eb700069, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}
   - displayName: MonoBehaviour_Instance
     assetTemplate: {fileID: 4900000, guid: 017ed14f53cd58143aa8a2c9cb930105, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}
   - displayName: CustomEditor_MonoBehaviour
     assetTemplate: {fileID: 4900000, guid: c934929b91fc885479017a49f43b8fbe, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: 2f711d5dd85417849b9276cca14a1907, type: 2}
+    - {fileID: 11400000, guid: 4b06fa46304ec404eb1dd0e71543716a, type: 2}
   - displayName: Class
     assetTemplate: {fileID: 4900000, guid: a25e9ec8c0061a6449d376ae0e41c7bf, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}
   - displayName: Class_Serializable
     assetTemplate: {fileID: 4900000, guid: 511ef15b4eb03c846ae9c885f816ade3, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}
   - displayName: Interface
     assetTemplate: {fileID: 4900000, guid: 943c13418dcef9546bc8bfc405ffa0a7, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}
   - displayName: Struct
     assetTemplate: {fileID: 4900000, guid: 83fac38bc2ac1604a84ca83112b4ddf7, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}
   - displayName: Enum
     assetTemplate: {fileID: 4900000, guid: 7a0af91f54ed80341acf45a8ac8f888e, type: 3}
-    replaces: []
+    replaces:
+    - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
+    - {fileID: 11400000, guid: e0aa58d9a4b2d4241a032e824fda65c9, type: 2}

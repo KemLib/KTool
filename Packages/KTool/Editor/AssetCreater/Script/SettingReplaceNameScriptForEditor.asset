@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SettingReplaceNameScriptForEditor
   m_EditorClassIdentifier: 
   keyNamespace: '[Namespace]'
-  colorTextPrivew: {r: 0, g: 0, b: 0, a: 0}
+  colorTextPrivew: {r: 1, g: 0, b: 0, a: 1}

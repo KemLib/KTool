@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SettingReplaceNameScript
   m_EditorClassIdentifier: 
   keyNameScript: '[NameScript]'
-  colorTextPrivew: {r: 0, g: 0, b: 0, a: 0}
-  editFileName: 0
+  colorTextPrivew: {r: 1, g: 0, b: 0, a: 1}
+  editFileName: 1
