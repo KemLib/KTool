@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace KTool.Observer
 {
@@ -18,19 +17,31 @@ namespace KTool.Observer
                 {
                     GameObject newGO = new(GAME_OBJECT_NAME);
                     instance = newGO.AddComponent<ObserverManager>();
-                    DontDestroyOnLoad(newGO);                
+                    DontDestroyOnLoad(newGO);
                 }
                 return instance;
             }
         }
 
-        private Dictionary<string, Registry> dicRegistries = new ();
+        private Dictionary<string, ObserverRegistry> dicRegistries = new ();
         #endregion
 
         #region Methods Unity
+        private void Awake()
+        {
+            if(instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(this.gameObject);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
+        }
         private void OnDestroy()
         {
-            if(instance.GetEntityId() == this.GetEntityId())
+            if(instance != null && instance.GetEntityId() == this.GetEntityId())
             {
                 foreach(var registry in dicRegistries.Values)
                     registry.Clear();
@@ -41,7 +52,7 @@ namespace KTool.Observer
         #endregion
 
         #region Register
-        public void Register(string key, UnityAction action)
+        public void Register(string key, Action action)
         {
             if(dicRegistries.ContainsKey(key))
             {
@@ -49,13 +60,13 @@ namespace KTool.Observer
             }
             else
             {
-                Registry registry = new();
+                ObserverRegistry registry = new();
                 registry.Register(action);
                 dicRegistries.Add(key, registry);
 
             }
         }
-        public void Register<T>(string key, UnityAction<T> action)
+        public void Register<T>(string key, Action<T> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
@@ -63,12 +74,12 @@ namespace KTool.Observer
             }
             else
             {
-                Registry registry = new();
+                ObserverRegistry registry = new();
                 registry.Register(action);
                 dicRegistries.Add(key, registry);
             }
         }
-        public void Register<T1, T2>(string key, UnityAction<T1, T2> action)
+        public void Register<T1, T2>(string key, Action<T1, T2> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
@@ -76,12 +87,12 @@ namespace KTool.Observer
             }
             else
             {
-                Registry registry = new();
+                ObserverRegistry registry = new();
                 registry.Register(action);
                 dicRegistries.Add(key, registry);
             }
         }
-        public void Register<T1, T2, T3>(string key, UnityAction<T1, T2, T3> action)
+        public void Register<T1, T2, T3>(string key, Action<T1, T2, T3> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
@@ -89,12 +100,12 @@ namespace KTool.Observer
             }
             else
             {
-                Registry registry = new();
+                ObserverRegistry registry = new();
                 registry.Register(action);
                 dicRegistries.Add(key, registry);
             }
         }
-        public void Register<T1, T2, T3, T4>(string key, UnityAction<T1, T2, T3, T4> action)
+        public void Register<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
@@ -102,7 +113,7 @@ namespace KTool.Observer
             }
             else
             {
-                Registry registry = new();
+                ObserverRegistry registry = new();
                 registry.Register(action);
                 dicRegistries.Add(key, registry);
             }
@@ -110,69 +121,79 @@ namespace KTool.Observer
         #endregion
 
         #region Unregister
-        public void Unregister(string key, UnityAction action)
+        public void Unregister(string key, Action action)
         {
             if(dicRegistries.ContainsKey(key))
             {
                 dicRegistries[key].Unregister(action);
+                if(dicRegistries[key].IsEmpty)
+                    dicRegistries.Remove(key);
             }
         }
-        public void Unregister<T>(string key, UnityAction<T> action)
+        public void Unregister<T>(string key, Action<T> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
                 dicRegistries[key].Unregister(action);
+                if(dicRegistries[key].IsEmpty)
+                    dicRegistries.Remove(key);
             }
         }
-        public void Unregister<T1, T2>(string key, UnityAction<T1, T2> action)
+        public void Unregister<T1, T2>(string key, Action<T1, T2> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
                 dicRegistries[key].Unregister(action);
+                if(dicRegistries[key].IsEmpty)
+                    dicRegistries.Remove(key);
             }
         }
-        public void Unregister<T1, T2, T3>(string key, UnityAction<T1, T2, T3> action)
+        public void Unregister<T1, T2, T3>(string key, Action<T1, T2, T3> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
                 dicRegistries[key].Unregister(action);
+                if(dicRegistries[key].IsEmpty)
+                    dicRegistries.Remove(key);
             }
         }
-        public void Unregister<T1, T2, T3, T4>(string key, UnityAction<T1, T2, T3, T4> action)
+        public void Unregister<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> action)
         {
             if(dicRegistries.ContainsKey(key))
             {
                 dicRegistries[key].Unregister(action);
+                if(dicRegistries[key].IsEmpty)
+                    dicRegistries.Remove(key);
             }
         }
         #endregion
 
         #region Check Register
-        public bool CheckRegister(string key, UnityAction action)
+        public bool CheckRegister(string key, Action action)
         {
             if(dicRegistries.ContainsKey(key))
                 return dicRegistries[key].CheckRegister(action);
             return false;
         }
-        public bool CheckRegister<T>(string key, UnityAction<T> action)
+        public bool CheckRegister<T>(string key, Action<T> action)
         {
             if(dicRegistries.ContainsKey(key))
                 return dicRegistries[key].CheckRegister(action);
             return false;
         }
-        public bool CheckRegister<T1, T2>(string key, UnityAction<T1, T2> action)
+        public bool CheckRegister<T1, T2>(string key, Action<T1, T2> action)
         {
             if(dicRegistries.ContainsKey(key))
                 return dicRegistries[key].CheckRegister(action);
             return false;
         }
-        public bool CheckRegister<T1, T2, T3>(string key, UnityAction<T1, T2, T3> action)
+        public bool CheckRegister<T1, T2, T3>(string key, Action<T1, T2, T3> action)
         {
             if(dicRegistries.ContainsKey(key))
                 return dicRegistries[key].CheckRegister(action);
             return false;
         }
-        public bool CheckRegister<T1, T2, T3, T4>(string key, UnityAction<T1, T2, T3, T4> action)
+        public bool CheckRegister<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> action)
         {
             if(dicRegistries.ContainsKey(key))
                 return dicRegistries[key].CheckRegister(action);
