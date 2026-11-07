@@ -87,7 +87,7 @@ namespace KTool.Attribute.Editor
         {
             if (component == null)
                 return COMPONENT_NAME_NULL;
-            return string.Format(COMPONENT_NAME_FORMAT, component.gameObject.name, component.GetType().Name, component.GetInstanceID());
+            return string.Format(COMPONENT_NAME_FORMAT, component.gameObject.name, component.GetType().Name, component.GetEntityId());
         }
         #endregion
     }

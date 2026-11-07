@@ -193,7 +193,7 @@ namespace KTool.Attribute.Editor
 
         public static bool Children_Check(MonoBehaviour mono, Component component, GetComponentType getComponentType, bool allowInactive)
         {
-            if (IsInGameObject(getComponentType) && mono.gameObject.GetInstanceID() == component.gameObject.GetInstanceID())
+            if (IsInGameObject(getComponentType) && mono.gameObject.GetEntityId() == component.gameObject.GetEntityId())
                 return true;
             if (IsInChildren(getComponentType))
                 return Children_Check(mono, component.transform, getComponentType, allowInactive);
@@ -206,7 +206,7 @@ namespace KTool.Attribute.Editor
             Transform childParent = child.parent;
             if (childParent == null)
                 return false;
-            if (childParent.GetInstanceID() == mono.transform.GetInstanceID())
+            if (childParent.GetEntityId() == mono.transform.GetEntityId())
                 return true;
             if (IsInAllChildren(getComponentType))
                 return Children_Check(mono, childParent, getComponentType, allowInactive);

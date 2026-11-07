@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24364738ab05d33449bebb488264b4e3, type: 3}
+  m_Script: {fileID: 11500000, guid: ede5239861c0e0741b907708ef448188, type: 3}
   m_Name: SettingReplaceNameScriptEditor
   m_EditorClassIdentifier: 
   keyNameScriptEditor: '[NameScriptEditor]'
-  colorTextPrivew: {r: 0.30588236, g: 0.7882353, b: 0.6901961, a: 1}
-  editFileName: 1
+  colorTextPrivew: {r: 0, g: 0, b: 0, a: 0}
+  editFileName: 0

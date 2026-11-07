@@ -35,7 +35,7 @@ namespace KTool.Cron
         }
         private void OnDestroy()
         {
-            if (instance != null && instance.GetInstanceID() == GetInstanceID())
+            if (instance != null && instance.GetEntityId() == GetEntityId())
                 instance = null;
         }
         #endregion
