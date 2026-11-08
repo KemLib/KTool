@@ -221,65 +221,65 @@ namespace KTool.Worker
         #endregion
 
         #region Notify
-        public void Notify(string key, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify(string key, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
         {
+            List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
-            {
-                List<WorkHandler> listHandlers = dicRegistries[key].Notify();
-                listStates.Add(new WorkState(listHandlers, callback, timeout, frameLimit));
-            }
+                 listHandlers = dicRegistries[key].Notify();
             else
-            {
-                callback?.Invoke(new List<WorkHandler>());
-            }
+                listHandlers = new();
+
+            WorkState workState = new(listHandlers, callback, timeout, frameLimit);
+            listStates.Add(workState);
+            return workState;
         }
-        public void Notify<T>(string key, T state, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T>(string key, T state, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
         {
+            List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
-            {
-                List<WorkHandler> listHandlers = dicRegistries[key].Notify(state);
-                listStates.Add(new WorkState(listHandlers, callback, timeout, frameLimit));
-            }
+                listHandlers = dicRegistries[key].Notify(state);
             else
-            {
-                callback?.Invoke(new List<WorkHandler>());
-            }
+                listHandlers = new();
+
+            WorkState workState = new(listHandlers, callback, timeout, frameLimit);
+            listStates.Add(workState);
+            return workState;
         }
-        public void Notify<T1, T2>(string key, T1 state1, T2 state2, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T1, T2>(string key, T1 state1, T2 state2, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
         {
+            List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
-            {
-                List<WorkHandler> listHandlers = dicRegistries[key].Notify(state1, state2);
-                listStates.Add(new WorkState(listHandlers, callback, timeout, frameLimit));
-            }
+                listHandlers = dicRegistries[key].Notify(state1, state2);
             else
-            {
-                callback?.Invoke(new List<WorkHandler>());
-            }
+                listHandlers = new();
+
+            WorkState workState = new(listHandlers, callback, timeout, frameLimit);
+            listStates.Add(workState);
+            return workState;
         }
-        public void Notify<T1, T2, T3>(string key, T1 state1, T2 state2, T3 state3, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T1, T2, T3>(string key, T1 state1, T2 state2, T3 state3, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
         {
+            List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
-            {
-                List<WorkHandler> listHandlers = dicRegistries[key].Notify(state1, state2, state3);
-                listStates.Add(new WorkState(listHandlers, callback, timeout, frameLimit));
-            }
+                listHandlers = dicRegistries[key].Notify(state1, state2, state3);
             else
-            {
-                callback?.Invoke(new List<WorkHandler>());
-            }
+                listHandlers = new();
+
+            WorkState workState = new(listHandlers, callback, timeout, frameLimit);
+            listStates.Add(workState);
+            return workState;
         }
-        public void Notify<T1, T2, T3, T4>(string key, T1 state1, T2 state2, T3 state3, T4 state4, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T1, T2, T3, T4>(string key, T1 state1, T2 state2, T3 state3, T4 state4, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
         {
+            List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
-            {
-                List<WorkHandler> listHandlers = dicRegistries[key].Notify(state1, state2, state3, state4);
-                listStates.Add(new WorkState(listHandlers, callback, timeout, frameLimit));
-            }
+                listHandlers = dicRegistries[key].Notify(state1, state2, state3, state4);
             else
-            {
-                callback?.Invoke(new List<WorkHandler>());
-            }
+                listHandlers = new();
+
+            WorkState workState = new(listHandlers, callback, timeout, frameLimit);
+            listStates.Add(workState);
+            return workState;
         }
         #endregion
     }
