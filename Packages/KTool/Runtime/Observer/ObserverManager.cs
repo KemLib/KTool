@@ -16,8 +16,7 @@ namespace KTool.Observer
                 if(instance == null)
                 {
                     GameObject newGO = new(GAME_OBJECT_NAME);
-                    instance = newGO.AddComponent<ObserverManager>();
-                    DontDestroyOnLoad(newGO);
+                    newGO.AddComponent<ObserverManager>();
                 }
                 return instance;
             }

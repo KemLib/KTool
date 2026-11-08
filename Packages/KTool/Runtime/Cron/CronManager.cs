@@ -16,9 +16,7 @@ namespace KTool.Cron
                 if (instance == null)
                 {
                     GameObject newObject = new GameObject(GAME_OBJECT_NAME);
-                    DontDestroyOnLoad(newObject);
-                    //
-                    instance = newObject.AddComponent<CronManager>();
+                    newObject.AddComponent<CronManager>();
                 }
                 return instance;
             }
