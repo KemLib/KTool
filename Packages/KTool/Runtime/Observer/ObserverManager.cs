@@ -7,7 +7,7 @@ namespace KTool.Observer
     public class ObserverManager : MonoBehaviour
     {
         #region Properties
-        private static readonly string GAME_OBJECT_NAME = "ObserverManager";
+        private static readonly string GAME_OBJECT_NAME = "KTool_ObserverManager";
         private static ObserverManager instance;
         public static ObserverManager Instance
         {

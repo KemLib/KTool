@@ -6,19 +6,19 @@ namespace KTool.Cron
     {
         #region Properties
         private AsyncOperation asyncOperation;
-        private float tagetProgress;
+        private float targetProgress;
         #endregion
 
         #region Construction
         internal ConditionAsyncOperation(AsyncOperation asyncOperation) : base()
         {
             this.asyncOperation = asyncOperation;
-            tagetProgress = -1;
+            targetProgress = -1;
         }
         internal ConditionAsyncOperation(AsyncOperation asyncOperation, float tagetProgress) : base()
         {
             this.asyncOperation = asyncOperation;
-            this.tagetProgress = Mathf.Clamp(tagetProgress, 0, 1);
+            this.targetProgress = Mathf.Clamp(tagetProgress, 0, 1);
         }
         #endregion
 
@@ -31,7 +31,7 @@ namespace KTool.Cron
                 return;
             }
             //
-            if (tagetProgress <= -1)
+            if (targetProgress <= -1)
             {
                 if (asyncOperation.isDone)
                 {
@@ -41,7 +41,7 @@ namespace KTool.Cron
             }
             else
             {
-                if (asyncOperation.progress >= tagetProgress)
+                if (asyncOperation.isDone || asyncOperation.progress >= targetProgress)
                 {
                     SetComplete();
                     asyncOperation = null;

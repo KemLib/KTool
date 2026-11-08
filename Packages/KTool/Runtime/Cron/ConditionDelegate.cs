@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 namespace KTool.Cron
 {
@@ -25,7 +26,16 @@ namespace KTool.Cron
                 return;
             }
             //
-            if (method())
+            bool isDone = false;
+            try{
+                isDone = method();
+            }
+            catch(Exception ex)
+            {
+                Debug.LogError(ex);
+            }
+            //
+            if (isDone)
             {
                 SetComplete();
                 method = null;

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 namespace KTool.Cron
 {
@@ -25,7 +26,13 @@ namespace KTool.Cron
         {
             if (onAction != null)
             {
-                onAction(state1, state2);
+                try{
+                    onAction(state1, state2);
+                }
+                catch(Exception ex)
+                {
+                    Debug.LogError(ex);
+                }
                 onAction = null;
             }
             state1 = default;

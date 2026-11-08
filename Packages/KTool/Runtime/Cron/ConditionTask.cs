@@ -6,7 +6,6 @@ namespace KTool.Cron
     public class ConditionTask : Condition
     {
         #region Properties
-        public delegate bool CheckConditionDelegate();
         private Task task;
         #endregion
 

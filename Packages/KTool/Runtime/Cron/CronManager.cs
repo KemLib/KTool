@@ -6,7 +6,7 @@ namespace KTool.Cron
     internal class CronManager : MonoBehaviour
     {
         #region Properties
-        private const string GAME_OBJECT_NAME = "KTool_CronUpdateManager";
+        private const string GAME_OBJECT_NAME = "KTool_CronManager";
 
         private static CronManager instance;
         internal static CronManager Instance
@@ -19,16 +19,27 @@ namespace KTool.Cron
                     DontDestroyOnLoad(newObject);
                     //
                     instance = newObject.AddComponent<CronManager>();
-                    instance.Init();
                 }
                 return instance;
             }
         }
 
-        private List<CronObject> crons;
+        private List<CronObject> crons = new();
         #endregion
 
         #region Unity Event
+        private void Awake()
+        {
+            if(instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
         private void Update()
         {
             Cron_Update();
@@ -40,11 +51,8 @@ namespace KTool.Cron
         }
         #endregion
 
-        #region Method
-        private void Init()
-        {
-            crons = new List<CronObject>();
-        }
+        #region Methods
+
         #endregion Method
 
         #region Cron
@@ -64,6 +72,8 @@ namespace KTool.Cron
         internal void Cron_Add(CronObject cron)
         {
             if (cron == null || cron.IsComplete)
+                return;
+            if(crons.Contains(cron))
                 return;
             cron.Update();
             if (cron.IsComplete)

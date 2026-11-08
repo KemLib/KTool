@@ -1,0 +1,87 @@
+# Unity generated / cache (also in .gitignore; keep explicit for clarity)
+Library/
+Temp/
+Logs/
+UserSettings/
+Obj/
+Build/
+Builds/
+MemoryCaptures/
+Recordings/
+
+# graphify output
+graphify-out/
+
+# IDE / solution noise
+.vscode/
+.vs/
+.idea/
+*.csproj
+*.sln
+*.slnx
+*.unityproj
+
+# Unity project scaffolding — not KTool package source
+ProjectSettings/
+Assets/TextMesh Pro
+
+# UPM lock/manifest at repo root (not package source)
+Packages/manifest.json
+Packages/packages-lock.json
+
+# Third-party / binary under the package
+Packages/KTool/Plugins/
+*.dll
+
+# Non-code assets (sprites, Unity assets, meta)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.psd
+*.prefab
+*.asset
+*.unity
+*.meta
+*.asmdef
+*.shader
+*.cginc
+*.hlsl
+*.mat
+*.controller
+*.anim
+*.fontsettings
+*.guiskin
+*.physicMaterial
+*.physicsMaterial2D
+*.renderTexture
+*.mixer
+*.signal
+*.playable
+*.terrainlayer
+*.brush
+*.flare
+*.cubemap
+*.overrideController
+*.mask
+*.spriteatlas
+*.spriteatlasv2
+*.tif
+*.tiff
+*.exr
+*.hdr
+*.tga
+*.fbx
+*.obj
+*.blend
+*.mp3
+*.wav
+*.ogg
+*.mp4
+*.mov
+*.webm
+*.bytes
+*.bin
+*.db
+*.json.meta

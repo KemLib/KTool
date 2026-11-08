@@ -5,20 +5,20 @@ namespace KTool.Cron
     public class ConditionReadTime : Condition
     {
         #region Properties
-        private float tagetTime;
+        private float targetTime;
         #endregion
 
         #region Construction
         internal ConditionReadTime(float time) : base()
         {
-            tagetTime = Time.realtimeSinceStartup + Mathf.Max(0, time);
+            targetTime = Time.realtimeSinceStartup + Mathf.Max(0, time);
         }
         #endregion
 
         #region Methods
         protected override void OnCheck()
         {
-            if (Time.realtimeSinceStartup >= tagetTime)
+            if (Time.realtimeSinceStartup >= targetTime)
                 SetComplete();
         }
         #endregion

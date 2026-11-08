@@ -7,7 +7,7 @@ namespace KTool.Worker
     public class WorkManager : MonoBehaviour
     {
         #region Properties
-        private static readonly string GAME_OBJECT_NAME = "WorkManager";
+        private static readonly string GAME_OBJECT_NAME = "KTool_WorkManager";
         private static WorkManager instance;
         public static WorkManager Instance
         {
