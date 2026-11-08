@@ -81,11 +81,18 @@ namespace KTool.Init
             {
                 stepCount = 0;
                 stepIndex = 0;
-                progress = 1;
+                progress = 0;
                 progressPerStep = 0;
                 //
+                onBegin?.Invoke();
+                //
+                progress = 1;
+                onProgress?.Invoke();
+                //
                 state = STATE_SUCCESS;
-                Init_End(callback);
+                onEnd?.Invoke();
+                //
+                callback?.Invoke(this);
                 return;
             }
             //
