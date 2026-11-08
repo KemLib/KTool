@@ -16,8 +16,7 @@ namespace KTool.Worker
                 if(instance == null)
                 {
                     GameObject newGO = new(GAME_OBJECT_NAME);
-                    instance = newGO.AddComponent<WorkManager>();
-                    DontDestroyOnLoad(newGO);
+                    newGO.AddComponent<WorkManager>();
                 }
                 return instance;
             }
