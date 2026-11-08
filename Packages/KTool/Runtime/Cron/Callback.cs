@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using KLibStandard.Concurrent;
 
 namespace KTool.Cron
 {
     public abstract class Callback
     {
         #region Properties
-        private bool isComplete;
+        private InterValueBool isComplete;
 
         public bool IsComplete => isComplete;
         #endregion
@@ -13,17 +14,15 @@ namespace KTool.Cron
         #region Construction
         public Callback()
         {
-            isComplete = false;
+            isComplete = new (false);
         }
         #endregion
 
         #region Methods
         internal void SetComplete()
         {
-            if (isComplete)
-                return;
-            isComplete = true;
-            OnComplete();
+            if (isComplete.TryExchange(true))
+                OnComplete();
         }
         protected abstract void OnComplete();
         #endregion

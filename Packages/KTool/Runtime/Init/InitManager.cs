@@ -28,7 +28,7 @@ namespace KTool.Init
         }
         private void OnDestroy()
         {
-            if (Instance != null && Instance.GetInstanceID() == GetInstanceID())
+            if (Instance != null && Instance.GetEntityId() == GetEntityId())
                 Instance = null;
         }
         private void Start()

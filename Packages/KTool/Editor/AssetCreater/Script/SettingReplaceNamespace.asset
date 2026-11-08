@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40d8dfaa3a5b06b4094c66519b7153ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a3b3ec39ea07f74c858f560dc2cb176, type: 3}
   m_Name: SettingReplaceNamespace
   m_EditorClassIdentifier: 
   keyNamespace: '[Namespace]'
-  colorTextPrivew: {r: 0.86274517, g: 0.8588236, b: 0.8470589, a: 1}
+  colorTextPrivew: {r: 1, g: 0, b: 0, a: 1}

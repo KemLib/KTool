@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using KLibStandard.Concurrent;
 
 namespace KTool.Cron
 {
     public abstract class Condition
     {
         #region Properties
-        private bool isComplete;
+        private InterValueBool isComplete;
 
         public bool IsComplete => isComplete;
         #endregion
@@ -13,21 +14,21 @@ namespace KTool.Cron
         #region Construction
         public Condition()
         {
-            isComplete = false;
+            isComplete = new (false);
         }
         #endregion
 
         #region Methods
         internal void Check()
         {
-            if (isComplete)
+            if (isComplete.Value)
                 return;
             OnCheck();
         }
         protected abstract void OnCheck();
         protected void SetComplete()
         {
-            isComplete = true;
+            isComplete.Value = true;
         }
         #endregion
     }

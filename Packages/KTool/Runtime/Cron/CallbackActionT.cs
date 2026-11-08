@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using System;
 namespace KTool.Cron
 {
     public class CallbackAction<T> : Callback
@@ -23,7 +23,13 @@ namespace KTool.Cron
         {
             if (onAction != null)
             {
-                onAction(state);
+                try{
+                    onAction(state);
+                }
+                catch(Exception ex)
+                {
+                    Debug.LogError(ex);
+                }
                 onAction = null;
             }
             state = default;

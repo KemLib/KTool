@@ -225,7 +225,7 @@ namespace KTool.Attribute.Editor
         {
             for (int i = 0; i < components.Length; i++)
             {
-                if (components[i].GetInstanceID() == component.GetInstanceID())
+                if (components[i].GetEntityId() == component.GetEntityId())
                     return i;
             }
             return -1;
@@ -235,7 +235,7 @@ namespace KTool.Attribute.Editor
             int index = 0;
             foreach (Component componentItem in components)
             {
-                if (componentItem.GetInstanceID() == component.GetInstanceID())
+                if (componentItem.GetEntityId() == component.GetEntityId())
                     return index;
                 index++;
             }

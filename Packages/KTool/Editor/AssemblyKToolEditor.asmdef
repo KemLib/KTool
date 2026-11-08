@@ -2,7 +2,7 @@
     "name": "AssemblyKToolEditor",
     "rootNamespace": "",
     "references": [
-        "GUID:47b1bdd8bf9052b40b56c65b51bfea0d"
+        "GUID:e616d9aaf1c02e3489095b6b53e69166"
     ],
     "includePlatforms": [
         "Editor"
