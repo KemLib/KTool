@@ -26,7 +26,7 @@ namespace KTool.Worker
 
         public float Progress
         {
-            get => _progress.Value;
+            get => IsDone ? 1 : _progress.Value;
             set => _progress.Value = math.clamp(value, 0f, 1f);
         }
         public bool IsDone => _state.Value != STATE_PENDING;
@@ -37,7 +37,7 @@ namespace KTool.Worker
         #endregion
 
         #region Constructors
-        public WorkHandler()
+        internal WorkHandler()
         {
             _progress = new(0);
             _state = new(STATE_PENDING);

@@ -44,7 +44,7 @@ If you want to use the latest version, replace the URL: <https://github.com/KemL
  3. Enter class name
  4. Click [Save]
 
-You can create a new template script, see the SettingCreateScript file in the "Assets/KTool/AssetCreater/Editor/Script" folder.
+You can create a new template script, see the SettingCreateScript file in the "Packages/KTool/Editor/AssetCreater/Script" folder.
 
 ### Cron
 
@@ -139,6 +139,8 @@ Notes:
 
 Supports handlers with `WorkHandler` plus 0–4 typed parameters. Signature must match between `Register` / `Unregister` / `Notify` / `CheckRegister`.
 
+`Notify` returns a `WorkState` you can inspect while the batch is running (`ListHandlers`, `Timeout`, `FrameLimit`, `StartTime`, `FrameCount`, `IsDone`).
+
 ```csharp
 using System;
 using System.Collections.Generic;
@@ -154,8 +156,8 @@ Action<WorkHandler, string> loadLevel = (WorkHandler job, string levelId) =>
 
 WorkManager.Instance.Register("LoadLevel", loadLevel);
 
-// Start all workers for this key, then receive results
-WorkManager.Instance.Notify(
+// Start all workers for this key; WorkState tracks the batch until callback runs
+WorkState state = WorkManager.Instance.Notify(
     "LoadLevel",
     "level_01",
     callback: (List<WorkHandler> handlers) =>
@@ -171,23 +173,30 @@ WorkManager.Instance.Notify(
     frameLimit: -1  // frames; -1 = no frame limit
 );
 
+// Optional: poll while waiting
+// if (state.IsDone) { ... }
+
 WorkManager.Instance.Unregister("LoadLevel", loadLevel);
 ```
 
-`WorkHandler` states: `Pending` → `Success` / `Canceled` / `Failed` / `Timeout` (terminal; only transitions from Pending).
+`WorkHandler` states: `Pending` → `Success` / `Canceled` / `Failed` / `Timeout` (terminal; only transitions from Pending). Constructed only by the manager (`internal` ctor).
 
 Notes:
 
 - Duplicate registration of the same delegate is ignored.
 - Inline lambdas cannot be unregistered later unless you stored them first.
 - `Notify` snapshots handlers first, so `Register` / `Unregister` inside a worker is safe (same snapshot rules as Observer).
-- Worker exceptions are logged; that worker is omitted from the returned handler list.
+- Worker exceptions are logged; that worker is omitted from the handler list passed to the callback.
+- If no handlers are registered for the key, `Notify` still returns a `WorkState` with an empty `ListHandlers`; the callback runs on the next `Update` (not synchronously).
+- On timeout / frame limit, remaining pending handlers are marked `Timeout`, then the callback runs once (`IsDone` stays true afterward).
+- `Progress` reads as `1` once the handler is done; set clamps to 0–1.
 - Prefer unregister in `OnDisable` / `OnDestroy` to avoid dangling workers.
 - Singleton: use `WorkManager.Instance`, or place one in a scene. Extra instances are destroyed in `Awake`.
 
 | API | Role |
 |--|--|
 | `Register` / `Unregister` / `CheckRegister` | manage workers by key + signature |
-| `Notify(..., callback, timeout, frameLimit)` | invoke workers and wait for completion |
-| `WorkHandler.Progress` | 0–1 progress |
-| `WorkHandler.Success/Fail/Cancel` | finish a job |
+| `Notify(...)` → `WorkState` | invoke workers and wait for completion |
+| `WorkState.ListHandlers` / `IsDone` / `FrameCount` | inspect the in-flight batch |
+| `WorkHandler.Progress` | 0–1 progress (`1` when done) |
+| `WorkHandler.Success` / `Fail` / `Cancel` | finish a job |
