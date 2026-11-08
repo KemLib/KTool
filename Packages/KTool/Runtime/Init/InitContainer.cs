@@ -1,32 +1,63 @@
-﻿using UnityEngine;
+﻿using System;
+using KTool.Attribute;
+using KTool.Cron;
+using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace KTool.Init
 {
     public class InitContainer : MonoBehaviour
     {
+        private enum State
+        {
+            None,
+            Initting,
+            Success,
+            Fail
+        }
         #region Properties
+        private const int STATE_NONE = (int)State.None;
+        private const int STATE_INITTING = (int)State.Initting;
+        private const int STATE_SUCCESS = (int)State.Success;
+        private const int STATE_FAIL = (int)State.Fail;
+
         [SerializeField]
         private float timeLimit = 5;
         [SerializeField]
         private InitStep[] steps;
+        [SerializeField]
+        private bool nextScene;
+        [SerializeField, SelectScene]
+        private string nextSceneName;
+        [SerializeField]
+        private LoadSceneMode loadSceneMode = LoadSceneMode.Single;
         [SerializeField]
         private UnityEvent onBegin,
             onStep,
             onProgress,
             onEnd;
 
+        private int state = STATE_NONE;
         private float initStartTime;
-        private int index_step;
-        private float progresTotal;
-        private float progresStep;
+        private float initTime;
+        private int stepCount;
+        private int stepIndex;
+        private float progress;
+        private float progressPerStep;
 
         public float TimeLimit => timeLimit;
-        public int Count => steps.Length;
-        public int Step => index_step;
-        public float ProgresTotal => progresTotal;
-        public float CurrentTime => Time.realtimeSinceStartup - initStartTime;
-        private InitStep CurrentStep => steps[index_step];
+        public bool NextScene => nextScene;
+        public string NextSceneName => nextSceneName;
+        public LoadSceneMode LoadSceneMode => loadSceneMode;
+        public int Count => stepCount;
+        public int Step => stepIndex;
+        public float Progress => progress;
+        public float InitTime => initTime;
+        private InitStep CurrentStep => steps[stepIndex];
+        public bool IsInitting => state == STATE_INITTING;
+        public bool IsInited => state == STATE_SUCCESS || state == STATE_FAIL;
+        public bool IsSuccessfully => state == STATE_SUCCESS;
         #endregion
 
         #region Methods Unity
@@ -34,80 +65,128 @@ namespace KTool.Init
         #endregion
 
         #region Methods
-        internal void Init_Begin()
+        internal void Init_Begin(Action<InitContainer> callback)
         {
+            if(IsInitting || IsInited)
+            {
+                Debug.LogError("Init is already in progress or inited");
+                callback?.Invoke(this);
+                return;
+            }
+            state = STATE_INITTING;
+            //
             initStartTime = Time.realtimeSinceStartup;
-            index_step = 0;
-            progresTotal = 0;
-            progresStep = Count <= 0 ? 0 : 1f / Count;
+            initTime = 0;
+            if (steps == null || steps.Length <= 0)
+            {
+                stepCount = 0;
+                stepIndex = 0;
+                progress = 1;
+                progressPerStep = 0;
+                //
+                state = STATE_SUCCESS;
+                Init_End(callback);
+                return;
+            }
+            //
+            stepCount = steps.Length;
+            stepIndex = 0;
+            progress = 0;
+            progressPerStep = stepCount <= 0 ? 0 : 1f / stepCount;
             //
             onBegin?.Invoke();
             //
-            if (Count > 0)
-            {
-                Init_Step(0);
-                PushEvent_OnProgress();
-            }
-        }
-        internal void Init_End()
-        {
-            for (int i = 0; i < steps.Length; i++)
-                steps[i].Item_InitEnded();
-            //
-            onEnd?.Invoke();
-        }
-        internal bool Init_Update()
-        {
+            Init_Step(0);
             PushEvent_OnProgress();
             //
-            if (TimeLimit > 0 && Time.realtimeSinceStartup - initStartTime >= TimeLimit)
+            CronObject.Create()
+                .Add(ConditionDelegate.Create(Init_Update))
+                .Add(CallbackAction.Create(Init_End, callback))
+                .Run();
+        }
+        private void Init_End(Action<InitContainer> callback)
+        {
+            for (int i = 0; i <= stepIndex && i  < stepCount; i++)
             {
-                while (true)
-                {
-                    if (CurrentStep.Item_IsCompleteIndispensable())
-                    {
-                        if (Init_IsComplete())
-                            return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
+                if(steps[i] == null)
+                    continue;
+                steps[i].Item_InitEnded();
             }
             //
-            if (CurrentStep.Item_IsCompleteAll())
+            onEnd?.Invoke();
+            //
+            callback?.Invoke(this);
+        }
+        private bool Init_Update()
+        {
+            initTime = Time.realtimeSinceStartup - initStartTime;
+            PushEvent_OnProgress();
+            //
+            bool isSuccessIndispensable = true;
+            if (TimeLimit > 0 && initTime >= TimeLimit)
             {
-                return Init_IsComplete();
+                if (CurrentStep == null || CurrentStep.Item_IsCompleteIndispensable(out isSuccessIndispensable))
+                {
+                    if(!isSuccessIndispensable)
+                    {
+                        Debug.Log($"Init failed: {name}");
+                        state = STATE_FAIL;
+                        return true;
+                    }
+                    if (Init_IsComplete())
+                    {
+                        state = STATE_SUCCESS;
+                        return true;
+                    }
+                    Init_Step(stepIndex + 1);
+                }
             }
             else
             {
-                return false;
+                if (CurrentStep == null || CurrentStep.Item_IsCompleteAll(out isSuccessIndispensable))
+                {
+                    if(!isSuccessIndispensable)
+                    {
+                        Debug.Log($"Init failed: {name}");
+                        state = STATE_FAIL;
+                        return true;
+                    }
+                    if (Init_IsComplete())
+                    {
+                        state = STATE_SUCCESS;
+                        return true;
+                    }
+                    Init_Step(stepIndex + 1);
+                }
             }
+            //
+            return false;
         }
         private bool Init_IsComplete()
         {
-            if (index_step >= Count - 1)
-                return true;
-            Init_Step(index_step + 1);
-            return false;
+            return stepIndex >= stepCount - 1;
         }
-        private void Init_Step(int index_step)
+        private void Init_Step(int stepIndex)
         {
-            this.index_step = index_step;
-            steps[index_step].Init();
-            steps[index_step].Item_Init();
+            this.stepIndex = stepIndex;
+            if(CurrentStep != null)
+            {
+                CurrentStep.Init();
+                CurrentStep.Item_Init();
+            }
             //
             onStep?.Invoke();
         }
         private void PushEvent_OnProgress()
         {
-            float tmpProgress = progresStep * index_step + progresStep * CurrentStep.Item_GetProgress();
-            if (tmpProgress == progresTotal)
-                return;
-            progresTotal = Mathf.Clamp(tmpProgress, 0, 1);
-            //
-            onProgress?.Invoke();
+            float stepProgress = CurrentStep == null ? 1: CurrentStep.Item_GetProgress(),
+                tmpProgress = progressPerStep * stepIndex + progressPerStep * stepProgress;
+            if (tmpProgress > progress)
+            {
+                progress = Mathf.Clamp(tmpProgress, 0, 1);
+                //
+                onProgress?.Invoke();
+            }
         }
         #endregion
     }
