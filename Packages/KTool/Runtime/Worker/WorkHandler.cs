@@ -4,7 +4,7 @@ using KLibStandard.Concurrent;
 
 namespace KTool.Worker
 {
-    public class WorkHandler
+    public class WorkHandler : IWorker
     {
         private enum State
         {
@@ -15,11 +15,11 @@ namespace KTool.Worker
             Timeout,
         }
         #region Properties
-        private readonly int STATE_PENDING = (int)State.Pending;
-        private readonly int STATE_SUCCESS = (int)State.Success;
-        private readonly int STATE_CANCELED = (int)State.Canceled;
-        private readonly int STATE_FAILED = (int)State.Failed;
-        private readonly int STATE_TIMEOUT = (int)State.Timeout;
+        private const int STATE_PENDING = (int)State.Pending;
+        private const int STATE_SUCCESS = (int)State.Success;
+        private const int STATE_CANCELED = (int)State.Canceled;
+        private const int STATE_FAILED = (int)State.Failed;
+        private const int STATE_TIMEOUT = (int)State.Timeout;
 
         private InterValueFloat _progress;
         private InterValueInt _state;
@@ -27,7 +27,12 @@ namespace KTool.Worker
         public float Progress
         {
             get => IsDone ? 1 : _progress.Value;
-            set => _progress.Value = math.clamp(value, 0f, 1f);
+            set
+            {
+                if(IsDone)
+                    return;
+                _progress.Value = math.clamp(value, 0f, 1f);
+            }
         }
         public bool IsDone => _state.Value != STATE_PENDING;
         public bool IsSuccess => _state.Value == STATE_SUCCESS;

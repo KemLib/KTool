@@ -220,7 +220,7 @@ namespace KTool.Worker
         #endregion
 
         #region Notify
-        public WorkState Notify(string key, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify(string key, Action<IReadOnlyList<IWorker>> callback, float timeout = -1, int frameLimit = -1)
         {
             List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
@@ -232,7 +232,7 @@ namespace KTool.Worker
             listStates.Add(workState);
             return workState;
         }
-        public WorkState Notify<T>(string key, T state, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T>(string key, T state, Action<IReadOnlyList<IWorker>> callback, float timeout = -1, int frameLimit = -1)
         {
             List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
@@ -244,7 +244,7 @@ namespace KTool.Worker
             listStates.Add(workState);
             return workState;
         }
-        public WorkState Notify<T1, T2>(string key, T1 state1, T2 state2, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T1, T2>(string key, T1 state1, T2 state2, Action<IReadOnlyList<IWorker>> callback, float timeout = -1, int frameLimit = -1)
         {
             List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
@@ -256,7 +256,7 @@ namespace KTool.Worker
             listStates.Add(workState);
             return workState;
         }
-        public WorkState Notify<T1, T2, T3>(string key, T1 state1, T2 state2, T3 state3, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T1, T2, T3>(string key, T1 state1, T2 state2, T3 state3, Action<IReadOnlyList<IWorker>> callback, float timeout = -1, int frameLimit = -1)
         {
             List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
@@ -268,7 +268,7 @@ namespace KTool.Worker
             listStates.Add(workState);
             return workState;
         }
-        public WorkState Notify<T1, T2, T3, T4>(string key, T1 state1, T2 state2, T3 state3, T4 state4, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        public WorkState Notify<T1, T2, T3, T4>(string key, T1 state1, T2 state2, T3 state3, T4 state4, Action<IReadOnlyList<IWorker>> callback, float timeout = -1, int frameLimit = -1)
         {
             List<WorkHandler> listHandlers;
             if(dicRegistries.ContainsKey(key))
