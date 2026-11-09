@@ -35,8 +35,9 @@ MonoBehaviour:
     assetTemplate: {fileID: 4900000, guid: c934929b91fc885479017a49f43b8fbe, type: 3}
     replaces:
     - {fileID: 11400000, guid: 00758804734120440b4fad8b655f9a1e, type: 2}
-    - {fileID: 11400000, guid: 2f711d5dd85417849b9276cca14a1907, type: 2}
+    - {fileID: 11400000, guid: d7623a92b0e5dc14fb907e8c4bd2bc79, type: 2}
     - {fileID: 11400000, guid: 4b06fa46304ec404eb1dd0e71543716a, type: 2}
+    - {fileID: 11400000, guid: 2f711d5dd85417849b9276cca14a1907, type: 2}
   - displayName: Class
     assetTemplate: {fileID: 4900000, guid: a25e9ec8c0061a6449d376ae0e41c7bf, type: 3}
     replaces:

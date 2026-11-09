@@ -16,7 +16,7 @@ namespace KTool.AssetCreater.Editor
         #region Method
         public void OnGuiShow(CreateWindow createWindow);
         public void OnGuiDraw(CreateWindow createWindow);
-        public void OnSave(CreateWindow createWindow);
+        public bool OnSave(CreateWindow createWindow);
         public void OnCancel(CreateWindow createWindow);
         #endregion
     }

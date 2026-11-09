@@ -49,46 +49,36 @@ namespace KTool.AssetCreater.Script.Editor
         #region Utility
         public static string GetNamespace(string folder)
         {
-            folder = FixName(folder);
+            if (string.IsNullOrEmpty(folder))
+                return string.Empty;
             //
-            List<string> listFolder = new List<string>(folder.Split(CHAR_DOT));
-            if (listFolder.Count > 0)
+            // Split by path separators first so dotted package ids
+            // (e.g. com.kem.ktool) stay as a single segment.
+            folder = StringRemoveStartSpace(folder);
+            folder = StringRemoveEndSpace(folder);
+            List<string> listFolder = new List<string>(folder.Split(
+                new char[] { CHAR_BACKSLASH, CHAR_UN_BACKSLASH },
+                System.StringSplitOptions.RemoveEmptyEntries));
+            if (listFolder.Count > 0
+                && (listFolder[0] == FOLDER_NAME_ASSETS || listFolder[0] == FOLDER_NAME_PACKAGES))
             {
-                if (listFolder[0] == FOLDER_NAME_ASSETS)
+                if (listFolder.Count >= 3)
                 {
-                    if (listFolder.Count >= 3)
+                    if (listFolder[2] == FOLDER_NAME_EDITOR)
                     {
-                        if (listFolder[2] == FOLDER_NAME_EDITOR)
-                        {
-                            listFolder.RemoveAt(2);
-                            listFolder.Add(FOLDER_NAME_EDITOR);
-                        }
-                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
-                        {
-                            listFolder.RemoveAt(2);
-                        }
+                        listFolder.RemoveAt(2);
+                        listFolder.Add(FOLDER_NAME_EDITOR);
                     }
-                    listFolder.RemoveAt(0);
-                }
-                else if (listFolder[0] == FOLDER_NAME_PACKAGES)
-                {
-                    if (listFolder.Count >= 3)
+                    else if (listFolder[2] == FOLDER_NAME_RUNTIME)
                     {
-                        if (listFolder[2] == FOLDER_NAME_EDITOR)
-                        {
-                            listFolder.RemoveAt(2);
-                            listFolder.Add(FOLDER_NAME_EDITOR);
-                        }
-                        else if (listFolder[2] == FOLDER_NAME_RUNTIME)
-                        {
-                            listFolder.RemoveAt(2);
-                        }
+                        listFolder.RemoveAt(2);
                     }
-                    listFolder.RemoveAt(0);
                 }
+                listFolder.RemoveAt(0);
             }
-            string nameSpace = string.Join(CHAR_DOT, listFolder.ToArray());
-            return nameSpace;
+            for (int i = 0; i < listFolder.Count; i++)
+                listFolder[i] = listFolder[i].Replace(CHAR_SPACE, CHAR_SLIP);
+            return string.Join(CHAR_DOT.ToString(), listFolder.ToArray());
         }
         public static string FixName(string name)
         {

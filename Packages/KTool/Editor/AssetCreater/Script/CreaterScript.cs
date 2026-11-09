@@ -1,5 +1,7 @@
 ﻿using KTool.AssetCreater.Editor;
 using System;
+using System.IO;
+using System.Text;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -9,9 +11,14 @@ namespace KTool.AssetCreater.Script.Editor
     public class CreaterScript : ICreater
     {
         #region Properties
+        private static string ERROR_FILE_NAME_IS_EMPTY = "Create file fail: file name is empty",
+            ERROR_FILE_EXISTS = "Create file fail: File already exists",
+            ERROR_WRITE_FAIL = "Create file fail: to write data: {0}";
+
         private const string CREATER_NAME = "Creater Script";
         private const string SCRIPT_FILE_EXTENSION = "cs";
         private const string FILE_PATH_FORMAT = "{0}\\{1}.{2}";
+        private const string FULL_FILE_PATH_FORMAT = "{0}/{1}/{2}.{3}";
         private const string FILE_PATH_TITLE = "Path";
         private const string GUI_ERROR_TITLE = "Error!",
             ERROR_LOAD_SETTING_FAIL = "Canot load Setting",
@@ -72,7 +79,9 @@ namespace KTool.AssetCreater.Script.Editor
             if (string.IsNullOrEmpty(fileName))
                 return string.Empty;
             //
-            fileName = fileName.Substring(0, fileName.LastIndexOf(Replace.CHAR_DOT));
+            int LastIndexOfDot = fileName.LastIndexOf(Replace.CHAR_DOT);
+            if (LastIndexOfDot > 0)
+                fileName = fileName.Substring(0, LastIndexOfDot);
             //
             return fileName;
         }
@@ -176,21 +185,60 @@ namespace KTool.AssetCreater.Script.Editor
             EditorGUILayout.EndScrollView();
             GUILayout.EndVertical();
         }
-        public void OnSave(CreateWindow createWindow)
+        public bool OnSave(CreateWindow createWindow)
         {
             if (settingTemplate == null)
-                return;
+                return true;
             //
             string text = settingTemplate.TextTemplate;
             foreach (var replace in listReplace)
                 text = replace.OnSave(text);
-            createWindow.WriteFile(FolderName, FileName, SCRIPT_FILE_EXTENSION, text);
+            return WriteFile(CreateWindow.ProjectPath, FolderName, FileName, SCRIPT_FILE_EXTENSION, text);
         }
         public void OnCancel(CreateWindow createWindow)
         {
             foreach (var replace in listReplace)
             {
                 replace.OnCancel();
+            }
+        }
+        #endregion
+
+        #region Write File
+        public bool WriteFile(string projectPath, string folder, string fileName, string fileExtension, string data)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                Debug.LogError(ERROR_FILE_NAME_IS_EMPTY);
+                return false;
+            }
+            //
+            string path = string.Format(FULL_FILE_PATH_FORMAT, projectPath, folder, fileName, fileExtension);
+            StreamWriter sw = null;
+            try
+            {
+                if (File.Exists(path))
+                {
+                    Debug.LogError(ERROR_FILE_EXISTS);
+                    return false;
+                }
+                FileStream fs = File.Open(path, FileMode.Create);
+                sw = new StreamWriter(fs, Encoding.UTF8);
+                sw.Write(data);
+                sw.Flush();
+                sw.Close();
+                sw = null;
+                AssetDatabase.Refresh();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(string.Format(ERROR_WRITE_FAIL, ex.Message));
+                return false;
+            }
+            finally
+            {
+                sw?.Close();
             }
         }
         #endregion
