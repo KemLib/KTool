@@ -1824,11 +1824,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0388c2df2acef744fb82d8e14167bfdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: 
-  isAutoReload: 0
-  panelMenu: {fileID: 0}
-  imgProgress: {fileID: 0}
-  timeShow: 0
+  adName: AdDemoRewarded
+  isAutoReload: 1
+  panelMenu: {fileID: 6360264318340180511}
+  imgProgress: {fileID: 2290694955898875989}
+  timeShow: 10
 --- !u!1 &3462714038614380744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1880,10 +1880,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9e7cfe2c386894e87e12d5b0a88717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: 
-  isAutoReload: 0
-  adPosition: 0
-  adSize: 0
+  adName: AdDemoBanner
+  isAutoReload: 1
+  adPosition: 8
+  adSize: 3
   position: {x: 0, y: 0}
   size: {x: 0, y: 0}
   bannerBot: {fileID: 1679459501561591090}
@@ -2435,11 +2435,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b153e4e53df2b44d987e5fc09b56a4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: 
-  isAutoReload: 0
-  panelMenu: {fileID: 0}
-  imgProgress: {fileID: 0}
-  timeShow: 0
+  adName: AdDemoAppOpen
+  isAutoReload: 1
+  panelMenu: {fileID: 7366958345101815071}
+  imgProgress: {fileID: 6559073414563007901}
+  timeShow: 5
 --- !u!1 &4723803449665033972
 GameObject:
   m_ObjectHideFlags: 0
@@ -2799,7 +2799,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &860441527810091493
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3115,11 +3115,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c8c9552dfe5dae4d9142af0893e5b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adName: 
-  isAutoReload: 0
-  panelMenu: {fileID: 0}
-  imgProgress: {fileID: 0}
-  timeShow: 0
+  adName: AdDemoInterstitial
+  isAutoReload: 1
+  panelMenu: {fileID: 4637021980517331052}
+  imgProgress: {fileID: 7754411427192906562}
+  timeShow: 5
 --- !u!1 &7509772357467409336
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,10 +27,15 @@ namespace KTool.Init
         }
         private static List<IIniter> GetAll_Initer(GameObject[] gameobjects)
         {
-            List<IIniter> result = new List<IIniter>(),
-                tmp = new List<IIniter>();
+            List<IIniter> result = new();
+            if(gameobjects == null || gameobjects.Length == 0)
+                return result;
+            //
+            List<IIniter> tmp = new();
             foreach (GameObject gameobject in gameobjects)
             {
+                if(gameobject == null)
+                    continue;
                 gameobject.GetComponents<IIniter>(tmp);
                 if (tmp.Count > 0)
                     result.AddRange(tmp);
@@ -44,18 +50,33 @@ namespace KTool.Init
             int index = 0;
             while (index < items.Count)
             {
-                IInitTracking initTracking = items[index].InitBegin();
-                if (initTracking is not null)
+                IInitTracking initTracking;
+                try{
+                    initTracking = items[index].InitBegin();
+                }
+                catch(Exception ex)
+                {
+                    Debug.LogError(ex);
+                    initTracking = new InitTrackingSource(true, ex.Message);
+                }
+                //
+                if(initTracking is not null)
                     listInitTracking.Add(initTracking);
                 index++;
             }
-
         }
         public void Item_InitEnded()
         {
             for (int i = 0; i < items.Count; i++)
             {
-                items[i].InitEnd();
+                try
+                {
+                    items[i].InitEnd();
+                }
+                catch(Exception ex)
+                {
+                    Debug.Log(ex);
+                }
             }
             //
             items.Clear();
@@ -71,18 +92,39 @@ namespace KTool.Init
                 totalProgress += value.Progress;
             return totalProgress / listInitTracking.Count;
         }
-        public bool Item_IsCompleteAll()
+        public bool Item_IsCompleteAll(out bool isSuccessIndispensable)
         {
+            isSuccessIndispensable = true;
             foreach (var value in listInitTracking)
-                if (!value.IsComplete)
+            {
+                if (value.IsComplete)
+                {
+                    if(value.Indispensable && !value.IsSuccessfully)
+                        isSuccessIndispensable = false;
+                }
+                else
+                {
+                    isSuccessIndispensable = false;
                     return false;
+                }
+            }
             return true;
         }
-        public bool Item_IsCompleteIndispensable()
+        public bool Item_IsCompleteIndispensable(out bool isSuccessIndispensable)
         {
+            isSuccessIndispensable = true;
             foreach (var value in listInitTracking)
-                if (value.Indispensable && !value.IsComplete)
+            {
+                if (!value.Indispensable)
+                    continue;
+                if(!value.IsComplete)
+                {
+                    isSuccessIndispensable = false;
                     return false;
+                }
+                if(!value.IsSuccessfully)
+                    isSuccessIndispensable = false;
+            }
             return true;
         }
         #endregion

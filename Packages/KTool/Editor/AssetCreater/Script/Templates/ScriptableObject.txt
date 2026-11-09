@@ -5,6 +5,10 @@ namespace [Namespace]
     [CreateAssetMenu(fileName = "[NameScript]", menuName = "ScriptableObject/[NameScript]")]
     [AccessModifier] class [NameScript] : ScriptableObject
     {
+        #region Fields
+
+        #endregion
+        
         #region Properties
 
         #endregion

@@ -7,6 +7,10 @@ namespace [Namespace]
     [CustomEditor(typeof([NameScript]))]
     [AccessModifier] class [NameScriptEditor] : UnityEditor.Editor
     {
+        #region Fields
+
+        #endregion
+        
         #region Properties
 
         #endregion

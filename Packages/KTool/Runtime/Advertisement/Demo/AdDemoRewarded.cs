@@ -92,7 +92,7 @@ namespace KTool.Advertisement.Demo
             IsDisplayed = false;
             IsShow = false;
             //
-            if (isClick)
+            if (!isClick)
                 PushEvent_ReceivedReward(AdRewardReceived.RewardFail);
             //
             AdRevenuePaid revenue = new AdRevenuePaid(

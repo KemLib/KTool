@@ -23,7 +23,7 @@ namespace KTool.Advertisement
         #region Methods
         public IAdRewardedTracking Show(string placement = "")
         {
-            string oldPlacement = placement;
+            string oldPlacement = this.placement;
             this.placement = string.IsNullOrEmpty(placement) ? AdAppOpen.PLACEMENT_UNKNOWN : placement;
             //
             AdRewardedTrackingSource trackingSource;
@@ -66,6 +66,7 @@ namespace KTool.Advertisement
         protected void PushEvent_ReceivedReward(AdRewardReceived rewardReceived)
         {
             OnAdReceivedReward?.Invoke(this, rewardReceived, placement);
+            trackingSource?.PushEvent_ReceivedReward(rewardReceived, placement);
         }
         #endregion
     }

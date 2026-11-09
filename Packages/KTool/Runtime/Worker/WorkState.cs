@@ -7,11 +7,12 @@ namespace KTool.Worker
     public class WorkState
     {
         #region Properties
-        public readonly List<WorkHandler> ListHandlers;
-        private readonly Action<List<WorkHandler>> callback;
+        private readonly List<WorkHandler> listWorkerHandler;
+        private readonly Action<IReadOnlyList<IWorker>> callback;
         public readonly float Timeout;
         public readonly int FrameLimit;
         public readonly float StartTime;
+        public readonly IReadOnlyList<IWorker> ListWorker;
         private int frameCount;
         private bool isDone;
         
@@ -20,15 +21,19 @@ namespace KTool.Worker
         #endregion
 
         #region Construction
-        internal WorkState(List<WorkHandler> listHandlers, Action<List<WorkHandler>> callback, float timeout = -1, int frameLimit = -1)
+        internal WorkState(List<WorkHandler> workers, Action<IReadOnlyList<IWorker>> callback, float timeout = -1, int frameLimit = -1)
         {
-            this.ListHandlers = listHandlers;
+            this.listWorkerHandler = workers;
             this.callback = callback;
             this.Timeout = timeout;
             this.FrameLimit = frameLimit;
             this.StartTime = Time.time;
             this.frameCount = 0;
             this.isDone = false;
+            List<IWorker> tmp = new (listWorkerHandler.Count);
+            foreach(var handler in listWorkerHandler)
+                tmp.Add(handler);
+            ListWorker = tmp;
         }
         #endregion
 
@@ -37,28 +42,42 @@ namespace KTool.Worker
         {
             if(isDone)
                 return true;
-            // check timeout
-            if(CheckTimeout() || CheckFrameLimit())
+            //
+            frameCount++;
+            if(Timeout > 0 && Time.time - StartTime > Timeout)
             {
-                // timeout or frame limit
-                foreach(var handler in ListHandlers)
-                {
+                foreach(var handler in listWorkerHandler)
                     handler.Timeout();
-                }
             }
             else
             {
-                // check all done
-                foreach(var handler in ListHandlers)
+                bool isAllDone = true;
+                foreach(var handler in listWorkerHandler)
                 {
                     if(!handler.IsDone)
+                    {
+                        isAllDone = false;
+                        break;
+                    }
+                }
+                //
+                if(!isAllDone)
+                {
+                    if(FrameLimit > 0 && frameCount >= FrameLimit)
+                    {
+                        foreach(var handler in listWorkerHandler)
+                            handler.Timeout();
+                    }
+                    else
+                    {
                         return false;
+                    }
                 }
             }
             // callback
             isDone = true;
             try{
-                callback?.Invoke(ListHandlers);
+                callback?.Invoke(ListWorker);
             }
             catch(Exception e)
             {
@@ -66,15 +85,6 @@ namespace KTool.Worker
             }
             // return true
             return true;
-        }
-        private bool CheckTimeout()
-        {
-            return Timeout > 0 && Time.time - StartTime > Timeout;
-        }
-        private bool CheckFrameLimit()
-        {
-            frameCount++;
-            return FrameLimit > 0 && frameCount > FrameLimit;
         }
         #endregion
     }

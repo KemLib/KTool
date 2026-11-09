@@ -5,6 +5,10 @@ namespace [Namespace]
     [System.Serializable]
     [AccessModifier] class [NameScript]
     {
+        #region Fields
+
+        #endregion
+
         #region Properties
 
         #endregion

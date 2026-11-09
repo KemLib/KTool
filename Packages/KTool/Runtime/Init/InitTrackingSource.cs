@@ -5,22 +5,26 @@ namespace KTool.Init
 {
     public class InitTrackingSource : IInitTracking
     {
+        private enum State
+        {
+            Pending,
+            Success,
+            Fail
+        }
         #region Progperties
+        public const int STATE_PENDING = (int)State.Pending;
+        public const int STATE_SUCCESS = (int)State.Success;
+        public const int STATE_FAIL = (int)State.Fail;
         public const string ERROR_UNKNOWN = "unknown error";
 
-        protected InterValueBool isComplete;
-        private InterValueBool isSuccessfully;
+        protected InterValueInt state;
         private InterValueClass<string> errorMessage;
         private readonly bool indispensable;
         private InterValueFloat progress;
 
         public bool Indispensable => indispensable;
-        public bool IsComplete => isComplete;
-        public bool IsSuccessfully
-        {
-            get => isSuccessfully;
-            private set => isSuccessfully.Value = value;
-        }
+        public bool IsComplete => state.Value != STATE_PENDING;
+        public bool IsSuccessfully => state.Value == STATE_SUCCESS;
         public string ErrorMessage
         {
             get => errorMessage;
@@ -37,16 +41,14 @@ namespace KTool.Init
         public InitTrackingSource(bool indispensable)
         {
             this.indispensable = indispensable;
-            isComplete = new InterValueBool(false);
-            isSuccessfully = new InterValueBool(false);
+            state = new(STATE_PENDING);
             errorMessage = new InterValueClass<string>(ERROR_UNKNOWN);
             progress = new InterValueFloat(0);
         }
         public InitTrackingSource(bool indispensable, bool isSuccess)
         {
             this.indispensable = indispensable;
-            isComplete = new InterValueBool(true);
-            isSuccessfully = new InterValueBool(isSuccess);
+            state = new(isSuccess ? STATE_SUCCESS : STATE_FAIL);
             if (isSuccess)
                 errorMessage = new InterValueClass<string>(string.Empty);
             else
@@ -56,8 +58,7 @@ namespace KTool.Init
         public InitTrackingSource(bool indispensable, string errorMessage)
         {
             this.indispensable = indispensable;
-            isComplete = new InterValueBool(true);
-            isSuccessfully = new InterValueBool(false);
+            state = new(STATE_FAIL);
             if (string.IsNullOrEmpty(errorMessage))
                 this.errorMessage = new InterValueClass<string>(ERROR_UNKNOWN);
             else
@@ -69,32 +70,29 @@ namespace KTool.Init
         #region Method
         public bool CompleteSuccess()
         {
-            if (isComplete.Exchange(true))
+            if (!state.TryCompareExchange(STATE_SUCCESS, STATE_PENDING))
                 return false;
             //
-            IsSuccessfully = true;
-            ErrorMessage = string.Empty;
-            Progress = 1;
+            errorMessage.Value = string.Empty;
+            progress.Value = 1;
             return true;
         }
         public bool CompleteFail()
         {
-            if (isComplete.Exchange(true))
+            if (!state.TryCompareExchange(STATE_FAIL, STATE_PENDING))
                 return false;
             //
-            IsSuccessfully = false;
-            ErrorMessage = ERROR_UNKNOWN;
-            Progress = 1;
+            errorMessage.Value = ERROR_UNKNOWN;
+            progress.Value = 1;
             return true;
         }
         public bool CompleteFail(string errorMessage)
         {
-            if (isComplete.Exchange(true))
+            if (!state.TryCompareExchange(STATE_FAIL, STATE_PENDING))
                 return false;
             //
-            IsSuccessfully = false;
-            ErrorMessage = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
-            Progress = 1;
+            this.errorMessage.Value = string.IsNullOrEmpty(errorMessage) ? ERROR_UNKNOWN : errorMessage;
+            progress.Value = 1;
             return true;
         }
         #endregion

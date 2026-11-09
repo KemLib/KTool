@@ -4,11 +4,15 @@ namespace [Namespace]
 {
     [AccessModifier] struct [NameScript]
     {
+        #region Fields
+
+        #endregion
+        
         #region Properties
 
         #endregion
 
-        #region Construction
+        #region Constructors
 
         #endregion
 
