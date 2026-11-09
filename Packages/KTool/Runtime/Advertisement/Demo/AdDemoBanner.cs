@@ -120,7 +120,7 @@ namespace KTool.Advertisement.Demo
             if (!IsShow)
                 return;
             //
-            PushEvent_Expanded(IsExpanded);
+            PushEvent_Expanded(!IsExpanded);
         }
         #endregion
     }
