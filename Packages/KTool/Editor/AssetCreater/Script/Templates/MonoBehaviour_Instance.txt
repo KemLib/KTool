@@ -4,6 +4,10 @@ namespace [Namespace]
 {
     [AccessModifier] class [NameScript] : MonoBehaviour
     {
+        #region Fields
+
+        #endregion
+        
         #region Properties
         public static [NameScript] Instance
         {
@@ -19,14 +23,15 @@ namespace [Namespace]
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                return;
             }
-            //
-            Destroy(gameObject);
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         private void OnDestroy()
         {
-            if (Instance != null && Instance.GetInstanceID() == GetInstanceID())
+            if (Instance != null && Instance.GetEntityId() == GetEntityId())
                 Instance = null;
         }
         #endregion

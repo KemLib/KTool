@@ -4,6 +4,10 @@ namespace [Namespace]
 {
     [AccessModifier] class [NameScript] : MonoBehaviour
     {
+        #region Fields
+
+        #endregion
+        
         #region Properties
 
         #endregion
