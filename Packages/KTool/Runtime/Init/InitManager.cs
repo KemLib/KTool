@@ -41,9 +41,6 @@ namespace KTool.Init
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                //
-                if(autoInit)
-                    Init();
             }
             else
             {
@@ -54,6 +51,13 @@ namespace KTool.Init
         {
             if (Instance != null && Instance.GetEntityId() == GetEntityId())
                 Instance = null;
+        }
+        private void Start()
+        {
+            if(Instance == null || Instance.GetEntityId() != GetEntityId())
+                return;
+            if(autoInit)
+                Init();
         }
         private void Update()
         {

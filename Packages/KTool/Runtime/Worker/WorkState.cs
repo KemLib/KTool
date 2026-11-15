@@ -1,90 +1,160 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using KLibStandard.Concurrent;
 
 namespace KTool.Worker
 {
     public class WorkState
     {
         #region Properties
-        private readonly List<WorkHandler> listWorkerHandler;
-        private readonly Action<IReadOnlyList<IWorker>> callback;
+        public readonly IReadOnlyList<WorkHandler> ListWorker;
+        private readonly Action<WorkState> callback;
         public readonly float Timeout;
         public readonly int FrameLimit;
         public readonly float StartTime;
-        public readonly IReadOnlyList<IWorker> ListWorker;
         private int frameCount;
-        private bool isDone;
+        private InterValueInt _state;
+        private InterValueFloat _progress;
         
         public int FrameCount => frameCount;
-        public bool IsDone => isDone;
+        public float Progress => _progress.Value;
+        public bool IsDone => _state.Value != WorkHandler.STATE_PENDING;
+        public bool IsSuccess => _state.Value == WorkHandler.STATE_SUCCESS;
+        public bool IsCanceled => _state.Value == WorkHandler.STATE_CANCELED;
+        public bool IsFailed => _state.Value == WorkHandler.STATE_FAILED;
+        public bool IsTimeout => _state.Value == WorkHandler.STATE_TIMEOUT;
         #endregion
 
         #region Construction
-        internal WorkState(List<WorkHandler> workers, Action<IReadOnlyList<IWorker>> callback, float timeout = -1, int frameLimit = -1)
+        internal WorkState(List<WorkHandler> workers, Action<WorkState> callback, float timeout = -1, int frameLimit = -1)
         {
-            this.listWorkerHandler = workers;
+            ListWorker = workers;
             this.callback = callback;
             this.Timeout = timeout;
             this.FrameLimit = frameLimit;
             this.StartTime = Time.time;
             this.frameCount = 0;
-            this.isDone = false;
-            List<IWorker> tmp = new (listWorkerHandler.Count);
-            foreach(var handler in listWorkerHandler)
-                tmp.Add(handler);
-            ListWorker = tmp;
+            _state = new(WorkHandler.STATE_PENDING);
+            _progress = new(0);
         }
         #endregion
 
-        #region Methods
+        #region Methods        
         internal bool CheckAllDone()
         {
-            if(isDone)
+            if(IsDone)
                 return true;
             //
             frameCount++;
             if(Timeout > 0 && Time.time - StartTime > Timeout)
             {
-                foreach(var handler in listWorkerHandler)
-                    handler.Timeout();
+                SetTimeout();
+                return true;
+            }
+            
+            bool isAllDone = true,
+                isAllSuccess = true;
+            float totalProgress = 0f;
+            foreach(var handler in ListWorker)
+            {
+                totalProgress += handler.Progress;
+                if(handler.IsDone)
+                {
+                    if(!handler.IsSuccess)
+                        isAllSuccess = false;
+                }
+                else
+                {
+                    isAllDone = false;
+                }
+            }
+            if(ListWorker.Count <=0 )
+                _progress.Value = 1;
+            else
+                _progress.Value = totalProgress / ListWorker.Count;
+            //
+            if(isAllDone)
+            {
+                if(isAllSuccess)
+                {
+                    SetSuccess();
+                    return true;
+                }
+                else
+                {
+                    SetFailed();
+                    return true;
+                }
             }
             else
             {
-                bool isAllDone = true;
-                foreach(var handler in listWorkerHandler)
+                if(FrameLimit > 0 && frameCount >= FrameLimit)
                 {
-                    if(!handler.IsDone)
-                    {
-                        isAllDone = false;
-                        break;
-                    }
+                    SetTimeout();
+                    return true;
                 }
-                //
-                if(!isAllDone)
+                else
                 {
-                    if(FrameLimit > 0 && frameCount >= FrameLimit)
-                    {
-                        foreach(var handler in listWorkerHandler)
-                            handler.Timeout();
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
-            // callback
-            isDone = true;
+        }
+        private void SetSuccess()
+        {
+            if(!_state.TryCompareExchange(WorkHandler.STATE_SUCCESS, WorkHandler.STATE_PENDING))
+                return;
+            //
             try{
-                callback?.Invoke(ListWorker);
+                callback?.Invoke(this);
             }
             catch(Exception e)
             {
                 Debug.LogError(e);
             }
-            // return true
-            return true;
+        }
+        private void SetFailed()
+        {
+            if(!_state.TryCompareExchange(WorkHandler.STATE_FAILED, WorkHandler.STATE_PENDING))
+                return;
+            //
+            try{
+                callback?.Invoke(this);
+            }
+            catch(Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        private void SetTimeout()
+        {
+            if(!_state.TryCompareExchange(WorkHandler.STATE_TIMEOUT, WorkHandler.STATE_PENDING))
+                return;
+            //
+            foreach(var handler in ListWorker)
+                handler.Timeout();
+            try{
+                callback?.Invoke(this);
+            }
+            catch(Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        public void SetCancel()
+        {
+            if(!_state.TryCompareExchange(WorkHandler.STATE_CANCELED, WorkHandler.STATE_PENDING))
+                return;
+            //
+            foreach(var handler in ListWorker)
+                handler.Cancel();
+            try{
+                callback?.Invoke(this);
+            }
+            catch(Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
         #endregion
     }

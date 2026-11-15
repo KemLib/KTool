@@ -4,22 +4,14 @@ using KLibStandard.Concurrent;
 
 namespace KTool.Worker
 {
-    public class WorkHandler : IWorker
+    public class WorkHandler
     {
-        private enum State
-        {
-            Pending,
-            Success,
-            Canceled,
-            Failed,
-            Timeout,
-        }
         #region Properties
-        private const int STATE_PENDING = (int)State.Pending;
-        private const int STATE_SUCCESS = (int)State.Success;
-        private const int STATE_CANCELED = (int)State.Canceled;
-        private const int STATE_FAILED = (int)State.Failed;
-        private const int STATE_TIMEOUT = (int)State.Timeout;
+        internal const int STATE_PENDING = (int)StateType.Pending,
+            STATE_SUCCESS = (int)StateType.Success,
+            STATE_CANCELED = (int)StateType.Canceled,
+            STATE_FAILED = (int)StateType.Failed,
+            STATE_TIMEOUT = (int)StateType.Timeout;
 
         private InterValueFloat _progress;
         private InterValueInt _state;
@@ -54,13 +46,13 @@ namespace KTool.Worker
         {
             _state.CompareExchange(STATE_SUCCESS, STATE_PENDING);
         }
-        public void Cancel()
-        {
-            _state.CompareExchange(STATE_CANCELED, STATE_PENDING);
-        }
         public void Fail()
         {
             _state.CompareExchange(STATE_FAILED, STATE_PENDING);
+        }
+        internal void Cancel()
+        {
+            _state.CompareExchange(STATE_CANCELED, STATE_PENDING);
         }
         internal void Timeout()
         {
